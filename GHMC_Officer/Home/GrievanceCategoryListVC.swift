@@ -53,8 +53,8 @@ class GrievanceCategoryListVC: UIViewController,CLLocationManagerDelegate,MKMapV
             locationManagerager.stopUpdatingLocation()
             lat  = location.coordinate.latitude
             long = location.coordinate.longitude
-            print(lat)
-            print(long)
+           // print(lat)
+           // print(long)
         }
     }
     func determineCurrentLocation()

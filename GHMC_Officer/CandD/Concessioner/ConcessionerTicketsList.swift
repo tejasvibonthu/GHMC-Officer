@@ -22,11 +22,11 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
         self.getRequestListWS()
     }
     func getRequestListWS(){
-       let params = ["EMPLOYEE_ID":"869",
+       let params = ["EMPLOYEE_ID":UserDefaultVars.empId,
                        "DEVICEID":deviceId,
                        "TOKEN_ID":UserDefaultVars.token
         ]
-      //  print(params)
+        print(params)
         
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
         NetworkRequest.makeRequest(type: ConcessionerTicketsListStruct.self, urlRequest: Router.getConcessionerTickets(Parameters: params)) { [weak self](result) in

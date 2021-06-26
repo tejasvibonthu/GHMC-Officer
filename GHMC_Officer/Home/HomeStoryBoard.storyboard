@@ -1328,7 +1328,7 @@
                 </view>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mqF-fI-rBE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="306" y="718"/>
+            <point key="canvasLocation" x="278" y="746"/>
         </scene>
         <!--Grievance Post ComplaintVC-->
         <scene sceneID="uYR-KT-3zt">

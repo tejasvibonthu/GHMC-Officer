@@ -20,6 +20,8 @@ pod 'Firebase/Auth'
 pod 'Firebase/Messaging'
 pod 'SDWebImage'
 pod 'GoogleMaps'
+pod 'GrowingTextView', '0.7.2'
+
 
 
 pod 'GooglePlaces'

@@ -100,15 +100,22 @@ enum Router:URLRequestConvertible{
     case insertGrievance(Parameters:Parameters)
     case getRamkeyVehicles(Parameters:Parameters)
     //C and D waste
+    //AMOH
     case getAMOHRequestList(Parameters:Parameters)
-    case getConcessionerTickets(Parameters:Parameters)
     case getAMOHRequestEstimation(Parameters:Parameters)
     case getClaimTypes
     case calculateAmountbyTons(Parameters:Parameters)
     case getVehicleData
     case getAmohDashboardList(Parameters:Parameters)
+    case submitAMohReq(Parameters:Parameters)
+    case submitPaymentReq(Parameters:Parameters)
+    case getConcessionerRejectList(Parameters:Parameters)
+    case getPaymentConformedList(Parameters:Parameters)
+    case concessionerReassignstatus(Parameters:Parameters)
+    //Concessioner
+    case getConcessionerTickets(Parameters:Parameters)
     case submitConcessionerReq(Parameters:Parameters)
-    
+
     
     case sendFile(senderName:String,senderMobileNo:String,senderDeviceIMEI:String,Qrcode:String,reciverName:String,recciverMobileNO:String)
     //revokeFile
@@ -128,7 +135,7 @@ enum Router:URLRequestConvertible{
             return .get
         case .resendOtp:
             return .post
-        case .getAllCount,.userList,.userDetails,.fullGrievence,.grivenceHistory,.getstatusType,.getWard,.getClaimtStatus,.forwordtoAnotherWard,.updateGrivence,.abstarctReport,.showNotifications,.getGrievanceTypeList,.getCategoryTypeList,.getViewGrievances,.getGrievanceStatusCitizen,.reopenserviceCall,.postcommentService,.postFeedback,.getRamkeyVehicles, .versionCheck,.GrievancesCategoryList,.whereIam,.insertGrievance,.getAMOHRequestList,.getAMOHRequestEstimation,.calculateAmountbyTons,.getAmohDashboardList,.getConcessionerTickets,.submitConcessionerReq:
+        case .getAllCount,.userList,.userDetails,.fullGrievence,.grivenceHistory,.getstatusType,.getWard,.getClaimtStatus,.forwordtoAnotherWard,.updateGrivence,.abstarctReport,.showNotifications,.getGrievanceTypeList,.getCategoryTypeList,.getViewGrievances,.getGrievanceStatusCitizen,.reopenserviceCall,.postcommentService,.postFeedback,.getRamkeyVehicles, .versionCheck,.GrievancesCategoryList,.whereIam,.insertGrievance,.getAMOHRequestList,.getAMOHRequestEstimation,.calculateAmountbyTons,.getAmohDashboardList,.getConcessionerTickets,.submitConcessionerReq,.submitAMohReq,.getConcessionerRejectList,.getPaymentConformedList,.submitPaymentReq,.concessionerReassignstatus:
             return .post
         }
     }
@@ -215,6 +222,16 @@ enum Router:URLRequestConvertible{
             return "GET_CONCESSIONER_TICKET_LIST"
         case .submitConcessionerReq:
             return "CONCESSIONER_REQUEST_SUBMIT"
+        case .submitAMohReq:
+            return "AMOH_REQUEST_ESTIMATION_SUBMIT"
+        case .getConcessionerRejectList:
+            return "CONCESSIONER_REJECTED_TICKETS_LIST"
+        case .getPaymentConformedList:
+            return "GET_AMOH_AMOUNT_PAID_LIST"
+        case .submitPaymentReq:
+            return ""
+        case .concessionerReassignstatus:
+            return "AMOH_REASSIGN_CONCESSIONER_REJECTED_TICKETS"
         }
     }
     func asURLRequest() throws -> URLRequest {
@@ -357,9 +374,22 @@ enum Router:URLRequestConvertible{
         case .submitConcessionerReq(let parameters):
             urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
             print(urlRequest)
-            
-        
-        }
+        case .submitAMohReq(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+            print(urlRequest)
+        case .getConcessionerRejectList(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+            print(urlRequest)
+        case .getPaymentConformedList(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+            print(urlRequest)
+        case .submitPaymentReq(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+            print(urlRequest)
+        case .concessionerReassignstatus(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+            print(urlRequest)
+            }
        
         
         return urlRequest

@@ -143,21 +143,10 @@ extension UserdetailsVC:UITableViewDelegate,UITableViewDataSource{
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let id = userDetailsmodel?.dashboard?[indexPath.row]
-        if UserDefaultVars.designation == "AMOH"{
-           if id?.typeID == "34-2"{
-                let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
-            self.navigationController?.pushViewController(vc, animated:true)
-            }
-           else{
-               let vc = storyboards.Complaints.instance.instantiateViewController(withIdentifier:"FullGrievancedetailsVC") as! FullGrievancedetailsVC
-               vc.compTypeId = id?.typeID
-               self.navigationController?.pushViewController(vc, animated:true)
-           }
-        } else{
             let vc = storyboards.Complaints.instance.instantiateViewController(withIdentifier:"FullGrievancedetailsVC") as! FullGrievancedetailsVC
             vc.compTypeId = id?.typeID
             self.navigationController?.pushViewController(vc, animated:true)
-        }
+        
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell=tableView.dequeueReusableCell(withIdentifier:"UserDetailsTableViewCell") as! UserDetailsTableViewCell

@@ -10,6 +10,7 @@ import UIKit
 import DropDown
 class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var estimationDetails:RequestEstimationStruct?
+    var ticketId:String?
     var reqdatasourceArry:[String] = []
     var req:String?
     var reqId:String?
@@ -23,6 +24,7 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     var tag:Int!
     var imgStr:String?
     var imagePicker: UIImagePickerController! = UIImagePickerController()
+    var ticketDetails:GetPaidListStruct.PaidList?
     @IBOutlet weak var dtaeLB: UILabel!
     @IBOutlet weak var zoneLB: UILabel!
     @IBOutlet weak var circleLB: UILabel!
@@ -36,16 +38,30 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     @IBOutlet weak var vehicletypeBtn: UIButton!
     @IBOutlet weak var estimationwasteTF: UITextField!
     @IBOutlet weak var amountTF: UITextField!
-    @IBOutlet weak var cameraImg: UIButton!
+    @IBOutlet weak var cameraImg: CustomImagePicker!
+    {
+        didSet
+        {
+            cameraImg.parentViewController = self
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setshadow()
-        dtaeLB.text = estimationDetails?.createdDate
-        zoneLB.text = estimationDetails?.zoneID
-        circleLB.text = estimationDetails?.circleID
-        wardLB.text = estimationDetails?.wardID
-        locationLB.text = estimationDetails?.landmark
-        imgView.image = UIImage(named: estimationDetails?.image1Path ?? "")
+        if tag == 0 {
+            dtaeLB.text = estimationDetails?.createdDate
+            zoneLB.text = estimationDetails?.zoneID
+            circleLB.text = estimationDetails?.circleID
+            wardLB.text = estimationDetails?.wardID
+            locationLB.text = estimationDetails?.landmark
+            imgView.image = UIImage(named: estimationDetails?.image1Path ?? "")
+        } else if tag == 1 {
+            dtaeLB.text = ticketDetails?.createdDate
+            zoneLB.text = ticketDetails?.zoneID
+            circleLB.text = ticketDetails?.circleID
+            wardLB.text = ticketDetails?.wardID
+            locationLB.text = ticketDetails?.landmark
+        }
         estimationwasteTF.isHidden = true
         noofVehiclesTF.delegate = self
         amountTF.isHidden = true
@@ -175,81 +191,7 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     @IBAction func backbuttonClick(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
-    @IBAction func cameraBtnClick(_ sender: UIButton) {
-        switch sender.tag {
-        case 0:
-            tag = 0
-            break
-      
-        default:
-            break
-        }
-        
-        
-        var alertStyle = UIAlertController.Style.actionSheet
-        if (UIDevice.current.userInterfaceIdiom == .pad) {
-          alertStyle = UIAlertController.Style.alert
-        }
-        let controller = UIAlertController(title: "Select a picture which properly describes the issue!", message: nil, preferredStyle: alertStyle)
-        controller.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { (action) in
-            print("Choosed Camera")
-            self.camera()
-        }))
-        controller.addAction(UIAlertAction(title: "Choose Photo", style: .default, handler: { (action) in
-            print("Choosed gsllry")
-            self.photoLibrary()
-        }))
-       
-        controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
-            print("Cancelled")
-            
-        }))
-     
-        self.present(controller, animated: true, completion: nil)
-    }
-    func camera()
-    {
-        if UIImagePickerController.isSourceTypeAvailable(.camera){
-            imagePicker.delegate = self
-            imagePicker.sourceType = .camera
-            self.present(imagePicker, animated: true, completion: nil)
-        }
-        
-    }
-    func photoLibrary()
-    {
-        
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
-            imagePicker.delegate = self
-            imagePicker.sourceType = .photoLibrary
-            self.present(imagePicker, animated: true, completion: nil)
-        }
-    }
-    //MARK:- imagePickerController Delegates
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-// Local variable inserted by Swift 4.2 migrator.
-//let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
-
-        NSLog("\(info)")
-        
-        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        switch tag {
-        case 0:
-            cameraImg.setImage(image, for: .normal)
-            dismiss(animated: true, completion: nil)
-            cameraImg.isSelected = true
-            imgStr = convertImageToBase64(image:image)
-            
-    
-        default:
-            print("default")
-        }
-
-    }
+   
     func convertImageToBase64(image: UIImage) -> String {
 
         //   let imageData1 = (image1Btn.image(for: .normal)!).jpeg(.lowest)
@@ -260,11 +202,93 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         return imageData.base64EncodedString(options: Data.Base64EncodingOptions.lineLength64Characters)
     }
         @IBAction func submitClick(_ sender: Any) {
+            if tag == 0{
+                self.requestsubmitWS()
+            } else if tag == 1{
+                self.paymentpendingEstimationSubmitWS()
+            }
+    }
+    func requestsubmitWS(){
+        let imgData = convertImageToBase64String(img: cameraImg.image!)
+        let params = [
+            "CNDW_GRIEVANCE_ID" : ticketId ?? "",
+            "EMPLOYEE_ID": UserDefaultVars.empId,
+            "DEVICEID": deviceId,
+            "TOKEN_ID": UserDefaultVars.token,
+            "IMAGE1_PATH": imgData,
+            "VEHICLE_TYPE_ID": vehicleId ?? "",
+            "NO_OF_VEHICLES": noofVehiclesTF.text ?? "",
+            "EST_WT": estimationwasteTF.text ?? "",
+            "AMOUNT": amountTF.text ?? ""
+            
+        ] as [String : Any]
+        print(params)
+    guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+    NetworkRequest.makeRequest(type: SUbmitStruct.self, urlRequest: Router.submitAMohReq(Parameters: params)) { [weak self](result) in
+            switch result {
+            case .success(let resp):
+                print(resp)
+                if resp.statusCode == "600"{
+                    self?.showCustomAlert(message: resp.statusMessage ?? ""){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+                if resp.statusCode == "200"
+                {
+                    self?.showAlert(message: resp.statusMessage ?? "")
+                }
+                else
+                {
+                    self?.showAlert(message: resp.statusMessage ?? "" )
+                }
+            case .failure(let err):
+                print(err)
+                self?.showAlert(message: err.localizedDescription)
+            }
+        }
+    }
+    func paymentpendingEstimationSubmitWS(){
+        let imgData = convertImageToBase64String(img: cameraImg.image!)
+        let params = [
+            "CNDW_GRIEVANCE_ID":ticketDetails?.ticketID ?? "",
+            "EMPLOYEE_ID": UserDefaultVars.empId,
+            "DEVICEID": deviceId,
+            "TOKEN_ID": UserDefaultVars.token,
+            "IMAGE1_PATH": imgData,
+            "VEHICLE_TYPE_ID": vehicleId ?? "",
+            "NO_OF_VEHICLES": noofVehiclesTF.text ?? "",
+            "EST_WT":  estimationwasteTF.text ?? "",
+            "WARD_ID": ticketDetails?.wardID ?? ""
+            
+        ]as [String : Any]
+        print(params)
+    guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+    NetworkRequest.makeRequest(type: PaymentPendingSubmitStruct.self, urlRequest: Router.submitPaymentReq(Parameters: params)) { [weak self](result) in
+            switch result {
+            case .success(let resp):
+                print(resp)
+                if resp.statusCode == "600"{
+                    self?.showCustomAlert(message: resp.statusMessage ?? ""){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+                if resp.statusCode == "200"
+                {
+                    self?.showAlert(message: resp.statusMessage ?? "")
+                }
+                else
+                {
+                    self?.showAlert(message: resp.statusMessage ?? "" )
+                }
+            case .failure(let err):
+                print(err)
+                self?.showAlert(message: err.localizedDescription)
+            }
+        }
     }
     func  setshadow(){
         // corner radius
         detailsView.layer.cornerRadius = 4
-
         // border
         detailsView.layer.borderWidth = 0.2
         // shadow
@@ -335,4 +359,15 @@ struct GetVehicledataStruct: Codable {
         }
     }
 
+}
+
+// MARK: - PaymentPendingSubmitStruct
+struct PaymentPendingSubmitStruct: Codable {
+    let statusCode, statusMessage, cndwGrievanceID: String?
+
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "STATUS_CODE"
+        case statusMessage = "STATUS_MESSAGE"
+        case cndwGrievanceID = "CNDW_GRIEVANCE_ID"
+    }
 }

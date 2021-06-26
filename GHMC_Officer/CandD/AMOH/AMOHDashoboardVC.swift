@@ -28,10 +28,12 @@ class AMOHDashoboardVC: UIViewController {
     @IBOutlet weak var usernameLB: UILabel!
     @IBOutlet weak var designationLB: UILabel!
     @IBOutlet weak var mobileNumberLB: UILabel!
+    @IBOutlet weak var backButton: UIButton!
     var dashboardCountsModel:AmohDashoardCountsStruct?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        backButton.isHidden = true
         self.usernameLB.text = UserDefaultVars.empName
         self.designationLB.text = UserDefaultVars.designation
         self.mobileNumberLB.text = UserDefaultVars.mobileNumber
@@ -56,18 +58,29 @@ class AMOHDashoboardVC: UIViewController {
     @IBAction func backBtnClick(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
+    //total no of requests list
     @objc func taponnoofReq(){
-        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "RequestListVC") as! RequestListVC
+        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
+        vc.tag = 0
         navigationController?.pushViewController(vc, animated: true)
      }
+    //payment conformed list
     @objc func taponpaymentConformation(){
-     
+        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
+        vc.tag = 1
+        navigationController?.pushViewController(vc, animated: true)
      }
+    //concessionerrejected list
     @objc func taponconsessionerRejected(){
-     
+        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
+        vc.tag = 2
+        navigationController?.pushViewController(vc, animated: true)
      }
+    //concessioner closed tickets
     @objc func taponconnsessionerclosedTickets(){
-     
+        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
+        vc.tag = 3
+        navigationController?.pushViewController(vc, animated: true)
      }
     @objc func taponAmohClosedTickets(){
      
@@ -152,8 +165,6 @@ struct AmohDashoardCountsStruct: Codable {
             case amohCloseTickets = "AMOH_CLOSE_TICKETS"
         }
     }
-
- 
 }
 
 

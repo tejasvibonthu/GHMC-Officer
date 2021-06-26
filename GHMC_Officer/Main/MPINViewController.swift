@@ -100,30 +100,26 @@ class MPINViewController: UIViewController {
                 
             case .success:
                 let responseDict = response.result.value as! NSDictionary
-//print(responseDict)
+////print(responseDict)
                 if UserDefaultVars.designation == "Concessioner Supervisor"
                 {
                     let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerTicketsList") as! ConcessionerTicketsList
                     self.navigationController?.pushViewController(vc, animated:true)
+                } else if UserDefaultVars.designation == "AMOH"
+                {
+                    let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
+                    self.navigationController?.pushViewController(vc, animated:true)
+                } else {
+                
+                    let appdelete = UIApplication.shared.delegate as! AppDelegate
+                   appdelete.openDashboard()
                 }
-//                if responseDict.value(forKey:"status") as! Bool == true{
-//                    let appdelete = UIApplication.shared.delegate as! AppDelegate
-//                   appdelete.openDashboard()
-//                    
-//                    
-//                }else{
-//                    self.showAlert(message:trAagin)
-//                }
-//                
+                
             case .failure:
                 self.showAlert(message:trAagin)
                 break
-                
-                
             }
         }
-        
-        
     }
         
     

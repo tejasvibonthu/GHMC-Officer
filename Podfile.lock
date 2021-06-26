@@ -91,6 +91,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.2.5):
     - GoogleUtilities/Logger
+  - GrowingTextView (0.7.2)
   - GTMSessionFetcher/Core (1.2.2)
   - IQKeyboardManagerSwift (6.4.1)
   - nanopb (0.3.901):
@@ -120,6 +121,7 @@ DEPENDENCIES:
   - Firebase/Messaging
   - GoogleMaps
   - GooglePlaces
+  - GrowingTextView (= 0.7.2)
   - IQKeyboardManagerSwift
   - PinCodeTextField
   - PKHUD (~> 5.0)
@@ -150,6 +152,7 @@ SPEC REPOS:
     - GoogleMaps
     - GooglePlaces
     - GoogleUtilities
+    - GrowingTextView
     - GTMSessionFetcher
     - IQKeyboardManagerSwift
     - nanopb
@@ -182,6 +185,7 @@ SPEC CHECKSUMS:
   GoogleMaps: 32ca02de09de357a10ac773f2c70f1986751392d
   GooglePlaces: be6f19fe8aa6ff0b5bcccfa1b8805cc977ea1450
   GoogleUtilities: e7dc37039b19df7fe543479d3e4a02ac8d11bb69
+  GrowingTextView: 876bf42005b5e4a4fd740597db12caaf41f0fe6c
   GTMSessionFetcher: 61bb0f61a4cb560030f1222021178008a5727a23
   IQKeyboardManagerSwift: d2df660d0b8d64a15cb2537c9ff303213fa515b2
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
@@ -194,6 +198,6 @@ SPEC CHECKSUMS:
   SwiftMessages: a952f7a9103d9aeab93730a2861d2d8fcdd8758f
   TextFieldEffects: 529b8aff706fb40f82c41c780c0777941a893796
 
-PODFILE CHECKSUM: 214dd039267bd15ca8fad599bcd32effe134756d
+PODFILE CHECKSUM: 7d6921abc784216e66329300a844115d3316f539
 
 COCOAPODS: 1.10.1
