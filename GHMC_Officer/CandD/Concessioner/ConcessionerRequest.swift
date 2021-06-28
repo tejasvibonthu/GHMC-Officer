@@ -243,7 +243,7 @@ class ConcessionerRequest: UIViewController,UITextFieldDelegate {
     @IBAction func proceedtoBtnClick(_ sender: Any) {
         if validation(){
             let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier: "VehicleDataVC") as! VehicleDataVC
-           // vc.tag = 0
+            vc.grievanceId = grievanceId
             navigationController?.pushViewController(vc, animated: true)
           //  self.submitWS()
         }
