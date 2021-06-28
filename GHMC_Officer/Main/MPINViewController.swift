@@ -103,13 +103,19 @@ class MPINViewController: UIViewController {
 ////print(responseDict)
                 if UserDefaultVars.designation == "Concessioner Supervisor"
                 {
-                    let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerTicketsList") as! ConcessionerTicketsList
+                    let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerDasboardVC") as! ConcessionerDasboardVC
                     self.navigationController?.pushViewController(vc, animated:true)
-                } else if UserDefaultVars.designation == "AMOH"
+                }
+//                else if UserDefaultVars.designation == "AMOH"
+//                {
+//                    let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
+//                    self.navigationController?.pushViewController(vc, animated:true)
+//                }
+                else if UserDefaultVars.designation == "Operator"
                 {
-                    let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
+                    let vc = storyboards.Operator.instance.instantiateViewController(withIdentifier:"TripsatPlantVC") as! TripsatPlantVC
                     self.navigationController?.pushViewController(vc, animated:true)
-                } else {
+                }  else {
                 
                     let appdelete = UIApplication.shared.delegate as! AppDelegate
                    appdelete.openDashboard()

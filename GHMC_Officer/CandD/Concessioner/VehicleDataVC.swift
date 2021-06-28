@@ -12,10 +12,17 @@ import DropDown
 class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate {
     @IBOutlet weak var submitBtnTop: NSLayoutConstraint!
     @IBOutlet weak var bg: UIImageView!
-    @IBOutlet weak var vehicleType: UIButton!
     @IBOutlet weak var noofvehiclesLb: UITextField!
     @IBOutlet weak var estimationWasteLb: UITextField!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var amountTF: UITextField!
+    @IBOutlet weak var camImg: CustomImagePicker!
+    {
+        didSet
+        {
+            camImg.parentViewController = self
+        }
+    }
     var vehicledatamodel:GetVehicledataStruct?
     var dropdown = DropDown()
     var vehicledatasourceArry:[String] = []
@@ -29,9 +36,13 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
         tableView.dataSource = self
         noofvehiclesLb.delegate = self
         estimationWasteLb.isHidden = true
+        amountTF.isHidden = true
         tableView.isHidden = true
         tableView.separatorStyle =  .none
         self.getVehiclesDataWS()
+    }
+    @IBAction func backClick(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
     }
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         if noofvehiclesLb.text != "" {
@@ -40,26 +51,27 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
         let totalCost: Int = noofTons! * noofVehicles!
         self.weight = String(totalCost)
             estimationWasteLb.isHidden = false
+            amountTF.isHidden = false
             tableView.isHidden = false
             tableView.reloadData()
-            estimationWasteLb.text = ("\(weight ?? "0") TONS")
+            estimationWasteLb.text = ("\(weight ?? "0") ")
     }
         return true
     }
-    @IBAction func vehicleTypeClick(_ sender: UIButton) {
-        dropdown.dataSource = vehicledatasourceArry
-        dropdown.anchorView = sender
-        dropdown.show()
-        dropdown.selectionAction = {[unowned self] (index : Int , item : String) in
-            //  print("selected index \(index) item \(item)")
-            
-            sender.setTitle(item, for: .normal)
-            vehicleType.setTitleColor(.black, for: .normal)
-            self.vehicleId = self.vehicledatamodel?.vehiclelist?[index].vehicleTypeID
-            self.dropdown.hide()
-            self.noofTons = Int((vehicleType.currentTitle?.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())! )
-                }
-    }
+//    @IBAction func vehicleTypeClick(_ sender: UIButton) {
+//        dropdown.dataSource = vehicledatasourceArry
+//        dropdown.anchorView = sender
+//        dropdown.show()
+//        dropdown.selectionAction = {[unowned self] (index : Int , item : String) in
+//            //  print("selected index \(index) item \(item)")
+//            
+//            sender.setTitle(item, for: .normal)
+//            vehicleType.setTitleColor(.black, for: .normal)
+//            self.vehicleId = self.vehicledatamodel?.vehiclelist?[index].vehicleTypeID
+//            self.dropdown.hide()
+//            self.noofTons = Int((vehicleType.currentTitle?.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())! )
+//                }
+//    }
 
     func getVehiclesDataWS()
     {
@@ -82,6 +94,25 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
             }
         }
     }
+    func calculateAmountWS(){
+            let params = ["EST_WT": self.weight]
+            guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+            NetworkRequest.makeRequest(type: CalculateAmountStruct.self, urlRequest: Router.calculateAmountbyTons(Parameters: params)) { [weak self](result) in
+                switch result
+                {
+                case  .success(let CalData):
+                    if CalData.statusCode == "200"{
+                        self?.amountTF.text = CalData.cndwAmount ?? ""
+                    }
+                    else{
+                        self?.showAlert(message: CalData.statusMessage ?? "")
+                    }
+                case .failure(let err):
+                    print(err)
+                    self?.showAlert(message: serverNotResponding)
+                }
+            }
+        }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        // return noofvehiclesLb.text?.count ?? 2
       //  print(vehiclesCount?.coun)
@@ -100,6 +131,8 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
 //        cell.img?.image = UIImage.init(named:details?.image1Path ?? "")
         
         cell.selectionStyle = .none
-        return cell    }
+        return cell
+        
+    }
     
 }

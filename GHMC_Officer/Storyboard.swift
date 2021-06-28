@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 enum  storyboards:String {
-    case Main,HomeStoryBoard,Complaints,photoDisplay,HoardingInfo,AMOH,Concessioner
+    case Main,HomeStoryBoard,Complaints,photoDisplay,HoardingInfo,AMOH,Concessioner,Operator
     var instance : UIStoryboard {
         return UIStoryboard(name: self.rawValue, bundle: Bundle.main)
     }

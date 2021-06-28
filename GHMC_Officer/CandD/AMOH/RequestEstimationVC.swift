@@ -206,6 +206,8 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
                 self.requestsubmitWS()
             } else if tag == 1{
                 self.paymentpendingEstimationSubmitWS()
+            } else if tag == 5{
+                self.raiseRequestWS()
             }
     }
     func requestsubmitWS(){
@@ -264,6 +266,45 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         print(params)
     guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
     NetworkRequest.makeRequest(type: PaymentPendingSubmitStruct.self, urlRequest: Router.submitPaymentReq(Parameters: params)) { [weak self](result) in
+            switch result {
+            case .success(let resp):
+                print(resp)
+                if resp.statusCode == "600"{
+                    self?.showCustomAlert(message: resp.statusMessage ?? ""){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+                if resp.statusCode == "200"
+                {
+                    self?.showAlert(message: resp.statusMessage ?? "")
+                }
+                else
+                {
+                    self?.showAlert(message: resp.statusMessage ?? "" )
+                }
+            case .failure(let err):
+                print(err)
+                self?.showAlert(message: err.localizedDescription)
+            }
+        }
+    }
+    func raiseRequestWS(){
+        let imgData = convertImageToBase64String(img: cameraImg.image!)
+        let params = [
+            "CNDW_GRIEVANCE_ID" : ticketId ?? "",
+            "EMPLOYEE_ID": UserDefaultVars.empId,
+            "DEVICEID": deviceId,
+            "TOKEN_ID": UserDefaultVars.token,
+            "IMAGE1_PATH": imgData,
+            "VEHICLE_TYPE_ID": vehicleId ?? "",
+            "NO_OF_VEHICLES": noofVehiclesTF.text ?? "",
+            "EST_WT": estimationwasteTF.text ?? "",
+            "AMOUNT": amountTF.text ?? ""
+            
+        ] as [String : Any]
+        print(params)
+    guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+    NetworkRequest.makeRequest(type: SUbmitStruct.self, urlRequest: Router.raiseRequest(Parameters: params)) { [weak self](result) in
             switch result {
             case .success(let resp):
                 print(resp)

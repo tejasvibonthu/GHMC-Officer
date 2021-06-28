@@ -112,9 +112,12 @@ enum Router:URLRequestConvertible{
     case getConcessionerRejectList(Parameters:Parameters)
     case getPaymentConformedList(Parameters:Parameters)
     case concessionerReassignstatus(Parameters:Parameters)
+    case raiseRequest(Parameters:Parameters)
     //Concessioner
     case getConcessionerTickets(Parameters:Parameters)
     case submitConcessionerReq(Parameters:Parameters)
+    case getConcessionerDashboardList(Parameters:Parameters)
+
 
     
     case sendFile(senderName:String,senderMobileNo:String,senderDeviceIMEI:String,Qrcode:String,reciverName:String,recciverMobileNO:String)
@@ -135,7 +138,7 @@ enum Router:URLRequestConvertible{
             return .get
         case .resendOtp:
             return .post
-        case .getAllCount,.userList,.userDetails,.fullGrievence,.grivenceHistory,.getstatusType,.getWard,.getClaimtStatus,.forwordtoAnotherWard,.updateGrivence,.abstarctReport,.showNotifications,.getGrievanceTypeList,.getCategoryTypeList,.getViewGrievances,.getGrievanceStatusCitizen,.reopenserviceCall,.postcommentService,.postFeedback,.getRamkeyVehicles, .versionCheck,.GrievancesCategoryList,.whereIam,.insertGrievance,.getAMOHRequestList,.getAMOHRequestEstimation,.calculateAmountbyTons,.getAmohDashboardList,.getConcessionerTickets,.submitConcessionerReq,.submitAMohReq,.getConcessionerRejectList,.getPaymentConformedList,.submitPaymentReq,.concessionerReassignstatus:
+        case .getAllCount,.userList,.userDetails,.fullGrievence,.grivenceHistory,.getstatusType,.getWard,.getClaimtStatus,.forwordtoAnotherWard,.updateGrivence,.abstarctReport,.showNotifications,.getGrievanceTypeList,.getCategoryTypeList,.getViewGrievances,.getGrievanceStatusCitizen,.reopenserviceCall,.postcommentService,.postFeedback,.getRamkeyVehicles, .versionCheck,.GrievancesCategoryList,.whereIam,.insertGrievance,.getAMOHRequestList,.getAMOHRequestEstimation,.calculateAmountbyTons,.getAmohDashboardList,.getConcessionerTickets,.submitConcessionerReq,.submitAMohReq,.getConcessionerRejectList,.getPaymentConformedList,.submitPaymentReq,.concessionerReassignstatus,.getConcessionerDashboardList,.raiseRequest:
             return .post
         }
     }
@@ -230,8 +233,12 @@ enum Router:URLRequestConvertible{
             return "GET_AMOH_AMOUNT_PAID_LIST"
         case .submitPaymentReq:
             return ""
+        case .raiseRequest:
+            return ""
         case .concessionerReassignstatus:
             return "AMOH_REASSIGN_CONCESSIONER_REJECTED_TICKETS"
+        case .getConcessionerDashboardList:
+            return "GET_CONCESSIONER_DASHBOARD_LIST"
         }
     }
     func asURLRequest() throws -> URLRequest {
@@ -387,6 +394,12 @@ enum Router:URLRequestConvertible{
             urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
             print(urlRequest)
         case .concessionerReassignstatus(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+            print(urlRequest)
+        case .getConcessionerDashboardList(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+            print(urlRequest)
+        case .raiseRequest(let parameters):
             urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
             print(urlRequest)
             }

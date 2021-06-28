@@ -7,13 +7,13 @@
 ////
 //
 //import UIKit
-//import iOSDropDown
 //import Alamofire
 //import PKHUD
 //import CoreLocation
 //import GoogleMaps
 //import GooglePlaces
 //import MobileCoreServices
+//import iOSDropDown
 //
 //// MARK: - Element
 ////struct vehiclesFullData: Codable {
@@ -25,9 +25,9 @@
 //struct vehiclesFullData : Decodable {
 //    let sLNO : String?
 //    let vEHICLE_NUMBER : String?
-//    
+//
 //    enum CodingKeys: String, CodingKey {
-//        
+//
 //        case sLNO = "SLNO"
 //        case vEHICLE_NUMBER = "VEHICLE_NUMBER"
 //    }
@@ -35,8 +35,8 @@
 //
 //
 //class TakeActionVC: UIViewController,CLLocationManagerDelegate,UIPickerViewDelegate, UIPickerViewDataSource ,UITextViewDelegate,UIImagePickerControllerDelegate,UIDocumentPickerDelegate,UIDocumentMenuDelegate,UINavigationControllerDelegate{
-//  
-//    
+//
+//
 //    @IBOutlet weak var ward_Name: DropDown!
 //    @IBOutlet weak var complaint_Text: DropDown!
 //    @IBOutlet weak var wardNameHeightConstraint: NSLayoutConstraint!
@@ -63,7 +63,7 @@
 //    @IBOutlet weak var totalnw: UITextField!
 //    @IBOutlet weak var vehicleswheight: NSLayoutConstraint!
 //    @IBOutlet weak var vehiclesvTop: NSLayoutConstraint!
-//    
+//
 //    var dropDOwn:DropDown?
 //    var myComplaintId:String?
 //    let complaintId:String? = nil
@@ -116,7 +116,7 @@
 //
 //        self.imagesPicker.delegate = self
 //        self.imagestr1 = ""
-//        
+//
 //        self.description1.text = "Enter Reramrks"
 //        description1.textColor = UIColor.darkGray
 //
@@ -131,14 +131,14 @@
 //        self.complaint_Text.selectedIndex = 0
 //      //  imageView.layer.cornerRadius = self.imageView.frame.width/2
 //       // imageView.layer.masksToBounds = true
-//        
+//
 //        locationManager = CLLocationManager()
 //        locationManager?.delegate = self
 //        locationManager?.desiredAccuracy = kCLLocationAccuracyBest
 //        locationManager?.requestAlwaysAuthorization()
 //        locationManager?.startUpdatingLocation()
-//        
-//        
+//
+//
 //      // set frame
 //      //  complaint_Text?.listHeight = 300.0
 //     //    ward_Name?.listHeight = 500.0
@@ -147,7 +147,7 @@
 //        complaint_Text!.borderColor = UIColor.darkGray
 //        complaint_Text?.selectedRowColor = .clear
 //        complaint_Text?.isSelected = false
-//       
+//
 //        ///Complaint Text did Select
 //        complaint_Text!.didSelect{[weak self](selectedText , index ,id) in
 //            guard let self = self else {return}
@@ -178,7 +178,7 @@
 //                self.wardTf.placeholder = "Select"
 //                self.getWardWS()
 //            }
-//            
+//
 //            if(self.designation == "Ramky Engineer"){
 //                if(self.complaintId == "11"){
 //                    self.vehiclesvTop.constant = 8
@@ -189,17 +189,17 @@
 //
 //                }
 //            }
-//           
+//
 //        }
 //        //Complaint Did Select End
-//        
+//
 //         ward_Name.borderWidth = 1.0
 //         ward_Name!.borderColor = UIColor.darkGray
 //         ward_Name?.selectedRowColor = .clear
 //         ward_Name?.isSelected = false
-//        
+//
 //         ward_Name!.didSelect{(selectedText , index ,id) in
-//           
+//
 //            self.ward_Name.text = ""
 //            self.ward_Name.text = "\(selectedText)"
 //            self.ward_Name!.hideList()
@@ -207,7 +207,7 @@
 //            UserDefaults.standard.set(self.ward_id, forKey: "Ward_id")
 //          //  print("wardidresponse",self.ward_id ?? "")
 //        }
-//        
+//
 //        let firstRIghtView = UIView(frame: CGRect(x:0, y: 0, width:0, height: 0))
 //        firstRIghtView.backgroundColor = UIColor.init(patternImage:UIImage.init(named:"arrow_right")!)
 //
@@ -216,7 +216,7 @@
 //        let gesture = UITapGestureRecognizer.init(target:self, action:#selector(taponDropDown))
 //        firstRIghtView.addGestureRecognizer(gesture)
 //        let SecondRIghtView = UIView(frame: CGRect(x:0, y: 0, width:0, height: 0))
-//        
+//
 //        SecondRIghtView.backgroundColor = UIColor.init(patternImage:UIImage.init(named:"arrow_right")!)
 //     //   wardTf.rightViewMode = .always
 //     //   wardTf.rightView = SecondRIghtView
@@ -232,9 +232,9 @@
 //            showAlert(message:interNetconnection)
 //        }
 //        // self.getLowerStaffWS()
-//        
-//       
-//        
+//
+//
+//
 //        // Do any additional setup after loading the view.
 //    }
 //    func textViewDidBeginEditing(_ textView: UITextView) {
@@ -252,10 +252,10 @@
 //    func numberOfComponents(in pickerView: UIPickerView) -> Int {
 //        return 1
 //    }
-//    
+//
 //    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 //        return self.vehicleDtaProofModel?.count ?? 0
-//        
+//
 //    }
 //    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 //        return self.vehicleDtaProofModel?[row].vEHICLE_NUMBER
@@ -266,22 +266,22 @@
 //        UserDefaults.standard.set(vehicleSLNo, forKey:"vehicleSlnum")
 //
 //    }
-//    
+//
 //    func getVehicleIds(){
-//        
+//
 //        let dict1 :Parameters  = ["userid":"cgg@ghmc",
 //                                  "password":"ghmc@cgg@2018"]
-//        
-//        
+//
+//
 //        let baseUrl = BASE_URL
 //        let mainURL = baseUrl + "getRamkyVehicles"
 //        self.loading(text:progressMsgWhenLOginClicked)
 //        PKHUD.sharedHUD.show()
 //        Alamofire.request(mainURL, method:.post, parameters:dict1, headers:nil).responseJSON { response in
-//            
+//
 //         //   print(mainURL)
 //         //   print(dict1)
-//            
+//
 //            DispatchQueue.main.async {
 //                PKHUD.sharedHUD.hide()
 //            }
@@ -293,7 +293,7 @@
 //                  //  print(self.vehicleDtaProofModel?.count ?? 0)
 //
 //                    self.vehiclePicker.reloadAllComponents()
-//                    
+//
 //                }catch {
 //                    print(error.localizedDescription)
 //                }
@@ -302,7 +302,7 @@
 //                print(error)
 //                break
 //            }
-//            
+//
 //        }
 //    }
 //    @IBAction func back_buttonAction(_ sender: Any) {
@@ -349,11 +349,11 @@
 //            self.loading(text:progressMsgWhenLOginClicked)
 //            PKHUD.sharedHUD.show()
 //        }
-//        
+//
 //        Alamofire.request(Router.forwordtoAnotherWard(params:dict)).responseJSON {response in
-//            
+//
 //           // print(response)
-//            
+//
 //            DispatchQueue.main.async {
 //                PKHUD.sharedHUD.hide()
 //            }
@@ -370,7 +370,7 @@
 //                                appDelegate.openDashboard()
 //                            }))
 //                            self.present(alert, animated: true, completion: nil)
-//                            
+//
 //                        }else {
 //                            self.showAlert(message:(self.updateWardModel?.tag ?? ""))
 //                        }
@@ -382,10 +382,10 @@
 //                break
 //            case .failure(_):
 //                self.showAlert(message:failedupdate)
-//                
+//
 //                break
-//                
-//                
+//
+//
 //            }
 //        }
 //    }
@@ -409,7 +409,7 @@
 //      //  UserDefaults.standard.set(noofTrips.text, forKey: "nooftrips") //setObject
 //      //  UserDefaults.standard.set(totalnw.text, forKey: "totalnw") //setObject
 //
-//        
+//
 //        guard let location1 = location else {
 //            showAlert(message:"Unable to fetch location.Please try again later..")
 //            return
@@ -437,16 +437,16 @@
 //        "claimant_status":ward_id ?? "",
 //        "lower_staff_id": ward_id ?? ""
 //        ]
-//       
+//
 //        DispatchQueue.main.async {
 //            self.loading(text:progressMsgWhenLOginClicked)
 //            PKHUD.sharedHUD.show()
 //        }
-//        
+//
 //        Alamofire.request(Router.updateGrivence(params:dict)).responseJSON {response in
 //           print("photouploadparameters",dict)
 //           print("photouploadresponse",response)
-//            
+//
 //            DispatchQueue.main.async {
 //                PKHUD.sharedHUD.hide()
 //            }
@@ -458,14 +458,14 @@
 //                   DispatchQueue.main.async {
 //                    if  self.updateGrivencemodel?.status == "True"{
 ////                            self.showAlert(message:(self.updateGrivencemodel?.compid! ?? ""))
-//                        
+//
 //                        let alert = UIAlertController(title: "MYGHMC", message:self.updateGrivencemodel?.compid!, preferredStyle: UIAlertController.Style.alert)
 //                        alert.addAction(UIAlertAction.init(title:"OK", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
 //                            let appDelegate = UIApplication.shared.delegate as! AppDelegate
 //                            appDelegate.openDashboard()
 //                        }))
 //                        self.present(alert, animated: true, completion: nil)
-//                            
+//
 //                        }else {
 //                            self.showAlert(message:(self.updateGrivencemodel?.Message ?? ""))
 //                        }
@@ -476,12 +476,12 @@
 //                break
 //            case .failure( _):
 //                 self.showAlert(message:failedupdate)
-//                
+//
 //                break
-//                
-//                
+//
+//
 //            }
-//            
+//
 //        }
 //    }
 //    func dispalyWard()
@@ -491,22 +491,22 @@
 //    self.ward_Name.text = ""
 //    self.ward_Name.text = String((dataArray?[1])!)
 //    }
-//    
+//
 //    func getWardWS(){
-//        
+//
 //        let dict :Parameters  = ["userid":userid,
 //                                 "password":password,
 //                                 ]
-//        
+//
 //        DispatchQueue.main.async {
 //            self.loading(text:progressMsgWhenLOginClicked)
 //            PKHUD.sharedHUD.show()
 //        }
-//        
+//
 //        Alamofire.request(Router.getWard(params:dict)).responseJSON {response in
-//            
+//
 ////print(response)
-//            
+//
 //            DispatchQueue.main.async {
 //                PKHUD.sharedHUD.hide()
 //            }
@@ -527,32 +527,32 @@
 //                        let id = Int((self.wardModel?.data?[i].id)!)
 //                        IDarray.append(id! )
 //                    }
-//                    
+//
 //                 //   print(IDarray )
-//                    
+//
 //                    DispatchQueue.main.async {
 //                        if  self.model?[0].status == "success"{
 //                            self.ward_Name?.optionArray = titlearray
 //                            self.ward_Name?.optionIds = IDarray
-//                            
+//
 //                        }else {
 //                            self.showAlert(message:(self.model?[0].status! ?? ""))
-//                            
+//
 //                        }
 //                    }
 //                }catch {
 //                    print(error.localizedDescription)
-//                    
+//
 //                }
 //                break
 //            case .failure(let error):
 //                print(error)
-//                
+//
 //                break
-//                
-//                
+//
+//
 //            }
-//            
+//
 //        }
 //    }
 //    func getIDproofs(){
@@ -571,7 +571,7 @@
 //                    self.getIdProofModel = try decoder.decode(getIdProofsTpes.self, from: response.data!)
 //                    var titlearray = [String]()
 //                    var IDarray = [Int]()
-//                    
+//
 //                    if self.getIdProofModel?.status == "true"{
 //                        for  i in (0 ..< self.getIdProofModel!.data!.count){
 //                            titlearray.append(self.getIdProofModel!.data?[i].name ?? "")
@@ -580,12 +580,12 @@
 //                        }
 //                    }
 //                //    print(IDarray )
-//                    
+//
 //                    DispatchQueue.main.async {
 //                        if  self.model?[0].status == "true"{
 //                            //self.complaint_Text?.optionArray = titlearray
 //                            //self.complaint_Text?.optionIds = IDarray
-//                            
+//
 //                        }else {
 //                            //self.showAlert(message: self.getLowerStaffModel!.tag ?? "")
 //                        }
@@ -596,12 +596,12 @@
 //                break
 //            case .failure(let error):
 //                print(error)
-//                
+//
 //                break
-//                
-//                
+//
+//
 //            }
-//            
+//
 //        }
 //    }
 //    func getLowerStaffWS(){
@@ -621,11 +621,11 @@
 //            case .success:
 //                do{
 //                    let decoder = JSONDecoder()
-//                   
+//
 //                    self.getLowerStaffModel = try decoder.decode(getLowerStaff.self, from: response.data!)
 //                    var titlearray = [String]()
 //                    var IDarray = [Int]()
-//                    
+//
 //                    if self.getLowerStaffModel?.status == true{
 //                        for  i in (0 ..< self.getLowerStaffModel!.data!.count){
 //                        titlearray.append(self.getLowerStaffModel!.data?[i].empName ?? "")
@@ -640,47 +640,47 @@
 //                            self.ward_Name.optionArray = titlearray
 //                            self.ward_Name.optionIds = IDarray
 //
-//                            
+//
 //                        }else {
 //                            self.showAlert(message: self.getLowerStaffModel!.tag ?? "")
 //                            self.ward_Name.isHidden = true
 //                            self.ward_Name.isHidden = true
 //                            self.complaint_Text.text = "select"
 //                            //self.complaint_Text.isEnabled = false
-//                            
+//
 //                        }
 //                    }
 //                }catch {
 //                    print(error.localizedDescription)
-//                   
+//
 //                }
 //                break
 //            case .failure(let error):
 //                print(error)
-//                
+//
 //                break
-//                
-//                
+//
+//
 //            }
-//            
+//
 //        }
 //    }
-//    
+//
 //    func getClimaintStatusWS(){
-//        
+//
 //        let dict :Parameters  = ["userid":userid,
 //                                 "password":password,
 //                                 "type_id":UserDefaults.standard.value(forKey:"TYPE_ID")!]
-//        
+//
 //        DispatchQueue.main.async {
 //            self.loading(text:progressMsgWhenLOginClicked)
 //            PKHUD.sharedHUD.show()
 //        }
-//        
+//
 //        Alamofire.request(Router.getClaimtStatus(params:dict)).responseJSON {response in
-//            
+//
 //          //  print(response)
-//            
+//
 //            DispatchQueue.main.async {
 //                PKHUD.sharedHUD.hide()
 //            }
@@ -691,22 +691,22 @@
 //                    self.claimedStatusModel = try decoder.decode([getClaimedStatus].self, from: response.data!)
 //                   var titlearray = [String]()
 //                    var IDarray = [Int]()
-//                    
-//                    
-//                    
+//
+//
+//
 //                    for  i in (0 ..< self.claimedStatusModel!.count){
 //                        titlearray.append(self.claimedStatusModel?[i].type ?? "")
 //                        let id = Int((self.claimedStatusModel?[i].id)!)
 //                        IDarray.append(id! )
 //                    }
-//                    
+//
 //                   // print(IDarray )
-//                    
+//
 //                    DispatchQueue.main.async {
 //                        if  self.model?[0].status == "success"{
 //                            self.ward_Name.optionArray = titlearray
 //                            self.ward_Name.optionIds = IDarray
-//                            
+//
 //                        }else {
 //                           self.showAlert(message:(self.model?[0].status! ?? ""))
 //                            self.ward_Name.isHidden = true
@@ -719,32 +719,32 @@
 //                break
 //            case .failure(let error):
 //                print(error)
-//                
+//
 //                break
-//                
-//                
+//
+//
 //            }
-//            
+//
 //        }
 //    }
-//    
-//    
+//
+//
 //    func getStatusTypeWS(){
-//        
+//
 //        let dict :Parameters  = ["userid":userid,
 //            "password":password,
 //            "type_id":UserDefaults.standard.value(forKey:"TYPE_ID")!,
 //        "designation":UserDefaults.standard.value(forKey:"DESIGNATION")!]
-//       
+//
 //        DispatchQueue.main.async {
 //            self.loading(text:progressMsgWhenLOginClicked)
 //            PKHUD.sharedHUD.show()
 //        }
-//        
+//
 //        Alamofire.request(Router.getstatusType(params:dict)).responseJSON {response in
 //           // print(dict)
 //           // print(response)
-//            
+//
 //            DispatchQueue.main.async {
 //                PKHUD.sharedHUD.hide()
 //            }
@@ -761,21 +761,21 @@
 //
 //
 //                }
-//              
-//                
+//
+//
 //                do{
 //                     let decoder = JSONDecoder()
 //                    self.model = try decoder.decode([getstatus].self, from: response.data!)
 //                  //  print(self.model![0].type! )
 //                    var titlearray = [String]()
 //                    var IDarray = [Int]()
-//                   
+//
 //                    if(self.subcatId == "34"){
 //                        for  i in (0 ..< self.model!.count){
 //                            titlearray.append(self.model?[i].type ?? "")
 //                            let id = Int((self.model?[i].id)!)
 //                            IDarray.append(id! )
-//                            
+//
 //                        }
 //                    } else{
 //                        for  i in (0 ..< self.model!.count){
@@ -783,20 +783,20 @@
 //                            titlearray = titlearray.filter { $0 != "Forward to Ramky" }
 //                            let id = Int((self.model?[i].id)!)
 //                            IDarray.append(id! )
-//                            
+//
 //                        }
 //                    }
-//                    
-//                   
-//                 
+//
+//
+//
 //                 //   print(IDarray)
-//                    
+//
 //                    DispatchQueue.main.async {
 //                        if  self.model?[0].status == "success"{
 //                            self.complaint_Text?.optionArray = titlearray
 //                            self.complaint_Text?.optionIds = IDarray
-//                            
-//                            
+//
+//
 //                        }else {
 //                            self.showAlert(message:(self.model?[0].status! ?? ""))
 //                       }
@@ -807,18 +807,18 @@
 //                break
 //            case .failure(let error):
 //                print(error)
-//                
+//
 //                break
-//                
-//                
+//
+//
 //            }
-//            
+//
 //        }
 //    }
 //   @objc func taponDropDown(){
-//    
+//
 //      complaint_Text.showList()
-//  
+//
 //    }
 //    func ConvertImageToBase64String (img: UIImage) -> String {
 //        return img.jpegData(compressionQuality: 1)?.base64EncodedString() ?? ""
@@ -880,7 +880,7 @@
 //                print("Cancelled")
 //
 //            }))
-//        
+//
 //        if let popoverController = controller.popoverPresentationController {
 //          popoverController.sourceView = self.view
 //          popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
@@ -934,7 +934,7 @@
 //
 //
 //               }
-//           
+//
 //
 //       }
 ////        ImagePickerManager().pickImage(self){
@@ -946,11 +946,11 @@
 ////
 ////
 ////        }
-//        
-//    
+//
+//
 //
 //    @IBAction func submitButtonAction(_ sender: Any) {
-//        
+//
 //      if  isdataValid(){
 //            if self.complaint_Text.text == "Forward to another ward"{
 //                if Reachability.isConnectedToNetwork(){
@@ -968,7 +968,7 @@
 //        }
 //    }
 //    func isdataValid()->Bool {
-//        
+//
 //
 //       if complaitTf.text?.count == 0{
 //            showAlert(message:complaint)
@@ -1006,7 +1006,7 @@
 //                showAlert(message:imageError)
 //                return false
 //            }
-//        
+//
 //        }
 //       else if description1.text.count == 0
 //       {
@@ -1035,7 +1035,7 @@
 //        case high    = 0.75
 //        case highest = 1
 //    }
-//    
+//
 //    /// Returns the data for the specified image in JPEG format.
 //    /// If the image object’s underlying image data has been purged, calling this function forces that data to be reloaded into memory.
 //    /// - returns: A data object containing the JPEG data, or nil if there was a problem generating the data. This function may return nil if the image has no data or if the underlying CGImageRef contains data in an unsupported bitmap format.
@@ -1044,7 +1044,7 @@
 //    }
 //}
 //extension TakeActionVC:UITextFieldDelegate {
-//    
+//
 //    func textFieldDidBeginEditing(_ textField: UITextField) {
 //       //complaint_Text?.showList()
 //        if textField == self.complaitTf{
@@ -1052,10 +1052,10 @@
 //        }else {
 //           self.ward_Name.showList()
 //        }
-//        
+//
 //    }
-//    
-//    
+//
+//
 //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 //        if textField == self.complaitTf{
 //            self.complaint_Text.showList()
@@ -1064,6 +1064,6 @@
 //        }
 //        return false
 //    }
-//    
-//    
+//
+//
 //}

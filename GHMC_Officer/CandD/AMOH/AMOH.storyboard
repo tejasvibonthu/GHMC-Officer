@@ -383,7 +383,7 @@
                                         </constraints>
                                         <state key="normal" title="Button" image="left_arrow"/>
                                         <connections>
-                                            <action selector="backBtnClick:" destination="zjN-II-dNI" eventType="touchUpInside" id="uGe-HQ-D0X"/>
+                                            <action selector="backBtnClick:" destination="zjN-II-dNI" eventType="touchUpInside" id="SEB-cX-5FU"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Home" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CBB-U5-SNd">
@@ -400,10 +400,11 @@
                                     <constraint firstItem="ppL-Iv-uBa" firstAttribute="leading" secondItem="EHV-HQ-GK6" secondAttribute="leading" constant="8" id="Zax-Aq-i1L"/>
                                     <constraint firstItem="CBB-U5-SNd" firstAttribute="centerX" secondItem="EHV-HQ-GK6" secondAttribute="centerX" id="aac-hD-tmr"/>
                                     <constraint firstAttribute="height" constant="50" id="gz8-va-NBL"/>
+                                    <constraint firstItem="ppL-Iv-uBa" firstAttribute="top" secondItem="EHV-HQ-GK6" secondAttribute="top" constant="10" id="l22-2B-opr"/>
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="TrJ-G6-jXN">
-                                <rect key="frame" x="10" y="269" width="355" height="290"/>
+                                <rect key="frame" x="10" y="269" width="355" height="350"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lTd-Og-DBF">
                                         <rect key="frame" x="0.0" y="0.0" width="355" height="50"/>
@@ -590,6 +591,34 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0n5-4E-zZ0">
+                                        <rect key="frame" x="0.0" y="300" width="355" height="50"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Raise Request" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WWC-6X-sRj">
+                                                <rect key="frame" x="16" y="16" width="323" height="18"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.30419234150000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="WWC-6X-sRj" firstAttribute="centerX" secondItem="0n5-4E-zZ0" secondAttribute="centerX" id="Ji6-al-Ujg"/>
+                                            <constraint firstItem="WWC-6X-sRj" firstAttribute="centerY" secondItem="0n5-4E-zZ0" secondAttribute="centerY" id="anM-ch-YFh"/>
+                                            <constraint firstItem="WWC-6X-sRj" firstAttribute="leading" secondItem="0n5-4E-zZ0" secondAttribute="leading" constant="16" id="zGe-H4-YfX"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColor ">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
                                 </subviews>
                             </stackView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appLogo" translatesAutoresizingMaskIntoConstraints="NO" id="6Sn-VT-9yD">
@@ -650,7 +679,7 @@
                         <outlet property="AmohClosedTicketsLB" destination="S1T-xB-Nsx" id="PAU-QU-ZsZ"/>
                         <outlet property="AmohClosedTicketsLBCount" destination="Rdr-wV-dg3" id="iw5-6h-CiF"/>
                         <outlet property="amohclosedView" destination="BNG-Oe-Tww" id="K6F-4C-RcS"/>
-                        <outlet property="backButton" destination="ppL-Iv-uBa" id="0Kl-B1-XYF"/>
+                        <outlet property="backButton" destination="ppL-Iv-uBa" id="A2g-Z5-NPr"/>
                         <outlet property="bgImg" destination="9Gj-sK-YsD" id="zwt-oC-7et"/>
                         <outlet property="concessionerClosedView" destination="Pfl-fq-ZUZ" id="zdT-3F-hLe"/>
                         <outlet property="conessionerRejectedView" destination="GkR-Ek-a0z" id="VQ1-Kh-aiw"/>
@@ -666,6 +695,7 @@
                         <outlet property="paymentConformationLB" destination="ScZ-cI-H0q" id="zr1-3q-B0i"/>
                         <outlet property="paymentConformationLBCount" destination="93r-US-Tsg" id="Csf-cU-2rh"/>
                         <outlet property="paymentConformationView" destination="Whh-OT-110" id="uCb-tX-yWZ"/>
+                        <outlet property="raiseEstimationView" destination="0n5-4E-zZ0" id="UuY-Hq-eFI"/>
                         <outlet property="usernameLB" destination="MN5-T7-mNz" id="FfB-bC-Oh6"/>
                     </connections>
                 </viewController>

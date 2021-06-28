@@ -1,19 +1,20 @@
 //
-//  VehicledataCell.swift
+//  TripsCell.swift
 //  GHMC_Officer
 //
-//  Created by Haritej on 28/05/21.
+//  Created by Haritej on 27/06/21.
 //  Copyright © 2021 IOSuser3. All rights reserved.
 //
 
 import UIKit
 
-class VehicledataCell: UITableViewCell {
-    @IBOutlet weak var driverNameTf: UITextField!
-    @IBOutlet weak var vehicleNoTf: UITextField!
-    @IBOutlet weak var mobileNameTf: UITextField!
-    @IBOutlet weak var nooftripsTf: UITextField!
-    @IBOutlet weak var vehicleType: UIButton!
+class TripsCell: UITableViewCell {
+    @IBOutlet weak var vehicleNumLb: UILabel!
+    @IBOutlet weak var typeofVehicleLb: UILabel!
+    @IBOutlet weak var driverNameLb: UILabel!
+    @IBOutlet weak var mobileNumberLb: UILabel!
+    @IBOutlet weak var supervisorNameLb: UILabel!
+    @IBOutlet weak var supervisorNoLB: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

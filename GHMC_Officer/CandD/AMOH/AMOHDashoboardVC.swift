@@ -24,6 +24,7 @@ class AMOHDashoboardVC: UIViewController {
     @IBOutlet weak var paymentConformationView: UIView!
     @IBOutlet weak var conessionerRejectedView: UIView!
     @IBOutlet weak var concessionerClosedView: UIView!
+    @IBOutlet weak var raiseEstimationView: UIView!
     @IBOutlet weak var amohclosedView: UIView!
     @IBOutlet weak var usernameLB: UILabel!
     @IBOutlet weak var designationLB: UILabel!
@@ -33,7 +34,6 @@ class AMOHDashoboardVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        backButton.isHidden = true
         self.usernameLB.text = UserDefaultVars.empName
         self.designationLB.text = UserDefaultVars.designation
         self.mobileNumberLB.text = UserDefaultVars.mobileNumber
@@ -53,6 +53,9 @@ class AMOHDashoboardVC: UIViewController {
         
         let AmohClosedTickets = UITapGestureRecognizer(target: self, action:#selector(self.taponAmohClosedTickets))
         amohclosedView.addGestureRecognizer(AmohClosedTickets)
+        
+        let raiseRequset = UITapGestureRecognizer(target: self, action:#selector(self.tapOnraiseEstimation))
+        raiseEstimationView.addGestureRecognizer(raiseRequset)
     }
     
     @IBAction func backBtnClick(_ sender: Any) {
@@ -85,6 +88,13 @@ class AMOHDashoboardVC: UIViewController {
     @objc func taponAmohClosedTickets(){
      
      }
+    @objc func tapOnraiseEstimation(){
+        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "RequestEstimationVC")as! RequestEstimationVC
+//        vc.ticketDetails = details
+       vc.tag = 5
+       // print(ticketIdLb)
+        self.navigationController?.pushViewController(vc, animated:true)
+    }
     func GetAmohDashboardcounts(){
         let params = ["EMPLOYEE_ID" : UserDefaultVars.empId,
                       "DEVICEID" :deviceId,

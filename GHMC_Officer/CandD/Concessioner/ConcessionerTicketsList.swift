@@ -12,6 +12,7 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
     @IBOutlet weak var bg: UIImageView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    var tag:Int?
     var requestListModel:ConcessionerTicketsListStruct?
     var tableviewDatasource:[ConcessionerTicketsListStruct.TicketList]?
     override func viewDidLoad() {
@@ -19,15 +20,23 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
-        self.getRequestListWS()
+        // Concessionerticketsist
+        if tag == 0 {
+            self.getRequestListWS()
+        }  else if tag == 1 {
+            //self.getRequestListWS()
+        }
+    }
+    
+    @IBAction func backBtnClick(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
     }
     func getRequestListWS(){
-       let params = ["EMPLOYEE_ID":UserDefaultVars.empId,
+       let params = ["EMPLOYEE_ID":"942",
                        "DEVICEID":deviceId,
                        "TOKEN_ID":UserDefaultVars.token
         ]
         print(params)
-        
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
         NetworkRequest.makeRequest(type: ConcessionerTicketsListStruct.self, urlRequest: Router.getConcessionerTickets(Parameters: params)) { [weak self](result) in
             switch result
@@ -63,12 +72,10 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
                 }
             }
         }
-        
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableviewDatasource?.count ?? 0
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ConcessionerTicketscell") as! ConcessionerTicketscell
         let details = tableviewDatasource?[indexPath.row]
@@ -82,15 +89,21 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)  {
         let details = tableviewDatasource?[indexPath.row]
+        if tag == 0 {
+            let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerRequest") as! ConcessionerRequest
+            vc.date = details?.createdDate
+            vc.zone = details?.zoneName
+            vc.circle = details?.circleName
+            vc.ward = details?.wardName
+            vc.location = details?.location
+            vc.grievanceId = details?.ticketID
+            self.navigationController?.pushViewController(vc, animated:true)
+        } else if tag == 1 {
+            let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerpickupCaptureVC") as! ConcessionerpickupCaptureVC
+            self.navigationController?.pushViewController(vc, animated:true)
+        }
 
-        let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerRequest") as! ConcessionerRequest
-        vc.date = details?.createdDate
-        vc.zone = details?.zoneName
-        vc.circle = details?.circleName
-        vc.ward = details?.wardName
-        vc.location = details?.location
-        vc.grievanceId = details?.ticketID
-        self.navigationController?.pushViewController(vc, animated:true)
+        
         // print(ticketIdLb)
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

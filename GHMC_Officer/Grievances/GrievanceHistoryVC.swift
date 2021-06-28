@@ -45,8 +45,8 @@ class GrievanceHistoryVC: UIViewController {
     }
     @IBAction func take_Action(_ sender: Any) {
         if(modeId == "15"){
-//            let vc = storyboards.Complaints.instance.instantiateViewController(withIdentifier:"TakeActionNewNMOSVC") as! TakeActionNewNMOSVC
-//            self.navigationController?.pushViewController(vc, animated:true)
+////            let vc = storyboards.Complaints.instance.instantiateViewController(withIdentifier:"TakeActionNewNMOSVC") as! TakeActionNewNMOSVC
+////            self.navigationController?.pushViewController(vc, animated:true)
         } else{
             let vc = storyboards.Complaints.instance.instantiateViewController(withIdentifier:"TakesactionVC") as! TakesactionVC
             vc.myComplaintId = complaintId
