@@ -319,39 +319,48 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)  {
-        //no of requests
-        if tag == 0 {
+        switch tag {
+        case 0:
             let details = tableviewnoofReqDatasource?[indexPath.row]
             guard let ticketIdLb = details?.tokenID else { return  }
             getRequestDetailsWS(ticketID: ticketIdLb)
-        }
-        //paymentConformation
-        else if tag == 1  {
+        case 1:
             let details = tableviewPaymentDatasource?[indexPath.row]
             let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "RequestEstimationVC")as! RequestEstimationVC
             vc.ticketDetails = details
             vc.tag = 1
-           // print(ticketIdLb)
+            // print(ticketIdLb)
             self.navigationController?.pushViewController(vc, animated:true)
-        }//concessionerRejected
-        else if tag == 2{
+        case 2:
             let details = tableviewDatasource?[indexPath.row]
             let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejcetorassignTicketVC")as! ConcessionerRejcetorassignTicketVC
             vc.ticketDetails = details
-           // print(ticketIdLb)
-            self.navigationController?.pushViewController(vc, animated:true)        }
+            // print(ticketIdLb)
+            self.navigationController?.pushViewController(vc, animated:true)
+        case 3: //ConcessionerCloseTicketDetails
+           // let details = tableviewDatasource?[indexPath.row]
+            let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerCloseTicketDetailsVc")as! ConcessionerCloseTicketDetailsVc
+           // vc.ticketDetails = details
+            // print(ticketIdLb)
+            self.navigationController?.pushViewController(vc, animated:true)
+        default:
+            break
+        }
         
        // print(ticketIdLb)
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         let searchString = searchText
         if searchText == ""{
-            if tag == 0{
+            switch tag {
+            case 0:
                 self.tableviewnoofReqDatasource = self.requestListModel?.amohList
-            }else if tag == 1{
+            case 1:
                 self.tableviewPaymentDatasource = self.paymentComformListModel?.paidList
-            } else if tag == 2{
+            case 2:
                 self.tableviewDatasource = self.rejectListModel?.ticketsList
+            default:
+                break
             }
         } else{
             if searchString != "", searchString.count > 0 {

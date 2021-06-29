@@ -84,6 +84,9 @@
 		650B31FE268454A600038149 /* RequestLists.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650B31FD268454A600038149 /* RequestLists.swift */; };
 		650B32682684B94700038149 /* ConcessionerDasboardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650B32672684B94700038149 /* ConcessionerDasboardVC.swift */; };
 		651032B5260DF98800FFC7AC /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651032B4260DF98800FFC7AC /* Router.swift */; };
+		651482C0268AECA3005F0891 /* ConcessionerCloseTicketTBCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651482BF268AECA3005F0891 /* ConcessionerCloseTicketTBCell.swift */; };
+		651482C3268AED0F005F0891 /* ConcessionerCloseTicketDetailsVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651482C2268AED0F005F0891 /* ConcessionerCloseTicketDetailsVc.swift */; };
+		651482C6268B114B005F0891 /* RaiseRequestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651482C5268B114B005F0891 /* RaiseRequestVC.swift */; };
 		6522C3BC2686F87E001FC83B /* ConcessionerRejcetorassignTicketVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6522C3BB2686F87E001FC83B /* ConcessionerRejcetorassignTicketVC.swift */; };
 		6534972A262D49DD00E25248 /* TakesactionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65349729262D49DD00E25248 /* TakesactionVC.swift */; };
 		6543861B2614437100512F12 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6543861A2614437100512F12 /* Extensions.swift */; };
@@ -200,6 +203,9 @@
 		650B31FD268454A600038149 /* RequestLists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestLists.swift; sourceTree = "<group>"; };
 		650B32672684B94700038149 /* ConcessionerDasboardVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcessionerDasboardVC.swift; sourceTree = "<group>"; };
 		651032B4260DF98800FFC7AC /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		651482BF268AECA3005F0891 /* ConcessionerCloseTicketTBCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcessionerCloseTicketTBCell.swift; sourceTree = "<group>"; };
+		651482C2268AED0F005F0891 /* ConcessionerCloseTicketDetailsVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcessionerCloseTicketDetailsVc.swift; sourceTree = "<group>"; };
+		651482C5268B114B005F0891 /* RaiseRequestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaiseRequestVC.swift; sourceTree = "<group>"; };
 		6522C3BB2686F87E001FC83B /* ConcessionerRejcetorassignTicketVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcessionerRejcetorassignTicketVC.swift; sourceTree = "<group>"; };
 		65349729262D49DD00E25248 /* TakesactionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakesactionVC.swift; sourceTree = "<group>"; };
 		6543861A2614437100512F12 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -470,6 +476,9 @@
 				650B31FA2684546600038149 /* RequestsListCell.swift */,
 				65C5C9612620585800DDF6A1 /* RequestEstimationVC.swift */,
 				6522C3BB2686F87E001FC83B /* ConcessionerRejcetorassignTicketVC.swift */,
+				651482BF268AECA3005F0891 /* ConcessionerCloseTicketTBCell.swift */,
+				651482C2268AED0F005F0891 /* ConcessionerCloseTicketDetailsVc.swift */,
+				651482C5268B114B005F0891 /* RaiseRequestVC.swift */,
 			);
 			path = AMOH;
 			sourceTree = "<group>";
@@ -667,6 +676,7 @@
 				0E60822B23210EAB000E45E3 /* OtpViewController.swift in Sources */,
 				BEF2214B265F842B000E0A4F /* ConcessionerRequest.swift in Sources */,
 				0E124EA82323B0F600615D91 /* MenuViewController.swift in Sources */,
+				651482C6268B114B005F0891 /* RaiseRequestVC.swift in Sources */,
 				0E09E918232BB0F40039CF86 /* GrivenceHistoryTableViewCell.swift in Sources */,
 				0E08A5482334F08D002F4FC2 /* ViewcommentsVc.swift in Sources */,
 				650B31FB2684546600038149 /* RequestsListCell.swift in Sources */,
@@ -695,6 +705,7 @@
 				0E65A16C24571A1A00DC0BCB /* CustomisedUI.swift in Sources */,
 				0E8F31AB2323CA1700884F0B /* HomeTableViewCell.swift in Sources */,
 				0E1018722364228700EA131A /* HodlingDeatilsViewController.swift in Sources */,
+				651482C3268AED0F005F0891 /* ConcessionerCloseTicketDetailsVc.swift in Sources */,
 				0E60822523210E0F000E45E3 /* Storyboard.swift in Sources */,
 				0E09E916232BA69A0039CF86 /* GrievanceHistoryVC.swift in Sources */,
 				0E0E7B752333843B00C190A5 /* photViewController.swift in Sources */,
@@ -714,6 +725,7 @@
 				650B31FE268454A600038149 /* RequestLists.swift in Sources */,
 				0EC7B40D2462D8600001D578 /* GrievanceCategoryListCell.swift in Sources */,
 				0E09E910232B73400039CF86 /* FullGrivenceDetails.swift in Sources */,
+				651482C0268AECA3005F0891 /* ConcessionerCloseTicketTBCell.swift in Sources */,
 				651032B5260DF98800FFC7AC /* Router.swift in Sources */,
 				BEF221512661152A000E0A4F /* VehicledataCell.swift in Sources */,
 				0E760D90232389CE0062C32F /* UpdateMpinViewController.swift in Sources */,
