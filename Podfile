@@ -10,7 +10,6 @@ pod 'SkyFloatingLabelTextField', '~> 2.0.0'
 pod 'PinCodeTextField'
 pod 'Alamofire', '~> 4.5'
 pod 'SwiftMessages'
-pod 'DropDown'
 pod 'PKHUD', '~> 5.0'
 pod 'TextFieldEffects'
 pod 'IQKeyboardManagerSwift'
@@ -21,6 +20,7 @@ pod 'Firebase/Messaging'
 pod 'SDWebImage'
 pod 'GoogleMaps'
 pod 'GrowingTextView', '0.7.2'
+pod 'DropDown'
 
 
 

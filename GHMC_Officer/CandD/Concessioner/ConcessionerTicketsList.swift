@@ -32,10 +32,9 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
         self.navigationController?.popViewController(animated: true)
     }
     func getRequestListWS(){
-       let params = ["EMPLOYEE_ID":"942",
+        let params = ["EMPLOYEE_ID":UserDefaultVars.empId,
                        "DEVICEID":deviceId,
-                       "TOKEN_ID":UserDefaultVars.token
-        ]
+                       "TOKEN_ID":UserDefaultVars.token]
         print(params)
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
         NetworkRequest.makeRequest(type: ConcessionerTicketsListStruct.self, urlRequest: Router.getConcessionerTickets(Parameters: params)) { [weak self](result) in
@@ -102,8 +101,6 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
             let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerpickupCaptureVC") as! ConcessionerpickupCaptureVC
             self.navigationController?.pushViewController(vc, animated:true)
         }
-
-        
         // print(ticketIdLb)
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

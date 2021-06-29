@@ -94,6 +94,11 @@
 		65C5C96626205DFD00DDF6A1 /* AMOH.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C5C96526205DFD00DDF6A1 /* AMOH.storyboard */; };
 		65F9A8EA260DC122006015A4 /* PdfVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F9A8E9260DC122006015A4 /* PdfVC.swift */; };
 		65FDD72B260F0707006CC14C /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FDD72A260F0707006CC14C /* Utility.swift */; };
+		BE6D090B2688B81D008B6928 /* Operator.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE6D090A2688B81D008B6928 /* Operator.storyboard */; };
+		BE6D090F2688B922008B6928 /* TripsatPlantVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6D090E2688B922008B6928 /* TripsatPlantVC.swift */; };
+		BE6D09122688BEAD008B6928 /* TripsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6D09112688BEAD008B6928 /* TripsCell.swift */; };
+		BE6D09152688CD26008B6928 /* PickupSlipDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6D09142688CD26008B6928 /* PickupSlipDetailsVC.swift */; };
+		BE6D093A2688F9AC008B6928 /* ConcessionerpickupCaptureVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6D09392688F9AC008B6928 /* ConcessionerpickupCaptureVC.swift */; };
 		BEA2C474265B77A200232217 /* Concessioner.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BEA2C473265B77A200232217 /* Concessioner.storyboard */; };
 		BEA2C477265B788D00232217 /* ConcessionerTicketsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA2C476265B788D00232217 /* ConcessionerTicketsList.swift */; };
 		BEA2C47A265B78FD00232217 /* ConcessionerTicketscell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA2C479265B78FD00232217 /* ConcessionerTicketscell.swift */; };
@@ -207,6 +212,11 @@
 		65FDD72A260F0707006CC14C /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		7D98C4760CFB8CA1166AB003 /* Pods-GHMC_Officer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GHMC_Officer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GHMC_Officer/Pods-GHMC_Officer.debug.xcconfig"; sourceTree = "<group>"; };
 		B7427FA7A98E76B1A1C70844 /* Pods-GHMC_Officer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GHMC_Officer.release.xcconfig"; path = "Pods/Target Support Files/Pods-GHMC_Officer/Pods-GHMC_Officer.release.xcconfig"; sourceTree = "<group>"; };
+		BE6D090A2688B81D008B6928 /* Operator.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Operator.storyboard; sourceTree = "<group>"; };
+		BE6D090E2688B922008B6928 /* TripsatPlantVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripsatPlantVC.swift; sourceTree = "<group>"; };
+		BE6D09112688BEAD008B6928 /* TripsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripsCell.swift; sourceTree = "<group>"; };
+		BE6D09142688CD26008B6928 /* PickupSlipDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupSlipDetailsVC.swift; sourceTree = "<group>"; };
+		BE6D09392688F9AC008B6928 /* ConcessionerpickupCaptureVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcessionerpickupCaptureVC.swift; sourceTree = "<group>"; };
 		BEA2C473265B77A200232217 /* Concessioner.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Concessioner.storyboard; sourceTree = "<group>"; };
 		BEA2C476265B788D00232217 /* ConcessionerTicketsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcessionerTicketsList.swift; sourceTree = "<group>"; };
 		BEA2C479265B78FD00232217 /* ConcessionerTicketscell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcessionerTicketscell.swift; sourceTree = "<group>"; };
@@ -350,6 +360,7 @@
 		65C5C95A26204C0800DDF6A1 /* CandD */ = {
 			isa = PBXGroup;
 			children = (
+				BE6D09092688B6B1008B6928 /* Operator */,
 				BEA2C472265B774400232217 /* Concessioner */,
 				BEA2C471265B770400232217 /* AMOH */,
 			);
@@ -439,6 +450,17 @@
 			path = PhotoorPdfDisplay;
 			sourceTree = "<group>";
 		};
+		BE6D09092688B6B1008B6928 /* Operator */ = {
+			isa = PBXGroup;
+			children = (
+				BE6D090A2688B81D008B6928 /* Operator.storyboard */,
+				BE6D090E2688B922008B6928 /* TripsatPlantVC.swift */,
+				BE6D09112688BEAD008B6928 /* TripsCell.swift */,
+				BE6D09142688CD26008B6928 /* PickupSlipDetailsVC.swift */,
+			);
+			path = Operator;
+			sourceTree = "<group>";
+		};
 		BEA2C471265B770400232217 /* AMOH */ = {
 			isa = PBXGroup;
 			children = (
@@ -462,6 +484,7 @@
 				BEF2214A265F842B000E0A4F /* ConcessionerRequest.swift */,
 				BEF2214D266114A8000E0A4F /* VehicleDataVC.swift */,
 				BEF221502661152A000E0A4F /* VehicledataCell.swift */,
+				BE6D09392688F9AC008B6928 /* ConcessionerpickupCaptureVC.swift */,
 			);
 			path = Concessioner;
 			sourceTree = "<group>";
@@ -549,6 +572,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				65C5C96626205DFD00DDF6A1 /* AMOH.storyboard in Resources */,
+				BE6D090B2688B81D008B6928 /* Operator.storyboard in Resources */,
 				0E101C732361B5A100210FBC /* XMLDictionary in Resources */,
 				0EA6D68523544FFE00BD742E /* HoardingInfo.storyboard in Resources */,
 				0E089D64231FC8DE0021F48E /* LaunchScreen.storyboard in Resources */,
@@ -630,6 +654,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0E07334E2338E4970029139A /* ThemesVC.swift in Sources */,
+				BE6D09152688CD26008B6928 /* PickupSlipDetailsVC.swift in Sources */,
 				0EC7B40B2462D7160001D578 /* GrievanceCategoryListVC.swift in Sources */,
 				0E07334A233889480029139A /* AbstarctReport.swift in Sources */,
 				6534972A262D49DD00E25248 /* TakesactionVC.swift in Sources */,
@@ -654,6 +679,7 @@
 				657DF75A262ABAF400418354 /* AMOHDashoboardVC.swift in Sources */,
 				650B32682684B94700038149 /* ConcessionerDasboardVC.swift in Sources */,
 				0E101C6F23616F3F00210FBC /* HoldingsNearMeViewController.swift in Sources */,
+				BE6D09122688BEAD008B6928 /* TripsCell.swift in Sources */,
 				0E08A54E2334FD4B002F4FC2 /* AbstarctTableViewCell.swift in Sources */,
 				0E089F4A2326511B00890052 /* UserListTableViewCell.swift in Sources */,
 				0E089F4C2326533F00890052 /* UserListVC.swift in Sources */,
@@ -662,6 +688,7 @@
 				0E5F9DFA246E87880032EA78 /* CheckStatusListVC.swift in Sources */,
 				65C5C932262041B300DDF6A1 /* LaunchViewController.swift in Sources */,
 				0EC7B4132463D23F0001D578 /* GrievancePostComplaintVC.swift in Sources */,
+				BE6D093A2688F9AC008B6928 /* ConcessionerpickupCaptureVC.swift in Sources */,
 				0E07334C2338CE220029139A /* NotificationData.swift in Sources */,
 				0E0F29442336113C007E4034 /* NotificationsVC.swift in Sources */,
 				0E3DD4B12473B44D0027037E /* PostCommentVC.swift in Sources */,
@@ -691,6 +718,7 @@
 				BEF221512661152A000E0A4F /* VehicledataCell.swift in Sources */,
 				0E760D90232389CE0062C32F /* UpdateMpinViewController.swift in Sources */,
 				BEA2C477265B788D00232217 /* ConcessionerTicketsList.swift in Sources */,
+				BE6D090F2688B922008B6928 /* TripsatPlantVC.swift in Sources */,
 				0E110DFB23322E8B00B78C20 /* AbstarctVC.swift in Sources */,
 				0E10187623642A7100EA131A /* PaymentDetailsTableViewCell.swift in Sources */,
 				0E09E912232B73660039CF86 /* FullGrivenceTableViewCell.swift in Sources */,
