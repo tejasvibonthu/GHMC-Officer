@@ -108,15 +108,20 @@ enum Router:URLRequestConvertible{
     case getVehicleData
     case getAmohDashboardList(Parameters:Parameters)
     case submitAMohReq(Parameters:Parameters)
-    case submitPaymentReq(Parameters:Parameters)
+    case forwordtoConcessioner(Parameters:Parameters)
     case getConcessionerRejectList(Parameters:Parameters)
     case getPaymentConformedList(Parameters:Parameters)
     case concessionerReassignstatus(Parameters:Parameters)
     case raiseRequest(Parameters:Parameters)
+    case DemoGraphics(Parameters:Parameters)
     //Concessioner
     case getConcessionerTickets(Parameters:Parameters)
     case submitConcessionerReq(Parameters:Parameters)
     case getConcessionerDashboardList(Parameters:Parameters)
+    case getPickupCaptureTickets(Parameters:Parameters)
+    //Operator
+    case gettripsAtPlant(Parameters:Parameters)
+    case tripSubmit(Parameters:Parameters)
 
 
     
@@ -138,7 +143,7 @@ enum Router:URLRequestConvertible{
             return .get
         case .resendOtp:
             return .post
-        case .getAllCount,.userList,.userDetails,.fullGrievence,.grivenceHistory,.getstatusType,.getWard,.getClaimtStatus,.forwordtoAnotherWard,.updateGrivence,.abstarctReport,.showNotifications,.getGrievanceTypeList,.getCategoryTypeList,.getViewGrievances,.getGrievanceStatusCitizen,.reopenserviceCall,.postcommentService,.postFeedback,.getRamkeyVehicles, .versionCheck,.GrievancesCategoryList,.whereIam,.insertGrievance,.getAMOHRequestList,.getAMOHRequestEstimation,.calculateAmountbyTons,.getAmohDashboardList,.getConcessionerTickets,.submitConcessionerReq,.submitAMohReq,.getConcessionerRejectList,.getPaymentConformedList,.submitPaymentReq,.concessionerReassignstatus,.getConcessionerDashboardList,.raiseRequest:
+        case .getAllCount,.userList,.userDetails,.fullGrievence,.grivenceHistory,.getstatusType,.getWard,.getClaimtStatus,.forwordtoAnotherWard,.updateGrivence,.abstarctReport,.showNotifications,.getGrievanceTypeList,.getCategoryTypeList,.getViewGrievances,.getGrievanceStatusCitizen,.reopenserviceCall,.postcommentService,.postFeedback,.getRamkeyVehicles, .versionCheck,.GrievancesCategoryList,.whereIam,.insertGrievance,.getAMOHRequestList,.getAMOHRequestEstimation,.calculateAmountbyTons,.getAmohDashboardList,.getConcessionerTickets,.submitConcessionerReq,.submitAMohReq,.getConcessionerRejectList,.getPaymentConformedList,.forwordtoConcessioner,.concessionerReassignstatus,.getConcessionerDashboardList,.raiseRequest,.DemoGraphics,.getPickupCaptureTickets,.gettripsAtPlant,.tripSubmit:
             return .post
         }
     }
@@ -231,14 +236,22 @@ enum Router:URLRequestConvertible{
             return "CONCESSIONER_REJECTED_TICKETS_LIST"
         case .getPaymentConformedList:
             return "GET_AMOH_AMOUNT_PAID_LIST"
-        case .submitPaymentReq:
-            return ""
+        case .forwordtoConcessioner:
+            return "AMOH_RAISE_REQUEST_SUBMIT"
         case .raiseRequest:
-            return ""
+            return "AMOH_RAISE_GRIEVANCE_SUBMIT"
         case .concessionerReassignstatus:
             return "AMOH_REASSIGN_CONCESSIONER_REJECTED_TICKETS"
         case .getConcessionerDashboardList:
             return "GET_CONCESSIONER_DASHBOARD_LIST"
+        case .DemoGraphics:
+            return "GET_DEMOGRAPHICS"
+        case .getPickupCaptureTickets:
+            return "GET_CONCESSIONER_PICKUP_CAPTURE_LIST"
+        case .gettripsAtPlant:
+            return "GET_OPERATOR_VEHICLE_TRIP"
+        case .tripSubmit:
+            return "OPERATOR_TRIP_PLANT_SUBMIT"
         }
     }
     func asURLRequest() throws -> URLRequest {
@@ -390,7 +403,7 @@ enum Router:URLRequestConvertible{
         case .getPaymentConformedList(let parameters):
             urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
             print(urlRequest)
-        case .submitPaymentReq(let parameters):
+        case .forwordtoConcessioner(let parameters):
             urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
             print(urlRequest)
         case .concessionerReassignstatus(let parameters):
@@ -402,7 +415,16 @@ enum Router:URLRequestConvertible{
         case .raiseRequest(let parameters):
             urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
             print(urlRequest)
+        case .DemoGraphics(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+        case .getPickupCaptureTickets(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+        case .gettripsAtPlant(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+        case .tripSubmit(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
             }
+        
        
         
         return urlRequest

@@ -21,24 +21,86 @@ class PickupSlipDetailsVC: UIViewController {
     @IBOutlet weak var grosswtTF: UITextField!
     @IBOutlet weak var tarewtTF: UITextField!
     @IBOutlet weak var netwtLb: UITextField!
+    var tripDetails:GetTripsatPlantStruct.OperatorVehicleList?
     override func viewDidLoad() {
         super.viewDidLoad()
+        driverNameLb.text = tripDetails?.driverName
+        vehicleNumLb.text = tripDetails?.vehicleNumber
+        zoneLb.text = tripDetails?.zone
+        circleLb.text = tripDetails?.circle
+        wardLb.text = tripDetails?.ward
+        wastetypeLb.text = "UnClaimed"
     }
     
     @IBAction func backClick(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
     @IBAction func submitClick(_ sender: Any) {
+        if validation(){
+            tripdetailsSubmitWS()
+        }
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func tripdetailsSubmitWS(){
+        let params = [
+            "CNDW_GRIEVANCE_ID": tripDetails?.cndwGrievancesID ?? "" ,
+            "DEVICEID": deviceId,
+            "TOKEN_ID": UserDefaultVars.token,
+            "EMPLOYEE_ID": UserDefaultVars.empId,
+            "VEHICLE_NUMBER": tripDetails?.vehicleNumber ?? "",
+            "GROSS_WT": grosswtTF.text ?? "",
+            "TARE_WT": tarewtTF.text ?? "",
+            "NET_WT": netwtLb.text ?? ""
+        ]as [String : Any]
+        print(params)
+    guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+    NetworkRequest.makeRequest(type: TripSubmitStruct.self, urlRequest: Router.tripSubmit(Parameters: params)) { [weak self](result) in
+            switch result {
+            case .success(let resp):
+                print(resp)
+                if resp.statusCode == "600"{
+                    self?.showCustomAlert(message: resp.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
+                if resp.statusCode == "200"
+                {
+                    self?.showAlert(message: resp.statusMessage ?? ""){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+                else
+                {
+                    self?.showAlert(message: resp.statusMessage ?? "" )
+                }
+            case .failure(let err):
+                print(err)
+                self?.showAlert(message: err.localizedDescription)
+            }
+        }
     }
-    */
 
+    func validation() -> Bool{
+        if grosswtTF.text == "" {
+            showAlert(message: "Please enter gross weight")
+            return false
+        }else if tarewtTF.text == "" {
+            showAlert(message: "Please enter tare weight")
+            return false
+        }else if netwtLb.text == "" {
+            showAlert(message: "Please enter net weight")
+            return false
+        }
+        return true
+    }
+}
+// MARK: - TripSubmitStruct
+struct TripSubmitStruct: Codable {
+    let statusCode, statusMessage, cndwGrievanceID: String?
+
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "STATUS_CODE"
+        case statusMessage = "STATUS_MESSAGE"
+        case cndwGrievanceID = "CNDW_GRIEVANCE_ID"
+    }
 }

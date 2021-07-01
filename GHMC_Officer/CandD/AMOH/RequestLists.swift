@@ -58,8 +58,9 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                 self?.requestListModel = getList
                 self?.tableviewnoofReqDatasource = self?.requestListModel?.amohList
                 if getList.statusCode == "600"{
-                    self?.showCustomAlert(message: getList.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                    self?.showAlert(message: getList.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
                     }
                 }
                 if getList.statusCode == "200"{
@@ -104,8 +105,9 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                 self?.tableviewPaymentDatasource = self?.paymentComformListModel?
                     .paidList
                 if getList.statusCode == "600"{
-                    self?.showCustomAlert(message: getList.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                    self?.showAlert(message: getList.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
                     }
                 }
                 if getList.statusCode == "200"{
@@ -134,7 +136,7 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
     }
     func getConcessionerRejectListWS(){
         let params = ["AMOH_EMP_ID": UserDefaultVars.empId,
-                      "AMOH_EMP_WARD_ID": "105",
+                      "AMOH_EMP_WARD_ID": "",
                       "DEVICEID": deviceId,
                       "TOKEN_ID": UserDefaultVars.token
         ]
@@ -148,8 +150,9 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                 self?.rejectListModel = getList
                 self?.tableviewDatasource = self?.rejectListModel?.ticketsList
                 if getList.statusCode == "600"{
-                    self?.showCustomAlert(message: getList.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                    self?.showAlert(message: getList.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
                     }
                 }
                 if getList.statusCode == "200"{
@@ -193,8 +196,9 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                 self?.rejectListModel = getList
                 self?.tableviewDatasource = self?.rejectListModel?.ticketsList
                 if getList.statusCode == "600"{
-                    self?.showCustomAlert(message: getList.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                    self?.showAlert(message: getList.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
                     }
                 }
                 if getList.statusCode == "200"{
@@ -237,8 +241,9 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
               //  print(getList)
                 self?.estimationDetailsModel = getDetails
                 if getDetails.statusCode == "600"{
-                    self?.showCustomAlert(message: getDetails.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                    self?.showAlert(message: getDetails.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
                     }
                 }
                 if getDetails.statusCode == "200"{
@@ -326,9 +331,9 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             getRequestDetailsWS(ticketID: ticketIdLb)
         case 1:
             let details = tableviewPaymentDatasource?[indexPath.row]
-            let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "RequestEstimationVC")as! RequestEstimationVC
+            let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ForwordtoConcessioner")as! ForwordtoConcessioner
             vc.ticketDetails = details
-            vc.tag = 1
+//            vc.tag = 1
             // print(ticketIdLb)
             self.navigationController?.pushViewController(vc, animated:true)
         case 2:
@@ -406,48 +411,6 @@ struct RequestListStruct: Codable {
         }
     }
 }
-
-// MARK: - GetPaidListStruct
-struct GetPaidListStruct: Codable {
-    let statusCode, statusMessage: String?
-    let paidList: [PaidList]?
-
-    enum CodingKeys: String, CodingKey {
-        case statusCode = "STATUS_CODE"
-        case statusMessage = "STATUS_MESSAGE"
-        case paidList = "PaidList"
-    }
-    // MARK: - PaidList
-    struct PaidList: Codable {
-        let ticketID, location, createdDate, estWt: String?
-        let paymentStatus, wardID, wardName, circleID: String?
-        let circleName, zoneID, zoneName, landmark: String?
-        let vehicleType: String?
-        let image1Path: String?
-        let noOfVehicles, status: String?
-
-        enum CodingKeys: String, CodingKey {
-            case ticketID = "TICKET_ID"
-            case location = "LOCATION"
-            case createdDate = "CREATED_DATE"
-            case estWt = "EST_WT"
-            case paymentStatus = "PAYMENT_STATUS"
-            case wardID = "WARD_ID"
-            case wardName = "WARD_NAME"
-            case circleID = "CIRCLE_ID"
-            case circleName = "CIRCLE_NAME"
-            case zoneID = "ZONE_ID"
-            case zoneName = "ZONE_NAME"
-            case landmark = "LANDMARK"
-            case vehicleType = "VEHICLE_TYPE"
-            case image1Path = "IMAGE1_PATH"
-            case noOfVehicles = "NO_OF_VEHICLES"
-            case status = "STATUS"
-        }
-    }
-}
-
-
 // MARK: - RequestListStruct
 struct ConcessionerRejectListStruct: Codable {
     let statusCode, statusMessage: String?
@@ -499,3 +462,44 @@ struct RequestEstimationStruct: Codable {
     }
 }
 
+
+// MARK: - GetPaidListStruct
+struct GetPaidListStruct: Codable {
+    let statusCode, statusMessage: String?
+    let paidList: [PaidList]?
+
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "STATUS_CODE"
+        case statusMessage = "STATUS_MESSAGE"
+        case paidList = "PaidList"
+    }
+    // MARK: - PaidList
+    struct PaidList: Codable {
+        let ticketID, location, createdDate, estWt: String?
+        let paymentStatus, wardID, wardName, circleID: String?
+        let circleName, zoneID, zoneName, landmark: String?
+        let vehicleType,vehicletypeId: String?
+        let image1Path: String?
+        let noOfVehicles, status: String?
+
+        enum CodingKeys: String, CodingKey {
+            case ticketID = "TICKET_ID"
+            case location = "LOCATION"
+            case createdDate = "CREATED_DATE"
+            case estWt = "EST_WT"
+            case paymentStatus = "PAYMENT_STATUS"
+            case wardID = "WARD_ID"
+            case wardName = "WARD_NAME"
+            case circleID = "CIRCLE_ID"
+            case circleName = "CIRCLE_NAME"
+            case zoneID = "ZONE_ID"
+            case zoneName = "ZONE_NAME"
+            case landmark = "LANDMARK"
+            case vehicleType = "VEHICLE_TYPE"
+            case image1Path = "IMAGE1_PATH"
+            case noOfVehicles = "NO_OF_VEHICLES"
+            case status = "STATUS"
+            case vehicletypeId = "VEHICLE_TYPE_ID"
+        }
+    }
+}

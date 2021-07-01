@@ -15,6 +15,8 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
     var tag:Int?
     var requestListModel:ConcessionerTicketsListStruct?
     var tableviewDatasource:[ConcessionerTicketsListStruct.TicketList]?
+    var pickupcapturelistModel:PickupcaptureListStruct?
+    var pickuplisttableviewDatasource:[PickupcaptureListStruct.TicketList]?
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -23,8 +25,9 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
         // Concessionerticketsist
         if tag == 0 {
             self.getRequestListWS()
+        //pickupcapturelist
         }  else if tag == 1 {
-            //self.getRequestListWS()
+            self.getpickupcaptureList()
         }
     }
     
@@ -44,6 +47,12 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
                 print(getList)
                 self?.requestListModel = getList
                 self?.tableviewDatasource = self?.requestListModel?.ticketList
+                if getList.statusCode == "600"{
+                    self?.showCustomAlert(message: getList.statusMessage){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
                 if getList.statusCode == "200"{
                     if getList.ticketList?.isEmpty == true {
                         self?.showAlert(message: "No Records found")
@@ -58,6 +67,53 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
 //                    }
                  else {
                     self?.showCustomAlert(message: getList.statusMessage){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+            case .failure(let err):
+                print(err)
+                DispatchQueue.main.async {
+                    //  self?.showAlert(message: serverNotResponding)
+                    self?.showCustomAlert(message: serverNotResponding){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+            }
+        }
+    }
+    func getpickupcaptureList(){
+        let params = ["EMPLOYEE_ID":UserDefaultVars.empId,
+                       "DEVICEID":deviceId,
+                       "TOKEN_ID":UserDefaultVars.token]
+        print(params)
+        guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
+        NetworkRequest.makeRequest(type: PickupcaptureListStruct.self, urlRequest: Router.getPickupCaptureTickets(Parameters: params)) { [weak self](result) in
+            switch result
+            {
+            case .success(let getList):
+               // print(getList)
+                self?.pickupcapturelistModel = getList
+                self?.pickuplisttableviewDatasource = self?.pickupcapturelistModel?.ticketList
+                if  getList.statusCode == "600"{
+                    self?.showAlert(message: getList.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
+                if getList.statusCode == "200"{
+                    if getList.ticketList?.isEmpty == true {
+                        self?.showAlert(message: "No Records found")
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.tableView.reloadData()
+                        }
+                    }
+                }
+//                else if getList.statusCode == "600"{
+//                        self?.showAlert(message:getList.statusMessage)
+//                    }
+                 else {
+                    self?.showCustomAlert(message: getList.statusMessage ?? ""){
                         self?.navigationController?.popViewController(animated: true)
                     }
                 }
@@ -163,6 +219,58 @@ struct ConcessionerTicketsListStruct: Codable {
     }
 
 }
+
+// MARK: - PickupcaptureListStruct
+struct PickupcaptureListStruct: Codable {
+    let statusCode, statusMessage: String?
+    let ticketList: [TicketList]?
+
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "STATUS_CODE"
+        case statusMessage = "STATUS_MESSAGE"
+        case ticketList = "TicketList"
+    }
+    // MARK: - TicketList
+    struct TicketList: Codable {
+        let ticketID, location, createdDate, estWt: String?
+        let paymentStatus: String?
+        let wardID, wardName, circleID, circleName: String?
+        let zoneID, zoneName: String?
+        let landmark: String?
+        let vehicleType, image1Path, noOfVehicles, status: String?
+        let listVehicles: [ListVehicle]?
+
+        enum CodingKeys: String, CodingKey {
+            case ticketID = "TICKET_ID"
+            case location = "LOCATION"
+            case createdDate = "CREATED_DATE"
+            case estWt = "EST_WT"
+            case paymentStatus = "PAYMENT_STATUS"
+            case wardID = "WARD_ID"
+            case wardName = "WARD_NAME"
+            case circleID = "CIRCLE_ID"
+            case circleName = "CIRCLE_NAME"
+            case zoneID = "ZONE_ID"
+            case zoneName = "ZONE_NAME"
+            case landmark = "LANDMARK"
+            case vehicleType = "VEHICLE_TYPE"
+            case image1Path = "IMAGE1_PATH"
+            case noOfVehicles = "NO_OF_VEHICLES"
+            case status = "STATUS"
+            case listVehicles
+        }
+        // MARK: - ListVehicle
+        struct ListVehicle: Codable {
+            let vehicleNo, vehicleID: String?
+
+            enum CodingKeys: String, CodingKey {
+                case vehicleNo = "VEHICLE_NO"
+                case vehicleID = "VEHICLE_ID"
+            }
+        }
+    }
+}
+
 
 
 

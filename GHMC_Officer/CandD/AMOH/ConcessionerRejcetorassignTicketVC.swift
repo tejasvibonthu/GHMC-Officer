@@ -26,7 +26,11 @@ class ConcessionerRejcetorassignTicketVC: UIViewController {
         self.img.image = UIImage(named: ticketDetails?.imagePath ?? "")
     }
     @IBAction func backbtnClick(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
+        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "RequestLists")as! RequestLists
+//        vc.ticketDetails = details
+       vc.tag = 2
+       // print(ticketIdLb)
+        self.navigationController?.pushViewController(vc, animated:true)
     }
     @IBAction func reassignClick(_ sender: UIButton) {
         if sender.isSelected {
@@ -69,13 +73,16 @@ class ConcessionerRejcetorassignTicketVC: UIViewController {
             case .success(let resp):
                 print(resp)
                 if resp.statusCode == "600"{
-                    self?.showCustomAlert(message: resp.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                    self?.showAlert(message: resp.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
                     }
                 }
                 if resp.statusCode == "200"
                 {
-                    self?.showAlert(message: resp.statusMessage ?? "")
+                    self?.showAlert(message: resp.statusMessage ?? ""){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
                 }
                 else
                 {

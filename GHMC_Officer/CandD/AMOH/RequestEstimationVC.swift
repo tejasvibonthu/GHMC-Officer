@@ -8,7 +8,8 @@
 
 import UIKit
 import DropDown
-class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+import GoogleMaps
+class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate,CLLocationManagerDelegate {
     var estimationDetails:RequestEstimationStruct?
     var ticketId:String?
     var reqdatasourceArry:[String] = []
@@ -25,6 +26,13 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     var imgStr:String?
     var imagePicker: UIImagePickerController! = UIImagePickerController()
     var ticketDetails:GetPaidListStruct.PaidList?
+    var latitude : String?
+    var longitude : String?
+    var circleId:String?
+    var zoneId:String?
+    var wardId:String?
+    var locationManager = CLLocationManager()
+    
     @IBOutlet weak var dtaeLB: UILabel!
     @IBOutlet weak var zoneLB: UILabel!
     @IBOutlet weak var circleLB: UILabel!
@@ -38,6 +46,7 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     @IBOutlet weak var vehicletypeBtn: UIButton!
     @IBOutlet weak var estimationwasteTF: UITextField!
     @IBOutlet weak var amountTF: UITextField!
+    @IBOutlet weak var landmarkTf: UITextField!
     @IBOutlet weak var cameraImg: CustomImagePicker!
     {
         didSet
@@ -48,12 +57,26 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setshadow()
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager = CLLocationManager()
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.requestAlwaysAuthorization()
+            locationManager.distanceFilter = 50
+            locationManager.startUpdatingLocation()
+        }else {
+            self.showAlert(message: "please enable location services")
+        }
+        guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
+        whereAmIService()
+        dtaeLB.text = Date().string(format: "dd-MM-YYYY")
+
         if tag == 0 {
             dtaeLB.text = estimationDetails?.createdDate
             zoneLB.text = estimationDetails?.zoneID
             circleLB.text = estimationDetails?.circleID
             wardLB.text = estimationDetails?.wardID
-            locationLB.text = estimationDetails?.landmark
+           // locationLB.text = estimationDetails?.landmark
             imgView.image = UIImage(named: estimationDetails?.image1Path ?? "")
         } else if tag == 1 {
             dtaeLB.text = ticketDetails?.createdDate
@@ -61,6 +84,8 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
             circleLB.text = ticketDetails?.circleID
             wardLB.text = ticketDetails?.wardID
             locationLB.text = ticketDetails?.landmark
+        } else if tag == 5 {
+            
         }
         estimationwasteTF.isHidden = true
         noofVehiclesTF.delegate = self
@@ -70,6 +95,21 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         self.getVehiclesDataWS()
        
         }
+    //Mark :- LocationManager Delegate
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        guard let location = locations.last else {return}
+        locationManager.stopUpdatingLocation()
+        latitude  = String(location.coordinate.latitude)
+        longitude = String(location.coordinate.longitude)
+        //            print(latitude)
+        //            print(longitude)
+        
+        guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
+        whereAmIService()
+        
+        //whereAmIWS()
+    }
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
 //        guard vehicletypeBtn.currentTitle != ""{
 //            
@@ -188,6 +228,41 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
             }
         }
     }
+    func whereAmIService()
+    {
+        let parameters : [String : Any] = [
+            "USER_ID": userid,
+            "PASSWORD": password,
+            "LATITUDE" : latitude ?? "",
+            "LONGITUDE" : longitude ?? ""]
+      //  print(parameters)
+        NetworkRequest.makeRequest(type: GetZonesStruct.self, urlRequest: Router.DemoGraphics(Parameters: parameters)) { [unowned self](result) in
+            switch result
+            {
+            case .success(let resp):
+                print(resp)
+                if resp.zoneID == ""
+                {
+                    self.showAlertWithOkAction(message: "Selected Location is Outside of GHMC") { (action) in
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                }
+                else{
+                    self.circleLB.text = resp.circleName
+                    self.zoneLB.text = resp.zoneName
+                    self.wardLB.text = resp.wardName
+                    self.zoneId = resp.zoneID
+                    self.wardId  = resp.wardID
+                    self.circleId = resp.circleID
+                    
+                }
+            case .failure(let err):
+                print(err)
+                self.showAlert(message: serverNotResponding)
+            //completion(nil)
+            }
+        }
+    }
     @IBAction func backbuttonClick(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
@@ -202,10 +277,11 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         return imageData.base64EncodedString(options: Data.Base64EncodingOptions.lineLength64Characters)
     }
         @IBAction func submitClick(_ sender: Any) {
+            //
             if tag == 0{
                 self.requestsubmitWS()
             } else if tag == 1{
-                self.paymentpendingEstimationSubmitWS()
+               // self.paymentpendingEstimationSubmitWS()
             } else if tag == 5{
                 self.raiseRequestWS()
             }
@@ -231,8 +307,9 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
             case .success(let resp):
                 print(resp)
                 if resp.statusCode == "600"{
-                    self?.showCustomAlert(message: resp.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                    self?.showAlert(message: resp.statusMessage ?? ""){
+                    let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                            self?.navigationController?.pushViewController(vc, animated: true)
                     }
                 }
                 if resp.statusCode == "200"
@@ -249,73 +326,82 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
             }
         }
     }
-    func paymentpendingEstimationSubmitWS(){
-        let imgData = convertImageToBase64String(img: cameraImg.image!)
-        let params = [
-            "CNDW_GRIEVANCE_ID":ticketDetails?.ticketID ?? "",
-            "EMPLOYEE_ID": UserDefaultVars.empId,
-            "DEVICEID": deviceId,
-            "TOKEN_ID": UserDefaultVars.token,
-            "IMAGE1_PATH": imgData,
-            "VEHICLE_TYPE_ID": vehicleId ?? "",
-            "NO_OF_VEHICLES": noofVehiclesTF.text ?? "",
-            "EST_WT":  estimationwasteTF.text ?? "",
-            "WARD_ID": ticketDetails?.wardID ?? ""
-            
-        ]as [String : Any]
-        print(params)
-    guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
-    NetworkRequest.makeRequest(type: PaymentPendingSubmitStruct.self, urlRequest: Router.submitPaymentReq(Parameters: params)) { [weak self](result) in
-            switch result {
-            case .success(let resp):
-                print(resp)
-                if resp.statusCode == "600"{
-                    self?.showCustomAlert(message: resp.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
-                    }
-                }
-                if resp.statusCode == "200"
-                {
-                    self?.showAlert(message: resp.statusMessage ?? "")
-                }
-                else
-                {
-                    self?.showAlert(message: resp.statusMessage ?? "" )
-                }
-            case .failure(let err):
-                print(err)
-                self?.showAlert(message: err.localizedDescription)
-            }
-        }
-    }
+//    func paymentpendingEstimationSubmitWS(){
+//        let imgData = convertImageToBase64String(img: cameraImg.image!)
+//        let params = [
+//            "CNDW_GRIEVANCE_ID":ticketDetails?.ticketID ?? "",
+//            "EMPLOYEE_ID": UserDefaultVars.empId,
+//            "DEVICEID": deviceId,
+//            "TOKEN_ID": UserDefaultVars.token,
+//            "IMAGE1_PATH": imgData,
+//            "VEHICLE_TYPE_ID": vehicleId ?? "",
+//            "NO_OF_VEHICLES": noofVehiclesTF.text ?? "",
+//            "EST_WT":  estimationwasteTF.text ?? "",
+//            "WARD_ID": ticketDetails?.wardID ?? ""
+//
+//        ]as [String : Any]
+//        print(params)
+//    guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+//    NetworkRequest.makeRequest(type: PaymentPendingSubmitStruct.self, urlRequest: Router.submitPaymentReq(Parameters: params)) { [weak self](result) in
+//            switch result {
+//            case .success(let resp):
+//                print(resp)
+//                if resp.statusCode == "600"{
+//                    self?.showCustomAlert(message: resp.statusMessage ?? ""){
+//                        self?.navigationController?.popViewController(animated: true)
+//                    }
+//                }
+//                if resp.statusCode == "200"
+//                {
+//                    self?.showAlert(message: resp.statusMessage ?? "")
+//                }
+//                else
+//                {
+//                    self?.showAlert(message: resp.statusMessage ?? "" )
+//                }
+//            case .failure(let err):
+//                print(err)
+//                self?.showAlert(message: err.localizedDescription)
+//            }
+//        }
+//    }
     func raiseRequestWS(){
         let imgData = convertImageToBase64String(img: cameraImg.image!)
         let params = [
-            "CNDW_GRIEVANCE_ID" : ticketId ?? "",
-            "EMPLOYEE_ID": UserDefaultVars.empId,
-            "DEVICEID": deviceId,
-            "TOKEN_ID": UserDefaultVars.token,
-            "IMAGE1_PATH": imgData,
-            "VEHICLE_TYPE_ID": vehicleId ?? "",
+            "ZONE_ID":zoneId ?? "",
+              "CIRCLE_ID": circleId ?? "",
+              "WARD_ID": wardId ?? "",
+            "LANDMARK": landmarkTf.text ?? "",
+              "VEHICLE_TYPE": vehicleId ?? "",
+              "IMAGE1_PATH": imgData,
+              "IMAGE2_PATH": "",
+              "IMAGE3_PATH": "",
             "NO_OF_VEHICLES": noofVehiclesTF.text ?? "",
             "EST_WT": estimationwasteTF.text ?? "",
-            "AMOUNT": amountTF.text ?? ""
+            "CREATED_BY": UserDefaultVars.empName,
+              "DEVICEID": deviceId,
+            "TOKEN_ID": UserDefaultVars.token,
+            "MOBILE_NUMBER": UserDefaultVars.mobileNumber,
+              "LATITUDE": latitude ?? "",
+              "LONGITUDE": longitude ?? ""
+            
             
         ] as [String : Any]
         print(params)
     guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
-    NetworkRequest.makeRequest(type: SUbmitStruct.self, urlRequest: Router.raiseRequest(Parameters: params)) { [weak self](result) in
+    NetworkRequest.makeRequest(type: AMograisegrivanceStruct.self, urlRequest: Router.raiseRequest(Parameters: params)) { [weak self](result) in
             switch result {
             case .success(let resp):
                 print(resp)
                 if resp.statusCode == "600"{
-                    self?.showCustomAlert(message: resp.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                        self?.showAlert(message: resp.statusMessage ?? ""){
+                            let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                            self?.navigationController?.pushViewController(vc, animated: true)
                     }
                 }
                 if resp.statusCode == "200"
                 {
-                    self?.showAlert(message: resp.statusMessage ?? "")
+                    self?.showAlert(message: "\(resp.statusMessage ?? serverNotResponding) \(resp.cndwGrievanceID ?? "")")
                 }
                 else
                 {
@@ -323,7 +409,7 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
                 }
             case .failure(let err):
                 print(err)
-                self?.showAlert(message: err.localizedDescription)
+                self?.showAlert(message: serverNotResponding)
             }
         }
     }
@@ -410,5 +496,33 @@ struct PaymentPendingSubmitStruct: Codable {
         case statusCode = "STATUS_CODE"
         case statusMessage = "STATUS_MESSAGE"
         case cndwGrievanceID = "CNDW_GRIEVANCE_ID"
+    }
+}
+// MARK: - GetZonesStruct
+struct GetZonesStruct: Codable {
+    let statusCode, statusMessage, wardID, wardName: String?
+    let circleID, circleName, zoneID, zoneName: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "STATUS_CODE"
+        case statusMessage = "STATUS_MESSAGE"
+        case wardID = "WARD_ID"
+        case wardName = "WARD_NAME"
+        case circleID = "CIRCLE_ID"
+        case circleName = "CIRCLE_NAME"
+        case zoneID = "ZONE_ID"
+        case zoneName = "ZONE_NAME"
+    }
+}
+
+// MARK: - AMograisegrivanceStruct
+struct AMograisegrivanceStruct: Codable {
+    let statusCode, statusMessage, cndwGrievanceID, officerDetails: String?
+
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "STATUS_CODE"
+        case statusMessage = "STATUS_MESSAGE"
+        case cndwGrievanceID = "CNDW_GRIEVANCE_ID"
+        case officerDetails = "OFFICER_DETAILS"
     }
 }

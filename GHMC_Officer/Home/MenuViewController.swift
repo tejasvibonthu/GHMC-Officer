@@ -24,8 +24,8 @@ class MenuViewController: UIViewController {
         self.revealViewController().rearViewRevealWidth = 250 //put the width you need
 
       sectionTitles = ["profile","services","others"]
-      rowTitles = [["Inbox"],["Grivevance","Absract Report"],["Themes","Exit"]]
-      logoImages = [["notification_new_icon"],["grievance","grievance"],["theme","logout"]]
+      rowTitles = [["Inbox"],["Grivevance","Absract Report"],["Themes","Exit","logout"]]
+      logoImages = [["notification_new_icon"],["grievance","grievance"],["theme","logout","logout"]]
         let image = UserDefaults.standard.value(forKey:"bgImagview") as! String
         bgimagev.image = UIImage.init(named:image)
       NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("theme"), object: nil)
@@ -51,7 +51,7 @@ extension MenuViewController:UITableViewDelegate,UITableViewDataSource{
         }else if section == 1{
             return 2
         }else if section == 2{
-            return 2
+            return 3
         }
         return 1
     }
@@ -134,7 +134,7 @@ extension MenuViewController:UITableViewDelegate,UITableViewDataSource{
                 propertyNavVc.modalPresentationStyle = .overCurrentContext
                 activeNav.present(propertyNavVc, animated:true, completion:nil)
                 
-            case 1: // logout
+            case 1: // exit
                 
                 //          UserDefaults.standard.removeObject(forKey:"mpin")
                 //            UserDefaults.standard.removeObject(forKey:"DESIGNATION")
@@ -149,21 +149,27 @@ extension MenuViewController:UITableViewDelegate,UITableViewDataSource{
                 )
                 let alertView = SCLAlertView(appearance: appearance)
                 alertView.addButton("Yes"){
-                    
                     DispatchQueue.main.async {
                         exit(0);
-                        
                     }
-                    
-                    
-                    
                 }
                 alertView.addButton("cancel") {
-                    
                 }
                 alertView.showInfo("GHMC", subTitle:"Do you want to exit from app?")
                 break
+            case 2: //logout
+//                let activeNav = self.revealViewController().frontViewController as! UINavigationController
+                let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                UserDefaults.standard.removeObject(forKey:"mpin")
+                UserDefaults.standard.synchronize()
+                let navVc = UINavigationController(rootViewController: vc)
+                self.view.window?.rootViewController = navVc
+                self.view.window?.makeKeyAndVisible()
                 
+                
+//
+//                let loginVC = vc.viewControllers[0] as! LoginViewControllerViewController
+//                activeNav.pushViewController(loginVC, animated: true)
             default:
                 print("dghae")
             }

@@ -20,6 +20,7 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
     var grievanceId:String?
     var table1Data:[String]?
     var noofTons : Int = 0
+    var imgData:String?
     var amount:String?
     {
         didSet
@@ -102,6 +103,15 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
     }
     func validation() -> Bool
     {
+        if  noofvehiclesLb.text == "" {
+            showAlert(message: "Please enter no of vehicles")
+            return false
+        }
+        else if imgData == nil {
+            showAlert(message: "Please capture photo")
+            return false
+        }
+        else {
         guard let dataSource = tableViewDataSource else {return false}
         for (index,item) in dataSource.enumerated()
         {
@@ -127,13 +137,20 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
                 return false
                 
             }
+            else if item.mobileNo.count < 10 {
+                self.showAlert(message: "Please Enter Mobile no")
+                tableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: true)
+                return false
+                
+            }
             else if item.noofTrips.count == 0{
                 self.showAlert(message: "Please Enter no of trips")
                 tableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: true)
                 return false
             }
-        
         }
+    }
+        
         return true
     }
     //MARK:- Service Call
@@ -179,8 +196,7 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
         }
     
     func submitWS(){
-        
-            let imgData = convertImageToBase64String(img: camImg.image!)
+        imgData = convertImageToBase64String(img: camImg.image!)
         var vehicleDetials : [[String : Any]] = [[:]]
         for item in tableViewDataSource!
         {
@@ -216,7 +232,11 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
                     print(resp)
                     if resp.statusCode == "200"
                     {
-                        self?.showAlert(message: resp.statusMessage ?? "")
+                        self?.showAlert(message: resp.statusMessage ?? ""){
+                           let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerTicketsList") as! ConcessionerTicketsList
+                            vc.tag = 0
+                            self?.navigationController?.pushViewController(vc, animated:true)
+                        }
                     }
                     else
                     {
