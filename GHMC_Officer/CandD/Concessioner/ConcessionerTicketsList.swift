@@ -95,9 +95,9 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
         }
     }
     func getpickupcaptureList(){
-        let params = ["EMPLOYEE_ID":UserDefaultVars.empId,
+      let params : [String : Any] = ["EMPLOYEE_ID":UserDefaultVars.empId,
                        "DEVICEID":deviceId,
-                       "TOKEN_ID":UserDefaultVars.token]
+                       "TOKEN_ID":UserDefaultVars.token!]
         print(params)
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
         NetworkRequest.makeRequest(type: PickupcaptureListStruct.self, urlRequest: Router.getPickupCaptureTickets(Parameters: params)) { [weak self](result) in
@@ -291,6 +291,9 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
             self.navigationController?.pushViewController(vc, animated:true)
         } else if tag == 1 {
             let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerpickupCaptureVC") as! ConcessionerpickupCaptureVC
+          vc.ticketData = pickupcapturelistModel?.ticketList?[indexPath.row]
+          
+            
             self.navigationController?.pushViewController(vc, animated:true)
         }
         // print(ticketIdLb)

@@ -8,7 +8,7 @@ struct UserDefaultVars {
     static var grievanceType =  UserDefaults.standard.value(forKey:"grievanceType") as! String
     static var modeID =  UserDefaults.standard.value(forKey:"MODEID") as! String
     static var subcatId =  UserDefaults.standard.value(forKey:"SUBCAT_ID") as! String
-    static var token =  UserDefaults.standard.value(forKey:"TOKEN_ID") as! String
+    static var token =  UserDefaults.standard.value(forKey:"TOKEN_ID") as? String
     
     
     

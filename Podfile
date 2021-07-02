@@ -21,7 +21,7 @@ pod 'SDWebImage'
 pod 'GoogleMaps'
 pod 'GrowingTextView', '0.7.2'
 pod 'DropDown'
-
+pod 'SearchTextField'
 
 
 pod 'GooglePlaces'

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		046E5ABC268F145300DEF7E3 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E5ABB268F145300DEF7E3 /* CustomImageView.swift */; };
 		0E03C49F232908600011F441 /* UserdetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E03C49E232908600011F441 /* UserdetailsVC.swift */; };
 		0E07334A233889480029139A /* AbstarctReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E073349233889480029139A /* AbstarctReport.swift */; };
 		0E07334C2338CE220029139A /* NotificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E07334B2338CE220029139A /* NotificationData.swift */; };
@@ -112,6 +113,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		046E5ABB268F145300DEF7E3 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		0E03C49E232908600011F441 /* UserdetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserdetailsVC.swift; sourceTree = "<group>"; };
 		0E073349233889480029139A /* AbstarctReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstarctReport.swift; sourceTree = "<group>"; };
 		0E07334B2338CE220029139A /* NotificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationData.swift; sourceTree = "<group>"; };
@@ -494,6 +496,7 @@
 				BEF2214D266114A8000E0A4F /* VehicleDataVC.swift */,
 				BEF221502661152A000E0A4F /* VehicledataCell.swift */,
 				BE6D09392688F9AC008B6928 /* ConcessionerpickupCaptureVC.swift */,
+				046E5ABB268F145300DEF7E3 /* CustomImageView.swift */,
 			);
 			path = Concessioner;
 			sourceTree = "<group>";
@@ -741,6 +744,7 @@
 				0EC7B40F2462F1830001D578 /* GrievanceCategoryListViewModel.swift in Sources */,
 				0EC7B4112462F2200001D578 /* GrievanceCategoryListModel.swift in Sources */,
 				0E09E914232B73820039CF86 /* FullGrievancedetailsVC.swift in Sources */,
+				046E5ABC268F145300DEF7E3 /* CustomImageView.swift in Sources */,
 				BEF2214E266114A8000E0A4F /* VehicleDataVC.swift in Sources */,
 				0E65A1662451C09A00DC0BCB /* LoginmodelClass.swift in Sources */,
 				0E201E4A232F709F0040B562 /* getStatusType.swift in Sources */,

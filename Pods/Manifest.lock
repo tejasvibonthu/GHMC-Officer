@@ -106,6 +106,7 @@ PODS:
   - SDWebImage (5.1.0):
     - SDWebImage/Core (= 5.1.0)
   - SDWebImage/Core (5.1.0)
+  - SearchTextField (1.2.4)
   - SkyFloatingLabelTextField (2.0.1)
   - SwiftMessages (7.0.0):
     - SwiftMessages/App (= 7.0.0)
@@ -127,6 +128,7 @@ DEPENDENCIES:
   - PKHUD (~> 5.0)
   - SCLAlertView
   - SDWebImage
+  - SearchTextField
   - SkyFloatingLabelTextField (~> 2.0.0)
   - SwiftMessages
   - TextFieldEffects
@@ -161,6 +163,7 @@ SPEC REPOS:
     - Protobuf
     - SCLAlertView
     - SDWebImage
+    - SearchTextField
     - SkyFloatingLabelTextField
     - SwiftMessages
     - TextFieldEffects
@@ -194,10 +197,11 @@ SPEC CHECKSUMS:
   Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   SDWebImage: fb387001955223213dde14bc08c8b73f371f8d8f
+  SearchTextField: 40dc3cc57def5a211f263cac263622c163bbc25a
   SkyFloatingLabelTextField: 070e749632ffd608d6fd9db3fa488a822524997c
   SwiftMessages: a952f7a9103d9aeab93730a2861d2d8fcdd8758f
   TextFieldEffects: 529b8aff706fb40f82c41c780c0777941a893796
 
-PODFILE CHECKSUM: 8c28ec2cd0820b49071b97e0a9e47fc76928bece
+PODFILE CHECKSUM: ea217965ce34f4a1f227eeaddca589221c43d133
 
 COCOAPODS: 1.10.1

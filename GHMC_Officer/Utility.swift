@@ -13,7 +13,7 @@ import PKHUD
 extension UIViewController {
     func showAlert(message: String , okcompletion : (()->())? = nil)
 {
-    let alert = UIAlertController(title: "GHMC", message:message, preferredStyle: UIAlertController.Style.alert)
+    let alert = UIAlertController(title: "GHMC Officer", message:message, preferredStyle: UIAlertController.Style.alert)
     alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: { (action) in
         okcompletion?()
         
@@ -21,6 +21,24 @@ extension UIViewController {
     self.present(alert, animated: true, completion: nil)
     
 }
+  func showAlertWithYesNoCompletions(message: String ,noCompletion : (()->())? = nil,Yescompletion : (()->())? = nil)
+{
+  let alert = UIAlertController(title: "GHMC Officer", message:message, preferredStyle: UIAlertController.Style.alert)
+    alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.destructive, handler: { (action) in
+        noCompletion?()
+        
+    }))
+  alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { (action) in
+      Yescompletion?()
+      
+  }))
+    
+    
+  self.present(alert, animated: true, completion: nil)
+  
+}
+  
+  
     func loading(text: String)
     {
         PKHUD.sharedHUD.contentView = PKHUDTextView(text: text)
@@ -32,7 +50,7 @@ extension UIViewController {
     }
     
     public  func showAlertWithOkAction(message : String , OkCompletion : @escaping (UIAlertAction)->Void)  {
-            let alert = UIAlertController(title: "MyGHMC", message: message, preferredStyle: .alert)
+            let alert = UIAlertController(title: "GHMC Officer", message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (alertAction) in
                 OkCompletion(alertAction)
             }))
