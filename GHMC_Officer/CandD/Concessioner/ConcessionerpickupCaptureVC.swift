@@ -74,7 +74,7 @@ class ConcessionerpickupCaptureVC: UIViewController {
     guard beforePickupImgView.isImagePicked == true else {self.showAlert(message: "Please Capture Before pickup Imape");return}
    
     let parameters : [String : Any] = [
-      "CNDW_GRIEVANCE_ID": "",
+      "CNDW_GRIEVANCE_ID":ticketData?.ticketID,
       "EMPLOYEE_ID": UserDefaultVars.empId,
       "DEVICEID": deviceId,
       "TOKEN_ID": UserDefaultVars.token!,
@@ -108,14 +108,38 @@ class ConcessionerpickupCaptureVC: UIViewController {
         isPending = "N"
       }
     }
-    
   }
-  
   
   //MARK:- ServiceCall
-  
   func concessionerPickupCaptureSubmitService(parameters : [String : Any])
   {
-    
-  }
+        let params = parameters as [String : Any]
+        print(params)
+        guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+        NetworkRequest.makeRequest(type: SUbmitStruct.self, urlRequest: Router.pickupcaptureSubmit(Parameters: params)) { [weak self](result) in
+                switch result {
+                case .success(let resp):
+                    print(resp)
+                    if resp.statusCode == "600"{
+                        self?.showCustomAlert(message: resp.statusMessage ?? ""){
+                            let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                            self?.navigationController?.pushViewController(vc, animated: true)
+                        }
+                    }
+                    if resp.statusCode == "200"
+                    {
+                        self?.showAlert(message: resp.statusMessage ?? ""){
+                            self?.navigationController?.popViewController(animated: true)
+                        }
+                    }
+                    else
+                    {
+                        self?.showAlert(message: resp.statusMessage ?? "" )
+                    }
+                case .failure(let err):
+                    print(err)
+                    self?.showAlert(message: err.localizedDescription)
+                }
+            }
+        }
 }

@@ -22,6 +22,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
     var estimationDetailsModel:RequestEstimationStruct?
     var concessionerCloselistmodel:AmohconcessionerClosedListStruct?
     var concessionerCloselistTabledatasource:[AmohconcessionerClosedListStruct.TicketList]?
+    var amohClosedListModel:AmohClosedListStruct?
+    var amohClosedlistTableviewdatasource:[AmohClosedListStruct.TicketList]?
     var tag:Int?
         override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +45,10 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             else if tag == 3 {
                 self.navTitleLb.text = "Concessioner Closed tickets"
                 self.getConcessionerCloseListWS()
+            }
+            else if tag == 4 {
+                self.navTitleLb.text = "Amoh Closed tickets"
+                self.getamohCloseListWS()
             }
     }
     func getRequestListWS(){
@@ -227,6 +233,54 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             }
         }
     }
+    func getamohCloseListWS(){
+        let params = ["AMOH_EMP_ID": UserDefaultVars.empId,
+                      "AMOH_EMP_WARD_ID": "",
+                      "DEVICEID": deviceId,
+                      "TOKEN_ID": UserDefaultVars.token
+        ]
+      print(params)
+        guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
+        NetworkRequest.makeRequest(type: AmohClosedListStruct.self, urlRequest: Router.amohclosedList(Parameters: params)) { [weak self](result) in
+            switch result
+            {
+            case .success(let getList):
+               print(getList)
+                self?.amohClosedListModel = getList
+                self?.amohClosedlistTableviewdatasource = self?.amohClosedListModel?.ticketList
+                if getList.statusCode == "600"{
+                    self?.showAlert(message: getList.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
+                if getList.statusCode == "200"{
+                    if getList.ticketList?.isEmpty == true {
+                        self?.showAlert(message: "No Records found"){
+                            self?.navigationController?.popViewController(animated: true)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.tableView.reloadData()
+                        }
+                    }
+                } else {
+                    self?.showCustomAlert(message: getList.statusMessage ?? ""){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+                
+            case .failure(let err):
+                print(err)
+                DispatchQueue.main.async {
+                    //  self?.showAlert(message: serverNotResponding)
+                    self?.showCustomAlert(message: serverNotResponding){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+            }
+        }
+    }
     func getRequestDetailsWS(ticketID:String){
         let params = ["CNDW_GRIEVANCE_ID":ticketID,
                       "EMPLOYEE_ID":UserDefaultVars.empId,
@@ -286,6 +340,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             return tableviewDatasource?.count ?? 0
         } else if tag == 3{
             return concessionerCloselistTabledatasource?.count ?? 0
+        } else if tag == 4{
+            return amohClosedlistTableviewdatasource?.count ?? 0
         }
         return 0
     }
@@ -332,6 +388,15 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
            // cell.imgView?.image = UIImage.init(named:details?.i ?? "")
             cell.satusLb.isHidden = false
             cell.selectionStyle = .none
+        } else if tag == 4{
+            let details = amohClosedlistTableviewdatasource?[indexPath.row]
+            cell.ticketIdLb.text = details?.ticketID
+            cell.locationLb.text = details?.location
+            cell.dateLb.text = details?.ticketClosedDate
+          //  cell.estimatedwasteLb.text = details?.e
+           // cell.imgView?.image = UIImage.init(named:details?.im ?? "")
+            cell.satusLb.isHidden = false
+            cell.selectionStyle = .none
         }
         return cell
     }
@@ -357,7 +422,15 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
         case 3: //ConcessionerCloseTicketDetails
              let details = concessionerCloselistTabledatasource?[indexPath.row]
             let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerCloseTicketDetailsVc")as! ConcessionerCloseTicketDetailsVc
+            vc.tag = 0
             vc.ticketDetails = details
+            // print(ticketIdLb)
+            self.navigationController?.pushViewController(vc, animated:true)
+        case 4: //amohCloseTicketDetails
+             let amohdetails = amohClosedlistTableviewdatasource?[indexPath.row]
+            let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerCloseTicketDetailsVc")as! ConcessionerCloseTicketDetailsVc
+            vc.tag = 1
+            vc.amohDetails = amohdetails
             // print(ticketIdLb)
             self.navigationController?.pushViewController(vc, animated:true)
         default:
@@ -516,9 +589,64 @@ struct GetPaidListStruct: Codable {
     }
 }
 
-
 // MARK: - AmohconcessionerClosedListStruct
 struct AmohconcessionerClosedListStruct: Codable {
+    let statusCode, statusMessage: String?
+    let ticketList: [TicketList]?
+
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "STATUS_CODE"
+        case statusMessage = "STATUS_MESSAGE"
+        case ticketList = "TicketList"
+    }
+    
+    // MARK: - TicketList
+    struct TicketList: Codable {
+        let ticketID, location, ticketRaisedDate, ticketClosedDate: String?
+        let zoneID: String?
+        let zoneName: String?
+        let circleID: String?
+        let circleName: String?
+        let wardID: String?
+        let wardName, concessionerName: String?
+        let typeOfWaste: String?
+        let status: String?
+        let listVehicles: [ListVehicle]?
+
+        enum CodingKeys: String, CodingKey {
+            case ticketID = "TICKET_ID"
+            case location = "LOCATION"
+            case ticketRaisedDate = "TICKET_RAISED_DATE"
+            case ticketClosedDate = "TICKET_CLOSED_DATE"
+            case zoneID = "ZONE_ID"
+            case zoneName = "ZONE_NAME"
+            case circleID = "CIRCLE_ID"
+            case circleName = "CIRCLE_NAME"
+            case wardID = "WARD_ID"
+            case wardName = "WARD_NAME"
+            case concessionerName = "CONCESSIONER_NAME"
+            case typeOfWaste = "TYPE_OF_WASTE"
+            case status = "STATUS"
+            case listVehicles
+        }
+    }
+    
+    // MARK: - ListVehicle
+    struct ListVehicle: Codable {
+        let vehicleNo, vehicleID: String?
+
+        enum CodingKeys: String, CodingKey {
+            case vehicleNo = "VEHICLE_NO"
+            case vehicleID = "VEHICLE_ID"
+        }
+    }
+
+
+}
+
+
+// MARK: - AmohClosedListStruct
+struct AmohClosedListStruct: Codable {
     let statusCode, statusMessage: String?
     let ticketList: [TicketList]?
 
@@ -538,7 +666,7 @@ struct AmohconcessionerClosedListStruct: Codable {
         let wardName, concessionerName: String?
         let typeOfWaste: String?
         let status: String?
-        let listVehicles: String?
+        let listVehicles: [ListVehicle]?
 
         enum CodingKeys: String, CodingKey {
             case ticketID = "TICKET_ID"
@@ -557,6 +685,15 @@ struct AmohconcessionerClosedListStruct: Codable {
             case listVehicles
         }
     }
+    
+    // MARK: - ListVehicle
+    struct ListVehicle: Codable {
+        let vehicleNo, vehicleID: String?
 
+        enum CodingKeys: String, CodingKey {
+            case vehicleNo = "VEHICLE_NO"
+            case vehicleID = "VEHICLE_ID"
+        }
+    }
 }
 

@@ -115,6 +115,8 @@ enum Router:URLRequestConvertible{
     case concessionerReassignstatus(Parameters:Parameters)
     case raiseRequest(Parameters:Parameters)
     case DemoGraphics(Parameters:Parameters)
+    case amohconcessionerClosedSubmit(Parameters:Parameters)
+    case amohclosedList(Parameters:Parameters)
     //Concessioner
     case getConcessionerTickets(Parameters:Parameters)
     case submitConcessionerReq(Parameters:Parameters)
@@ -122,6 +124,7 @@ enum Router:URLRequestConvertible{
     case getPickupCaptureTickets(Parameters:Parameters)
     case getConcesRejectList(Parameters:Parameters)
     case getConcClosedList(Parameters:Parameters)
+    case pickupcaptureSubmit(Parameters:Parameters)
     //Operator
     case gettripsAtPlant(Parameters:Parameters)
     case tripSubmit(Parameters:Parameters)
@@ -146,7 +149,7 @@ enum Router:URLRequestConvertible{
             return .get
         case .resendOtp:
             return .post
-        case .getAllCount,.userList,.userDetails,.fullGrievence,.grivenceHistory,.getstatusType,.getWard,.getClaimtStatus,.forwordtoAnotherWard,.updateGrivence,.abstarctReport,.showNotifications,.getGrievanceTypeList,.getCategoryTypeList,.getViewGrievances,.getGrievanceStatusCitizen,.reopenserviceCall,.postcommentService,.postFeedback,.getRamkeyVehicles, .versionCheck,.GrievancesCategoryList,.whereIam,.insertGrievance,.getAMOHRequestList,.getAMOHRequestEstimation,.calculateAmountbyTons,.getAmohDashboardList,.getConcessionerTickets,.submitConcessionerReq,.submitAMohReq,.getConcessionerRejectList,.getPaymentConformedList,.forwordtoConcessioner,.concessionerReassignstatus,.getConcessionerDashboardList,.raiseRequest,.DemoGraphics,.getPickupCaptureTickets,.gettripsAtPlant,.tripSubmit,.getConcesRejectList,.getConcClosedList,.getamohConcessionerCloseList:
+        case .getAllCount,.userList,.userDetails,.fullGrievence,.grivenceHistory,.getstatusType,.getWard,.getClaimtStatus,.forwordtoAnotherWard,.updateGrivence,.abstarctReport,.showNotifications,.getGrievanceTypeList,.getCategoryTypeList,.getViewGrievances,.getGrievanceStatusCitizen,.reopenserviceCall,.postcommentService,.postFeedback,.getRamkeyVehicles, .versionCheck,.GrievancesCategoryList,.whereIam,.insertGrievance,.getAMOHRequestList,.getAMOHRequestEstimation,.calculateAmountbyTons,.getAmohDashboardList,.getConcessionerTickets,.submitConcessionerReq,.submitAMohReq,.getConcessionerRejectList,.getPaymentConformedList,.forwordtoConcessioner,.concessionerReassignstatus,.getConcessionerDashboardList,.raiseRequest,.DemoGraphics,.getPickupCaptureTickets,.gettripsAtPlant,.tripSubmit,.getConcesRejectList,.getConcClosedList,.getamohConcessionerCloseList,.amohconcessionerClosedSubmit,.amohclosedList,.pickupcaptureSubmit:
             return .post
         }
     }
@@ -261,6 +264,12 @@ enum Router:URLRequestConvertible{
             return "GET_CONCESSIONER_CLOSED_TICKETS_LIST"
         case .getamohConcessionerCloseList:
             return "AMOH_GET_CONCESSIONER_CLOSED_TICKETS_LIST"
+        case .amohconcessionerClosedSubmit:
+            return "AMOH_CLOSE_CONCESSIONER_CLOSE_TICKET_SUBMIT"
+        case .amohclosedList:
+            return "AMOH_CLOSED_TICKETS_LIST"
+        case .pickupcaptureSubmit:
+            return "CONCESSIONER_PICKUP_CAPTURE_SUBMIT"
         }
     }
     func asURLRequest() throws -> URLRequest {
@@ -437,6 +446,12 @@ enum Router:URLRequestConvertible{
         case .getConcClosedList(let parameters):
             urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
         case .getamohConcessionerCloseList(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+        case .amohconcessionerClosedSubmit(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+        case .amohclosedList(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+        case .pickupcaptureSubmit(let parameters):
             urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
             }
         return urlRequest

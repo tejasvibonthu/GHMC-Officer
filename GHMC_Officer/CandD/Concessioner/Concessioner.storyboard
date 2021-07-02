@@ -1332,11 +1332,6 @@
             <point key="canvasLocation" x="-536.231884057971" y="77.678571428571431"/>
         </scene>
     </scenes>
-    <designables>
-        <designable name="4CT-Qg-jgb">
-            <size key="intrinsicContentSize" width="-1" height="30"/>
-        </designable>
-    </designables>
     <resources>
         <image name="appLogo" width="344" height="130"/>
         <image name="bg" width="540" height="926"/>

@@ -84,11 +84,11 @@ class AMOHDashoboardVC: UIViewController {
         let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
         vc.tag = 3
         navigationController?.pushViewController(vc, animated: true)
-//        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerCloseTicketDetailsVc") as! ConcessionerCloseTicketDetailsVc
-//          navigationController?.pushViewController(vc, animated: true)
      }
     @objc func taponAmohClosedTickets(){
-     
+        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
+        vc.tag = 4
+        navigationController?.pushViewController(vc, animated: true)
      }
     //Raise request
     @objc func tapOnraiseEstimation(){
