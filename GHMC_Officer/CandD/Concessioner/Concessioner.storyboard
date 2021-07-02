@@ -214,6 +214,7 @@
                     <navigationItem key="navigationItem" id="zCb-e7-TZE"/>
                     <connections>
                         <outlet property="bg" destination="uGf-IE-pji" id="c5N-ZO-7XJ"/>
+                        <outlet property="navTitle" destination="aCh-Yv-7K2" id="M7s-Np-Rkr"/>
                         <outlet property="searchBar" destination="HMN-fn-Wtr" id="Vzp-7T-Kno"/>
                         <outlet property="tableView" destination="IOY-Ei-WLP" id="FMM-39-BdV"/>
                     </connections>
@@ -899,19 +900,33 @@
                                         </constraints>
                                         <state key="normal" title="Button" image="left_arrow"/>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Home" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TGq-Rd-ALK">
-                                        <rect key="frame" x="186" y="16" width="42.5" height="18"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Home" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TGq-Rd-ALK">
+                                        <rect key="frame" x="125" y="8" width="42.5" height="18"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FgP-uB-9P1">
+                                        <rect key="frame" x="376" y="8" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="OfJ-PX-cs7"/>
+                                            <constraint firstAttribute="height" constant="30" id="gTH-XF-NPM"/>
+                                        </constraints>
+                                        <state key="normal" title="Button" image="logout"/>
+                                        <connections>
+                                            <action selector="backBtnClick:" destination="FQJ-HS-Hiw" eventType="touchUpInside" id="irV-rY-95L"/>
+                                            <action selector="logoutClick:" destination="fmB-85-10Q" eventType="touchUpInside" id="vN5-Cb-LjL"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="FgP-uB-9P1" firstAttribute="top" secondItem="87R-vh-3vZ" secondAttribute="top" constant="8" id="1Cv-1n-ILP"/>
                                     <constraint firstItem="0wn-sK-JdF" firstAttribute="leading" secondItem="87R-vh-3vZ" secondAttribute="leading" constant="8" id="1f9-nN-a8J"/>
                                     <constraint firstAttribute="height" constant="50" id="I62-SB-F7d"/>
                                     <constraint firstItem="0wn-sK-JdF" firstAttribute="top" secondItem="87R-vh-3vZ" secondAttribute="top" constant="8" id="Tzo-T6-DOr"/>
                                     <constraint firstItem="TGq-Rd-ALK" firstAttribute="centerY" secondItem="87R-vh-3vZ" secondAttribute="centerY" id="mT8-t2-UfX"/>
+                                    <constraint firstAttribute="trailing" secondItem="FgP-uB-9P1" secondAttribute="trailing" constant="8" id="nMj-Pf-sBW"/>
                                     <constraint firstItem="TGq-Rd-ALK" firstAttribute="centerX" secondItem="87R-vh-3vZ" secondAttribute="centerX" id="q9B-nk-0IV"/>
                                 </constraints>
                             </view>
@@ -1156,6 +1171,7 @@
         <image name="camera" width="162" height="159"/>
         <image name="ghmc_layer" width="540" height="926"/>
         <image name="left_arrow" width="28" height="28"/>
+        <image name="logout" width="26" height="26"/>
         <image name="radio_btn_off" width="32" height="32"/>
         <image name="radio_button_on" width="32" height="32"/>
         <systemColor name="labelColor">

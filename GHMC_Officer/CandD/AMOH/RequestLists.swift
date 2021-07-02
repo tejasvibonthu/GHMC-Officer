@@ -20,6 +20,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
     var rejectListModel:ConcessionerRejectListStruct?
     var tableviewDatasource:[ConcessionerRejectListStruct.TicketList]?
     var estimationDetailsModel:RequestEstimationStruct?
+    var concessionerCloselistmodel:AmohconcessionerClosedListStruct?
+    var concessionerCloselistTabledatasource:[AmohconcessionerClosedListStruct.TicketList]?
     var tag:Int?
         override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +42,7 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             }
             else if tag == 3 {
                 self.navTitleLb.text = "Concessioner Closed tickets"
-                self.getConcessionerRejectListWS()
+                self.getConcessionerCloseListWS()
             }
     }
     func getRequestListWS(){
@@ -182,19 +184,18 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
     }
     func getConcessionerCloseListWS(){
         let params = ["AMOH_EMP_ID": UserDefaultVars.empId,
-                      "AMOH_EMP_WARD_ID": "105",
                       "DEVICEID": deviceId,
                       "TOKEN_ID": UserDefaultVars.token
         ]
       //print(params)
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
-        NetworkRequest.makeRequest(type: ConcessionerRejectListStruct.self, urlRequest: Router.getConcessionerRejectList(Parameters: params)) { [weak self](result) in
+        NetworkRequest.makeRequest(type: AmohconcessionerClosedListStruct.self, urlRequest: Router.getamohConcessionerCloseList(Parameters: params)) { [weak self](result) in
             switch result
             {
             case .success(let getList):
               //  print(getList)
-                self?.rejectListModel = getList
-                self?.tableviewDatasource = self?.rejectListModel?.ticketsList
+                self?.concessionerCloselistmodel = getList
+                self?.concessionerCloselistTabledatasource = self?.concessionerCloselistmodel?.ticketList
                 if getList.statusCode == "600"{
                     self?.showAlert(message: getList.statusMessage ?? ""){
                         let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
@@ -202,7 +203,7 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                     }
                 }
                 if getList.statusCode == "200"{
-                    if getList.ticketsList?.isEmpty == true {
+                    if getList.ticketList?.isEmpty == true {
                         self?.showAlert(message: "No Records found")
                     } else {
                         DispatchQueue.main.async {
@@ -283,6 +284,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             return tableviewPaymentDatasource?.count ?? 0
         } else if tag == 2{
             return tableviewDatasource?.count ?? 0
+        } else if tag == 3{
+            return concessionerCloselistTabledatasource?.count ?? 0
         }
         return 0
     }
@@ -320,6 +323,15 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             cell.imgView?.image = UIImage.init(named:details?.imagePath ?? "")
             cell.satusLb.isHidden = false
             cell.selectionStyle = .none
+        } else if tag == 3{
+            let details = concessionerCloselistTabledatasource?[indexPath.row]
+            cell.ticketIdLb.text = details?.ticketID
+            cell.locationLb.text = details?.location
+            cell.dateLb.text = details?.ticketClosedDate
+          //  cell.estimatedwasteLb.text = details?.e
+           // cell.imgView?.image = UIImage.init(named:details?.i ?? "")
+            cell.satusLb.isHidden = false
+            cell.selectionStyle = .none
         }
         return cell
     }
@@ -343,9 +355,9 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             // print(ticketIdLb)
             self.navigationController?.pushViewController(vc, animated:true)
         case 3: //ConcessionerCloseTicketDetails
-           // let details = tableviewDatasource?[indexPath.row]
+             let details = concessionerCloselistTabledatasource?[indexPath.row]
             let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerCloseTicketDetailsVc")as! ConcessionerCloseTicketDetailsVc
-           // vc.ticketDetails = details
+            vc.ticketDetails = details
             // print(ticketIdLb)
             self.navigationController?.pushViewController(vc, animated:true)
         default:
@@ -503,3 +515,48 @@ struct GetPaidListStruct: Codable {
         }
     }
 }
+
+
+// MARK: - AmohconcessionerClosedListStruct
+struct AmohconcessionerClosedListStruct: Codable {
+    let statusCode, statusMessage: String?
+    let ticketList: [TicketList]?
+
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "STATUS_CODE"
+        case statusMessage = "STATUS_MESSAGE"
+        case ticketList = "TicketList"
+    }
+    // MARK: - TicketList
+    struct TicketList: Codable {
+        let ticketID, location, ticketRaisedDate, ticketClosedDate: String?
+        let zoneID: String?
+        let zoneName: String?
+        let circleID: String?
+        let circleName: String?
+        let wardID: String?
+        let wardName, concessionerName: String?
+        let typeOfWaste: String?
+        let status: String?
+        let listVehicles: String?
+
+        enum CodingKeys: String, CodingKey {
+            case ticketID = "TICKET_ID"
+            case location = "LOCATION"
+            case ticketRaisedDate = "TICKET_RAISED_DATE"
+            case ticketClosedDate = "TICKET_CLOSED_DATE"
+            case zoneID = "ZONE_ID"
+            case zoneName = "ZONE_NAME"
+            case circleID = "CIRCLE_ID"
+            case circleName = "CIRCLE_NAME"
+            case wardID = "WARD_ID"
+            case wardName = "WARD_NAME"
+            case concessionerName = "CONCESSIONER_NAME"
+            case typeOfWaste = "TYPE_OF_WASTE"
+            case status = "STATUS"
+            case listVehicles
+        }
+    }
+
+}
+

@@ -12,11 +12,16 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
     @IBOutlet weak var bg: UIImageView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var navTitle: UILabel!
     var tag:Int?
     var requestListModel:ConcessionerTicketsListStruct?
     var tableviewDatasource:[ConcessionerTicketsListStruct.TicketList]?
     var pickupcapturelistModel:PickupcaptureListStruct?
     var pickuplisttableviewDatasource:[PickupcaptureListStruct.TicketList]?
+    var concessionerRejectlistModel:ConcesRejectListStruct?
+    var concessionerRejecttableviewDatasource:[ConcesRejectListStruct.TicketList]?
+    var concessonerCloseListModel:ConcessionerClosedListStruct?
+    var concessionerClosedTableDatasource:[ConcessionerClosedListStruct.TicketList]?
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -24,10 +29,18 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
         searchBar.delegate = self
         // Concessionerticketsist
         if tag == 0 {
+            self.navTitle.text = "Requests List"
             self.getRequestListWS()
         //pickupcapturelist
         }  else if tag == 1 {
+            self.navTitle.text = "Pickup capture List"
             self.getpickupcaptureList()
+        }  else if tag == 2 {
+            self.navTitle.text = "Rejected List"
+            self.getconcessionerRejectList()
+        }  else if tag == 3 {
+            self.navTitle.text = "Closed List"
+            self.getconcessionerClosedList()
         }
     }
     
@@ -128,17 +141,140 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
             }
         }
     }
+    func getconcessionerRejectList(){
+        let params = ["CONC_EMP_ID": UserDefaultVars.empId,
+                      "DEVICEID": deviceId,
+                      "TOKEN_ID": UserDefaultVars.token
+        ]
+      //print(params)
+        guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
+        NetworkRequest.makeRequest(type: ConcesRejectListStruct.self, urlRequest: Router.getConcesRejectList(Parameters: params)) { [weak self](result) in
+            switch result
+            {
+            case .success(let getList):
+              //  print(getList)
+                self?.concessionerRejectlistModel = getList
+                self?.concessionerRejecttableviewDatasource = self?.concessionerRejectlistModel?.ticketList
+                if getList.statusCode == "600"{
+                    self?.showAlert(message: getList.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
+                if getList.statusCode == "200"{
+                    if getList.ticketList?.isEmpty == true {
+                        self?.showAlert(message: "No Records found")
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.tableView.reloadData()
+                        }
+                    }
+                } else {
+                    self?.showCustomAlert(message: getList.statusMessage ?? ""){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+                
+            case .failure(let err):
+                print(err)
+                DispatchQueue.main.async {
+                    //  self?.showAlert(message: serverNotResponding)
+                    self?.showCustomAlert(message: serverNotResponding){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+            }
+        }
+    }
+    func getconcessionerClosedList(){
+        let params = ["CONC_EMP_ID": UserDefaultVars.empId,
+                      "DEVICEID": deviceId,
+                      "TOKEN_ID": UserDefaultVars.token
+        ]
+      //print(params)
+        guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
+        NetworkRequest.makeRequest(type: ConcessionerClosedListStruct.self, urlRequest: Router.getConcClosedList(Parameters: params)) { [weak self](result) in
+            switch result
+            {
+            case .success(let getList):
+              //  print(getList)
+                self?.concessonerCloseListModel = getList
+                self?.concessionerClosedTableDatasource = self?.concessonerCloseListModel?.ticketList
+                if getList.statusCode == "600"{
+                    self?.showAlert(message: getList.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
+                if getList.statusCode == "200"{
+                    if getList.ticketList?.isEmpty == true {
+                        self?.showAlert(message: "No Records found")
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.tableView.reloadData()
+                        }
+                    }
+                } else {
+                    self?.showCustomAlert(message: getList.statusMessage ?? ""){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+                
+            case .failure(let err):
+                print(err)
+                DispatchQueue.main.async {
+                    self?.showCustomAlert(message: serverNotResponding){
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+            }
+        }
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableviewDatasource?.count ?? 0
+        if tag == 0{
+            return  tableviewDatasource?.count ?? 0
+        } else if tag == 1{
+            return pickuplisttableviewDatasource?.count ?? 0
+        } else if tag == 2
+        {
+            return concessionerRejecttableviewDatasource?.count ?? 0
+        } else if tag == 3
+        {
+            return concessionerClosedTableDatasource?.count ?? 0
+        }
+        return  0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ConcessionerTicketscell") as! ConcessionerTicketscell
-        let details = tableviewDatasource?[indexPath.row]
-        cell.ticketIdLb.text = details?.ticketID
-        cell.locationLb.text = details?.location
-        cell.dateLB.text = details?.createdDate
-        cell.estimatedWtLB.text = details?.estWt
-        cell.img?.image = UIImage.init(named:details?.image1Path ?? "")
+        if tag == 0 {
+            let details = tableviewDatasource?[indexPath.row]
+            cell.ticketIdLb.text = details?.ticketID
+            cell.locationLb.text = details?.location
+            cell.dateLB.text = details?.createdDate
+            cell.estimatedWtLB.text = details?.estWt
+            cell.img?.image = UIImage.init(named:details?.image1Path ?? "")
+        } else if tag == 1{
+            let details = pickuplisttableviewDatasource?[indexPath.row]
+            cell.ticketIdLb.text = details?.ticketID
+            cell.locationLb.text = details?.location
+            cell.dateLB.text = details?.createdDate
+            cell.estimatedWtLB.text = details?.estWt
+            cell.img?.image = UIImage.init(named:details?.image1Path ?? "")
+        } else if tag == 2{
+            let details = concessionerRejecttableviewDatasource?[indexPath.row]
+            cell.ticketIdLb.text = details?.ticketID
+            cell.locationLb.text = details?.location
+            cell.dateLB.text = details?.createdDate
+          //  cell.estimatedWtLB.text = details?.st
+            cell.img?.image = UIImage.init(named:details?.image1Path ?? "")
+        } else if tag == 3{
+            let details = concessionerClosedTableDatasource?[indexPath.row]
+            cell.ticketIdLb.text = details?.ticketID
+            cell.locationLb.text = details?.location
+            cell.dateLB.text = details?.ticketClosedDate
+          //  cell.estimatedWtLB.text = details?.st
+           // cell.img?.image = UIImage.init(named:details?.im ?? "")
+        }
         cell.selectionStyle = .none
         return cell
     }
@@ -270,6 +406,101 @@ struct PickupcaptureListStruct: Codable {
         }
     }
 }
+
+
+
+// MARK: - ConcessionerRejectListStruct
+struct ConcesRejectListStruct: Codable {
+    let statusCode, statusMessage: String?
+    let ticketList: [TicketList]?
+
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "STATUS_CODE"
+        case statusMessage = "STATUS_MESSAGE"
+        case ticketList = "TicketList"
+    }
+    // MARK: - TicketList
+    struct TicketList: Codable {
+        let ticketID, location, createdDate, reasonForReject: String?
+        let paymentStatus, wardID, wardName, circleID: String?
+        let circleName, zoneID, zoneName, landmark: String?
+        let image1Path: String?
+        let status: String?
+
+        enum CodingKeys: String, CodingKey {
+            case ticketID = "TICKET_ID"
+            case location = "LOCATION"
+            case createdDate = "CREATED_DATE"
+            case reasonForReject = "REASON_FOR_REJECT"
+            case paymentStatus = "PAYMENT_STATUS"
+            case wardID = "WARD_ID"
+            case wardName = "WARD_NAME"
+            case circleID = "CIRCLE_ID"
+            case circleName = "CIRCLE_NAME"
+            case zoneID = "ZONE_ID"
+            case zoneName = "ZONE_NAME"
+            case landmark = "LANDMARK"
+            case image1Path = "IMAGE1_PATH"
+            case status = "STATUS"
+        }
+    }
+}
+
+
+// MARK: - ConcessionerClosedListStruct
+struct ConcessionerClosedListStruct: Codable {
+    let statusCode, statusMessage: String?
+    let ticketList: [TicketList]?
+
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "STATUS_CODE"
+        case statusMessage = "STATUS_MESSAGE"
+        case ticketList = "TicketList"
+    }
+    // MARK: - TicketList
+    struct TicketList: Codable {
+        let ticketID, location, ticketRaisedDate, ticketClosedDate: String?
+        let zoneID: String?
+        let zoneName: String?
+        let circleID: String?
+        let circleName: String?
+        let wardID: String?
+        let wardName, concessionerName: String?
+        let typeOfWaste: String?
+        let status: String?
+        let listVehicles: [ListVehicle]?
+
+        enum CodingKeys: String, CodingKey {
+            case ticketID = "TICKET_ID"
+            case location = "LOCATION"
+            case ticketRaisedDate = "TICKET_RAISED_DATE"
+            case ticketClosedDate = "TICKET_CLOSED_DATE"
+            case zoneID = "ZONE_ID"
+            case zoneName = "ZONE_NAME"
+            case circleID = "CIRCLE_ID"
+            case circleName = "CIRCLE_NAME"
+            case wardID = "WARD_ID"
+            case wardName = "WARD_NAME"
+            case concessionerName = "CONCESSIONER_NAME"
+            case typeOfWaste = "TYPE_OF_WASTE"
+            case status = "STATUS"
+            case listVehicles
+        }
+    }
+}
+
+
+
+// MARK: - ListVehicle
+struct ListVehicle: Codable {
+    let vehicleNo, vehicleID: String?
+
+    enum CodingKeys: String, CodingKey {
+        case vehicleNo = "VEHICLE_NO"
+        case vehicleID = "VEHICLE_ID"
+    }
+}
+
 
 
 

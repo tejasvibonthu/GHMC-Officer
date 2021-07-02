@@ -41,6 +41,15 @@ class ConcessionerDasboardVC: UIViewController {
         let closedTickets = UITapGestureRecognizer(target: self, action:#selector(self.taponclosedListView))
         closedListView.addGestureRecognizer(closedTickets)
     }
+    @IBAction func logoutClick(_ sender: Any) {
+        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+        UserDefaults.standard.removeObject(forKey:"mpin")
+        UserDefaults.standard.synchronize()
+        let navVc = UINavigationController(rootViewController: vc)
+        self.view.window?.rootViewController = navVc
+        self.view.window?.makeKeyAndVisible()
+        
+    }
     //tickets List
     @objc func taponticketListView(){
         let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier: "ConcessionerTicketsList") as! ConcessionerTicketsList
@@ -55,15 +64,15 @@ class ConcessionerDasboardVC: UIViewController {
      }
     //concessionerrejected list
     @objc func taponrejectListView(){
-//        let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
-//       // vc.tag = 2
-//        navigationController?.pushViewController(vc, animated: true)
+        let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier: "ConcessionerTicketsList") as! ConcessionerTicketsList
+        vc.tag = 2
+        navigationController?.pushViewController(vc, animated: true)
      }
     //concessioner closed tickets
     @objc func taponclosedListView(){
-//        let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
-//     //   vc.tag = 3
-//        navigationController?.pushViewController(vc, animated: true)
+        let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier: "ConcessionerTicketsList") as! ConcessionerTicketsList
+        vc.tag = 3
+        navigationController?.pushViewController(vc, animated: true)
      }
    func getConcessionerDashboardWS() {
     let params = ["EMPLOYEE_ID" : UserDefaultVars.empId,

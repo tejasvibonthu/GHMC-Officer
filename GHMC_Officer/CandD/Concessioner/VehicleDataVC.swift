@@ -107,7 +107,7 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
             showAlert(message: "Please enter no of vehicles")
             return false
         }
-        else if imgData == nil {
+        else if camImg.isImagePicked == false {
             showAlert(message: "Please capture photo")
             return false
         }

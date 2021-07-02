@@ -79,14 +79,13 @@ class AMOHDashoboardVC: UIViewController {
         vc.tag = 2
         navigationController?.pushViewController(vc, animated: true)
      }
-    //concessioner closed tickets
+    //concessioner closed tickets(Amoh login)
     @objc func taponconnsessionerclosedTickets(){
-//        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
-//        vc.tag = 3
-//        navigationController?.pushViewController(vc, animated: true)
-        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerCloseTicketDetailsVc") as! ConcessionerCloseTicketDetailsVc
-  
+        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
+        vc.tag = 3
         navigationController?.pushViewController(vc, animated: true)
+//        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerCloseTicketDetailsVc") as! ConcessionerCloseTicketDetailsVc
+//          navigationController?.pushViewController(vc, animated: true)
      }
     @objc func taponAmohClosedTickets(){
      

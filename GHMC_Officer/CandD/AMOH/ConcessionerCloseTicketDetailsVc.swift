@@ -21,18 +21,22 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
     @IBOutlet weak var lb_ramkysupervisorname: UILabel!
     @IBOutlet weak var remarksTxt: UITextField!
     @IBOutlet weak var reAssignBtn: UIButton!
-    
     @IBOutlet weak var lb_typeOfWaste: UILabel!
-    
     @IBOutlet weak var closeRadioBtn: UIButton!
-    
-    
-    
+    var ticketDetails:AmohconcessionerClosedListStruct.TicketList?
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        lb_TickedID.text = ticketDetails?.ticketID
+        lb_TickedClosedDate.text = ticketDetails?.ticketClosedDate
+        lb_TickedRaisedDate.text = ticketDetails?.ticketRaisedDate
+        lb_zone.text = ticketDetails?.zoneName
+        lb_circle.text = ticketDetails?.circleName
+        lb_ward.text = ticketDetails?.wardName
+        lb_ramkysupervisorname.text = ticketDetails?.concessionerName
+        lb_location.text = ticketDetails?.location
+        lb_typeOfWaste.text = ticketDetails?.typeOfWaste
 
-        // Do any additional setup after loading the view.
     }
     @IBAction func backBtnClicked(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
