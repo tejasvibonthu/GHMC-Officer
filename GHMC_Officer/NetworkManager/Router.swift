@@ -117,6 +117,7 @@ enum Router:URLRequestConvertible{
     case DemoGraphics(Parameters:Parameters)
     case amohconcessionerClosedSubmit(Parameters:Parameters)
     case amohclosedList(Parameters:Parameters)
+    case amohCloseticketSubmit(Parameters:Parameters)
     //Concessioner
     case getConcessionerTickets(Parameters:Parameters)
     case submitConcessionerReq(Parameters:Parameters)
@@ -149,7 +150,7 @@ enum Router:URLRequestConvertible{
             return .get
         case .resendOtp:
             return .post
-        case .getAllCount,.userList,.userDetails,.fullGrievence,.grivenceHistory,.getstatusType,.getWard,.getClaimtStatus,.forwordtoAnotherWard,.updateGrivence,.abstarctReport,.showNotifications,.getGrievanceTypeList,.getCategoryTypeList,.getViewGrievances,.getGrievanceStatusCitizen,.reopenserviceCall,.postcommentService,.postFeedback,.getRamkeyVehicles, .versionCheck,.GrievancesCategoryList,.whereIam,.insertGrievance,.getAMOHRequestList,.getAMOHRequestEstimation,.calculateAmountbyTons,.getAmohDashboardList,.getConcessionerTickets,.submitConcessionerReq,.submitAMohReq,.getConcessionerRejectList,.getPaymentConformedList,.forwordtoConcessioner,.concessionerReassignstatus,.getConcessionerDashboardList,.raiseRequest,.DemoGraphics,.getPickupCaptureTickets,.gettripsAtPlant,.tripSubmit,.getConcesRejectList,.getConcClosedList,.getamohConcessionerCloseList,.amohconcessionerClosedSubmit,.amohclosedList,.pickupcaptureSubmit:
+        case .getAllCount,.userList,.userDetails,.fullGrievence,.grivenceHistory,.getstatusType,.getWard,.getClaimtStatus,.forwordtoAnotherWard,.updateGrivence,.abstarctReport,.showNotifications,.getGrievanceTypeList,.getCategoryTypeList,.getViewGrievances,.getGrievanceStatusCitizen,.reopenserviceCall,.postcommentService,.postFeedback,.getRamkeyVehicles, .versionCheck,.GrievancesCategoryList,.whereIam,.insertGrievance,.getAMOHRequestList,.getAMOHRequestEstimation,.calculateAmountbyTons,.getAmohDashboardList,.getConcessionerTickets,.submitConcessionerReq,.submitAMohReq,.getConcessionerRejectList,.getPaymentConformedList,.forwordtoConcessioner,.concessionerReassignstatus,.getConcessionerDashboardList,.raiseRequest,.DemoGraphics,.getPickupCaptureTickets,.gettripsAtPlant,.tripSubmit,.getConcesRejectList,.getConcClosedList,.getamohConcessionerCloseList,.amohconcessionerClosedSubmit,.amohclosedList,.pickupcaptureSubmit,.amohCloseticketSubmit:
             return .post
         }
     }
@@ -270,6 +271,8 @@ enum Router:URLRequestConvertible{
             return "AMOH_CLOSED_TICKETS_LIST"
         case .pickupcaptureSubmit:
             return "CONCESSIONER_PICKUP_CAPTURE_SUBMIT"
+        case .amohCloseticketSubmit:
+            return "AMOH_CLOSE_AMOH_CLOSE_TICKET_SUBMIT"
         }
     }
     func asURLRequest() throws -> URLRequest {
@@ -452,6 +455,8 @@ enum Router:URLRequestConvertible{
         case .amohclosedList(let parameters):
             urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
         case .pickupcaptureSubmit(let parameters):
+            urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
+        case .amohCloseticketSubmit(let parameters):
             urlRequest = try JSONEncoding.default.encode(urlRequestIs,with: parameters)
             }
         return urlRequest

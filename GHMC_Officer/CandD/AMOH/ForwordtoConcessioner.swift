@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ForwordtoConcessioner: UIViewController {
     @IBOutlet weak var dateLb: UILabel!
@@ -17,7 +18,7 @@ class ForwordtoConcessioner: UIViewController {
     @IBOutlet weak var typeofWasteLb: UILabel!
     @IBOutlet weak var typeofvehiclesLb: UILabel!
     @IBOutlet weak var noofvehiclesLb: UILabel!
-    @IBOutlet weak var camImg: UIImage!
+    @IBOutlet weak var camImg: UIImageView!
     @IBOutlet weak var estimationLb: UILabel!
    
     var ticketDetails:GetPaidListStruct.PaidList?
@@ -32,6 +33,7 @@ class ForwordtoConcessioner: UIViewController {
         typeofvehiclesLb.text = ticketDetails?.vehicleType
         noofvehiclesLb.text = ticketDetails?.noOfVehicles
         estimationLb.text = ticketDetails?.estWt
+        camImg.sd_setImage(with: URL(string:ticketDetails?.image1Path ?? ""), placeholderImage: UIImage(named: "noi"))
         
         
     }

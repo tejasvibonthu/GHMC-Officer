@@ -233,8 +233,7 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
                     if resp.statusCode == "200"
                     {
                         self?.showAlert(message: resp.statusMessage ?? ""){
-                           let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerTicketsList") as! ConcessionerTicketsList
-                            vc.tag = 0
+                           let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerDasboardVC") as! ConcessionerDasboardVC
                             self?.navigationController?.pushViewController(vc, animated:true)
                         }
                     }

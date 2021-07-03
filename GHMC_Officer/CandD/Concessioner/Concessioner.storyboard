@@ -925,7 +925,7 @@
                                                     <constraint firstItem="1oo-AI-ftz" firstAttribute="width" secondItem="f5k-dp-RcU" secondAttribute="width" multiplier="1:1.5" id="0rN-iP-fZi"/>
                                                 </constraints>
                                             </stackView>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Vehicle No" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="x8h-nU-0cN">
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Vehicle No" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="x8h-nU-0cN" customClass="SearchTextField" customModule="SearchTextField">
                                                 <rect key="frame" x="0.0" y="84" width="382" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="DyP-TR-KXp"/>

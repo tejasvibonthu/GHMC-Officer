@@ -11,6 +11,7 @@ import SearchTextField
 class ConcessionerpickupCaptureVC: UIViewController {
 
   @IBOutlet weak var afterPickupImgView: CustomImagePicker!
+
   @IBOutlet weak var beforePickupImgView: CustomImagePicker!
  
   @IBOutlet weak var ticketIdLb: UILabel!
@@ -28,8 +29,11 @@ class ConcessionerpickupCaptureVC: UIViewController {
   }
   var ticketData : PickupcaptureListStruct.TicketList?
   var vehicleId : String!
+  var isLastTrip : Bool?
   override func viewDidLoad() {
         super.viewDidLoad()
+    afterPickupImgView.parentViewController = self
+    beforePickupImgView.parentViewController = self
         configureUI()
         configureSearchTextField()
     }
@@ -48,9 +52,10 @@ class ConcessionerpickupCaptureVC: UIViewController {
   {
     let filterStrings = ticketData?.listVehicles?.compactMap({$0.vehicleNo})
     if let filte = filterStrings{
+    print(filte)
       vehicleNoTxt.filterStrings(filte)
     }
-    
+
     vehicleNoTxt.theme.bgColor = UIColor.white
     vehicleNoTxt.theme.font = UIFont.systemFont(ofSize: 13.0)
     vehicleNoTxt.itemSelectionHandler = { filteredResults, itemPosition in
@@ -71,10 +76,34 @@ class ConcessionerpickupCaptureVC: UIViewController {
     
     var isPending : String = "Y"
     guard vehicleNoTxt.text != "" else {self.showAlert(message: "Please Enter Vehicle No");return}
-    guard beforePickupImgView.isImagePicked == true else {self.showAlert(message: "Please Capture Before pickup Imape");return}
+    guard beforePickupImgView.isImagePicked == true  else {self.showAlert(message: "Please Capture Before pickup Imape");return}
+    if isLastTrip == nil
+    {
+        self.showAlertWithYesNoCompletions(message: "Is this your last trip") {
+         //NO Completion
+            isPending = "Y"
+            self.isLastTrip = false
+            // self.concessionerPickupCaptureSubmitService(parameters: parameters)
+        } Yescompletion: {
+            self.afterPickupContainerView.isHidden = false
+            isPending = "N"
+            self.isLastTrip = true
+            
+        }
+        return
+    }
+    if isLastTrip == true
+    {
+        if afterPickupImgView.isImagePicked == false
+        {
+            self.showAlert(message: "Please Capture After pickup Imape")
+            return
+        }
+    }
+    
    
     let parameters : [String : Any] = [
-      "CNDW_GRIEVANCE_ID":ticketData?.ticketID,
+      "CNDW_GRIEVANCE_ID":ticketData?.ticketID ?? "",
       "EMPLOYEE_ID": UserDefaultVars.empId,
       "DEVICEID": deviceId,
       "TOKEN_ID": UserDefaultVars.token!,
@@ -88,26 +117,31 @@ class ConcessionerpickupCaptureVC: UIViewController {
         ]
       ]
     ]
-    if afterPickupContainerView.isHidden == false && afterPickupImgView.isImagePicked == true
-    {
-      //servicecall
-      concessionerPickupCaptureSubmitService(parameters: parameters)
-  
-    }
-    else if afterPickupContainerView.isHidden == false && afterPickupImgView.isImagePicked == false
-    {
-      self.showAlert(message: "Please Capture After pickup Imape")
-    }
-    else {
-     
-      self.showAlertWithYesNoCompletions(message: "Is this your last trip") {
-        //servicecall
-        self.concessionerPickupCaptureSubmitService(parameters: parameters)
-      } Yescompletion: {
-        self.afterPickupContainerView.isHidden = false
-        isPending = "N"
-      }
-    }
+    concessionerPickupCaptureSubmitService(parameters: parameters)
+    
+    
+//    if afterPickupContainerView.isHidden == false && afterPickupImgView.isImagePicked == true
+//    {
+//      //servicecall
+//      concessionerPickupCaptureSubmitService(parameters: parameters)
+//
+//    }
+//    else if afterPickupContainerView.isHidden == false && afterPickupImgView.isImagePicked == false
+//    {
+//      self.showAlert(message: "Please Capture After pickup Imape")
+//    }
+//    else {
+//           self.showAlertWithYesNoCompletions(message: "Is this your last trip") {
+//        //servicecall
+//        self.isLastTrip = false
+//       // self.concessionerPickupCaptureSubmitService(parameters: parameters)
+//      } Yescompletion: {
+//        self.afterPickupContainerView.isHidden = false
+//        isPending = "N"
+//        self.isLastTrip = true
+//
+//      }
+//    }
   }
   
   //MARK:- ServiceCall
@@ -129,7 +163,8 @@ class ConcessionerpickupCaptureVC: UIViewController {
                     if resp.statusCode == "200"
                     {
                         self?.showAlert(message: resp.statusMessage ?? ""){
-                            self?.navigationController?.popViewController(animated: true)
+                            let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerDasboardVC") as! ConcessionerDasboardVC
+                             self?.navigationController?.pushViewController(vc, animated:true)
                         }
                     }
                     else

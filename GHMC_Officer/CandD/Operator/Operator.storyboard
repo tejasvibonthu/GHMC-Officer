@@ -192,29 +192,29 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QOO-uU-CfL">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bZy-Uj-Fdi">
-                                        <rect key="frame" x="8" y="8" width="30" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="h4p-ae-EN4"/>
-                                            <constraint firstAttribute="width" constant="30" id="khS-lD-1tV"/>
-                                        </constraints>
-                                        <state key="normal" title="Button" image="left_arrow"/>
-                                        <connections>
-                                            <action selector="backClick:" destination="VgM-sL-gqT" eventType="touchUpInside" id="tXp-uw-Mud"/>
-                                        </connections>
-                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Trips at plant" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A8B-Zj-jTG">
                                         <rect key="frame" x="160" y="16" width="94" height="18"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rTm-Kl-PLe">
+                                        <rect key="frame" x="368" y="10" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="m2i-2k-7ul"/>
+                                            <constraint firstAttribute="height" constant="30" id="uQc-EC-glm"/>
+                                        </constraints>
+                                        <state key="normal" title="Button" image="logout"/>
+                                        <connections>
+                                            <action selector="logoutClick:" destination="VgM-sL-gqT" eventType="touchUpInside" id="M62-x6-Dd5"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="bZy-Uj-Fdi" firstAttribute="leading" secondItem="QOO-uU-CfL" secondAttribute="leading" constant="8" id="8fy-mF-0jg"/>
+                                    <constraint firstAttribute="trailing" secondItem="rTm-Kl-PLe" secondAttribute="trailing" constant="16" id="Qii-NA-37c"/>
                                     <constraint firstAttribute="height" constant="50" id="RM9-1W-wDO"/>
-                                    <constraint firstItem="bZy-Uj-Fdi" firstAttribute="top" secondItem="QOO-uU-CfL" secondAttribute="top" constant="8" id="j7h-Gb-4EE"/>
+                                    <constraint firstItem="rTm-Kl-PLe" firstAttribute="centerY" secondItem="QOO-uU-CfL" secondAttribute="centerY" id="rtk-O5-23x"/>
                                     <constraint firstItem="A8B-Zj-jTG" firstAttribute="centerY" secondItem="QOO-uU-CfL" secondAttribute="centerY" id="tR8-y3-8kv"/>
                                     <constraint firstItem="A8B-Zj-jTG" firstAttribute="centerX" secondItem="QOO-uU-CfL" secondAttribute="centerX" id="tgi-Cf-g2C"/>
                                 </constraints>
@@ -542,6 +542,7 @@
     <resources>
         <image name="ghmc_layer" width="540" height="926"/>
         <image name="left_arrow" width="28" height="28"/>
+        <image name="logout" width="26" height="26"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

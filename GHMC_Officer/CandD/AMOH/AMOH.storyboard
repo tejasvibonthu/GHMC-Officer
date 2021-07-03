@@ -1683,7 +1683,7 @@
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="UBb-Z8-f7p" customClass="CustomImagePicker" customModule="GHMC_Officer" customModuleProvider="target">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="UBb-Z8-f7p">
                                         <rect key="frame" x="161.5" y="224" width="75" height="75"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="75" id="czJ-YO-aKx"/>
@@ -1756,7 +1756,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="camImg" destination="JN8-se-9Rb" id="Lxg-6w-9Lb"/>
+                        <outlet property="camImg" destination="UBb-Z8-f7p" id="dNf-JU-5Bn"/>
                         <outlet property="circleLb" destination="X8M-T2-Bi4" id="Ubs-ZB-oBd"/>
                         <outlet property="dateLb" destination="Hmf-SO-fDK" id="5h6-it-chG"/>
                         <outlet property="estimationLb" destination="2X0-fb-Td3" id="NQV-Js-ziw"/>

@@ -95,7 +95,43 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
             }
         }
     func amohCloseTicketsWS(){
-        
+        let params = [
+            "CNDW_GRIEVANCE_ID": amohDetails?.ticketID ?? "",
+            "EMPLOYEE_ID": UserDefaultVars.empId,
+            "DEVICEID": deviceId,
+            "TOKEN_ID": UserDefaultVars.token ?? "",
+            "IS_REASSIGN": isreassign ?? "" ,
+            "REMARKS":remarksTxt.text ?? ""
+            
+            
+        ] as [String : Any]
+            print(params)
+        guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+        NetworkRequest.makeRequest(type: AmohConcessionerClosedtStruct.self, urlRequest: Router.amohCloseticketSubmit(Parameters: params)) { [weak self](result) in
+                switch result {
+                case .success(let resp):
+                    print(resp)
+                    if resp.statusCode == "600"{
+                        self?.showAlert(message: resp.statusMessage ?? ""){
+                        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
+                                self?.navigationController?.pushViewController(vc, animated: true)
+                        }
+                    }
+                    if resp.statusCode == "200"
+                    {
+                        self?.showAlert(message: resp.statusMessage ?? "" ){
+                            self?.navigationController?.popViewController(animated: true)
+                        }
+                    }
+                    else
+                    {
+                        self?.showAlert(message: resp.statusMessage ?? "" )
+                    }
+                case .failure(let err):
+                    print(err)
+                    self?.showAlert(message: err.localizedDescription)
+                }
+            }
     }
     func validation() -> Bool{
     if closeRadioBtn.isSelected == false && reAssignBtn.isSelected == false{
