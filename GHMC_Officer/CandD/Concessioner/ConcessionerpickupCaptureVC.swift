@@ -30,6 +30,7 @@ class ConcessionerpickupCaptureVC: UIViewController {
   var ticketData : PickupcaptureListStruct.TicketList?
   var vehicleId : String!
   var isLastTrip : Bool?
+  var isPending : String = "Y"
   override func viewDidLoad() {
         super.viewDidLoad()
     afterPickupImgView.parentViewController = self
@@ -74,19 +75,19 @@ class ConcessionerpickupCaptureVC: UIViewController {
   
   @IBAction func submitBtnClicked(_ sender: UIButton) {
     
-    var isPending : String = "Y"
+  
     guard vehicleNoTxt.text != "" else {self.showAlert(message: "Please Enter Vehicle No");return}
     guard beforePickupImgView.isImagePicked == true  else {self.showAlert(message: "Please Capture Before pickup Imape");return}
     if isLastTrip == nil
     {
         self.showAlertWithYesNoCompletions(message: "Is this your last trip") {
          //NO Completion
-            isPending = "Y"
+            self.isPending = "Y"
             self.isLastTrip = false
             // self.concessionerPickupCaptureSubmitService(parameters: parameters)
         } Yescompletion: {
             self.afterPickupContainerView.isHidden = false
-            isPending = "N"
+            self.isPending = "N"
             self.isLastTrip = true
             
         }
@@ -117,31 +118,10 @@ class ConcessionerpickupCaptureVC: UIViewController {
         ]
       ]
     ]
+  //  print(isPending)
     concessionerPickupCaptureSubmitService(parameters: parameters)
     
-    
-//    if afterPickupContainerView.isHidden == false && afterPickupImgView.isImagePicked == true
-//    {
-//      //servicecall
-//      concessionerPickupCaptureSubmitService(parameters: parameters)
-//
-//    }
-//    else if afterPickupContainerView.isHidden == false && afterPickupImgView.isImagePicked == false
-//    {
-//      self.showAlert(message: "Please Capture After pickup Imape")
-//    }
-//    else {
-//           self.showAlertWithYesNoCompletions(message: "Is this your last trip") {
-//        //servicecall
-//        self.isLastTrip = false
-//       // self.concessionerPickupCaptureSubmitService(parameters: parameters)
-//      } Yescompletion: {
-//        self.afterPickupContainerView.isHidden = false
-//        isPending = "N"
-//        self.isLastTrip = true
-//
-//      }
-//    }
+
   }
   
   //MARK:- ServiceCall

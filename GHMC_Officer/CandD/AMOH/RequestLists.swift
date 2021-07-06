@@ -30,25 +30,24 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
         tableView.dataSource = self
         tableView.delegate = self
         searchBar.delegate = self
-            if tag == 0 {
+            switch tag {
+            case 0:
                 self.navTitleLb.text = "No of requests"
                 self.getRequestListWS()
-            }
-            else if tag == 1 {
+            case 1:
                 self.navTitleLb.text = "Payment Conformed Tickets"
                 self.getPaymentConformationListWS()
-            }
-            else if tag == 2 {
+            case 2:
                 self.navTitleLb.text = "Concessioner Rejected tickets"
                 self.getConcessionerRejectListWS()
-            }
-            else if tag == 3 {
+            case 3:
                 self.navTitleLb.text = "Concessioner Closed tickets"
                 self.getConcessionerCloseListWS()
-            }
-            else if tag == 4 {
+            case 4:
                 self.navTitleLb.text = "Amoh Closed tickets"
                 self.getamohCloseListWS()
+            default:
+                break
             }
     }
     func getRequestListWS(){
@@ -355,8 +354,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             cell.locationLb.text = details?.location
             cell.dateLb.text = details?.createdDate
             cell.estimatedwasteLb.text = details?.estWt
-            cell.imgView?.image = UIImage.init(named:details?.imagePath ?? "")
-            cell.satusLb.isHidden = true
+            cell.imgView?.sd_setImage(with: URL(string:details?.imagePath  ?? ""), placeholderImage: UIImage(named: "noi"))
+            cell.satusSV.isHidden = true
             cell.selectionStyle = .none
             //paymentConformation
         } else if tag == 1 {
@@ -365,9 +364,9 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             cell.locationLb.text = details?.location
             cell.dateLb.text = details?.createdDate
             cell.estimatedwasteLb.text = details?.estWt
-            cell.imgView?.image = UIImage.init(named:details?.image1Path ?? "")
-            cell.satusLb.text = details?.status
-            cell.satusLb.isHidden = false
+            cell.imgView?.sd_setImage(with: URL(string:details?.image1Path  ?? ""), placeholderImage: UIImage(named: "noi"))
+            cell.lb_status.text = details?.status
+            cell.satusSV.isHidden = false
             cell.selectionStyle = .none
             //concessionerRejected
         } else if tag == 2{
@@ -375,27 +374,29 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             cell.ticketIdLb.text = details?.tokenID
             cell.locationLb.text = details?.location
             cell.dateLb.text = details?.createdDate
-            cell.estimatedwasteLb.text = details?.estWt
-            cell.imgView?.image = UIImage.init(named:details?.imagePath ?? "")
-            cell.satusLb.isHidden = false
+            cell.imgView?.sd_setImage(with: URL(string:details?.imagePath  ?? ""), placeholderImage: UIImage(named: "noi"))
+            cell.satusSV.isHidden = false
+            cell.estmationSV.isHidden = true
+            cell.lb_status.text = details?.status
+            cell.lb_statusHeading.text = "Reason for reject"
             cell.selectionStyle = .none
-        } else if tag == 3{
+        } else if tag == 3{ //Concessioner Closed tickets
             let details = concessionerCloselistTabledatasource?[indexPath.row]
             cell.ticketIdLb.text = details?.ticketID
             cell.locationLb.text = details?.location
             cell.dateLb.text = details?.ticketClosedDate
-          //  cell.estimatedwasteLb.text = details?.e
-           // cell.imgView?.image = UIImage.init(named:details?.i ?? "")
-            cell.satusLb.isHidden = false
+            cell.estmationSV.isHidden = true
+           // cell.imgView?.sd_setImage(with: URL(string:details?.imagePath  ?? ""), placeholderImage: UIImage(named: "noi"))
+            cell.satusSV.isHidden = true
             cell.selectionStyle = .none
-        } else if tag == 4{
+        } else if tag == 4{ //Amoh Closed tickets
             let details = amohClosedlistTableviewdatasource?[indexPath.row]
             cell.ticketIdLb.text = details?.ticketID
             cell.locationLb.text = details?.location
             cell.dateLb.text = details?.ticketClosedDate
-          //  cell.estimatedwasteLb.text = details?.e
+            cell.estmationSV.isHidden = true
            // cell.imgView?.image = UIImage.init(named:details?.im ?? "")
-            cell.satusLb.isHidden = false
+            cell.satusSV.isHidden = true
             cell.selectionStyle = .none
         }
         return cell
@@ -454,18 +455,29 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             }
         } else{
             if searchString != "", searchString.count > 0 {
-                if tag == 0 {
+                switch tag {
+                case 0:
                     self.tableviewnoofReqDatasource = self.requestListModel?.amohList?.filter {
                         return $0.tokenID?.range(of: searchString, options: .caseInsensitive) != nil
                     }
-                }else if tag == 1 {
+                case 1:
                     self.tableviewPaymentDatasource = self.paymentComformListModel?.paidList?.filter {
                         return $0.ticketID?.range(of: searchString, options: .caseInsensitive) != nil
                     }
-                } else if tag == 2{
+                case 2:
                     self.tableviewDatasource = self.rejectListModel?.ticketsList?.filter {
                         return $0.tokenID?.range(of: searchString, options: .caseInsensitive) != nil
                     }
+                case 3:
+                    self.concessionerCloselistTabledatasource = self.concessionerCloselistmodel?.ticketList?.filter {
+                        return $0.ticketID?.range(of: searchString, options: .caseInsensitive) != nil
+                    }
+                case 4:
+                    self.amohClosedlistTableviewdatasource = self.amohClosedListModel?.ticketList?.filter {
+                        return $0.ticketID?.range(of: searchString, options: .caseInsensitive) != nil
+                    }
+                default:
+                    break
                 }
                 
             }
@@ -611,6 +623,7 @@ struct AmohconcessionerClosedListStruct: Codable {
         let wardName, concessionerName: String?
         let typeOfWaste: String?
         let status: String?
+       
         let listVehicles: [ListVehicle]?
 
         enum CodingKeys: String, CodingKey {
@@ -627,17 +640,20 @@ struct AmohconcessionerClosedListStruct: Codable {
             case concessionerName = "CONCESSIONER_NAME"
             case typeOfWaste = "TYPE_OF_WASTE"
             case status = "STATUS"
+           
             case listVehicles
         }
     }
     
     // MARK: - ListVehicle
     struct ListVehicle: Codable {
-        let vehicleNo, vehicleID: String?
+        let vehicleNo, vehicleID,  driverName, mobileNumber: String?
 
         enum CodingKeys: String, CodingKey {
             case vehicleNo = "VEHICLE_NO"
             case vehicleID = "VEHICLE_ID"
+            case driverName = "DRIVER_NAME"
+            case mobileNumber = "MOBILE_NUMBER"
         }
     }
 
@@ -688,11 +704,13 @@ struct AmohClosedListStruct: Codable {
     
     // MARK: - ListVehicle
     struct ListVehicle: Codable {
-        let vehicleNo, vehicleID: String?
+        let vehicleNo, vehicleID,  driverName, mobileNumber: String?
 
         enum CodingKeys: String, CodingKey {
             case vehicleNo = "VEHICLE_NO"
             case vehicleID = "VEHICLE_ID"
+            case driverName = "DRIVER_NAME"
+            case mobileNumber = "MOBILE_NUMBER"
         }
     }
 }

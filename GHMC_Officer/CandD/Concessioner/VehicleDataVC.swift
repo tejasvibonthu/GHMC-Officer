@@ -70,7 +70,6 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
             tableViewDataSource?[sender.tag].tons =  totalNoofVehicles * Int((item.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()))!
             self.noofTons = tableViewDataSource!.map({$0.tons}).reduce(0, +)
             self.dropdown.hide()
-           
             self.calculateAmountWS()
         }
     }

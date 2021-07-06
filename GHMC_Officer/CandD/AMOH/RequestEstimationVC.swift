@@ -32,7 +32,7 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     var zoneId:String?
     var wardId:String?
     var locationManager = CLLocationManager()
-    
+    @IBOutlet weak var imgtopConstraint: NSLayoutConstraint!
     @IBOutlet weak var dtaeLB: UILabel!
     @IBOutlet weak var zoneLB: UILabel!
     @IBOutlet weak var circleLB: UILabel!
@@ -69,31 +69,31 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         }
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
         whereAmIService()
-        dtaeLB.text = Date().string(format: "dd-MM-YYYY")
-
         if tag == 0 {
             dtaeLB.text = estimationDetails?.createdDate
             zoneLB.text = estimationDetails?.zoneID
             circleLB.text = estimationDetails?.circleID
             wardLB.text = estimationDetails?.wardID
-           // locationLB.text = estimationDetails?.landmark
-            imgView.image = UIImage(named: estimationDetails?.image1Path ?? "")
-        } else if tag == 1 {
-            dtaeLB.text = ticketDetails?.createdDate
+            landmarkTf.text = estimationDetails?.landmark
+            landmarkTf.borderStyle = .none
+            imgView.sd_setImage(with: URL(string:estimationDetails?.image1Path  ?? ""), placeholderImage: UIImage(named: "noi"))
+        }
+            else if tag == 5 {
+            dtaeLB.text = Date().string(format:"dd-MM-YYYY")
             zoneLB.text = ticketDetails?.zoneID
             circleLB.text = ticketDetails?.circleID
             wardLB.text = ticketDetails?.wardID
-            locationLB.text = ticketDetails?.landmark
-        } else if tag == 5 {
-            
+            imgtopConstraint.constant = 0
         }
         estimationwasteTF.isHidden = true
+        self.estimationwasteTF.isEnabled = false
         noofVehiclesTF.delegate = self
+        noofVehiclesTF.isHidden = true
         amountTF.isHidden = true
         amountTF.delegate = self
+        self.amountTF.isEnabled = false
         self.getRequestTypeWS()
         self.getVehiclesDataWS()
-       
         }
     //Mark :- LocationManager Delegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -102,18 +102,10 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         locationManager.stopUpdatingLocation()
         latitude  = String(location.coordinate.latitude)
         longitude = String(location.coordinate.longitude)
-        //            print(latitude)
-        //            print(longitude)
-        
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
         whereAmIService()
-        
-        //whereAmIWS()
     }
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-//        guard vehicletypeBtn.currentTitle != ""{
-//            
-//        }
         if noofVehiclesTF.text != "" {
         let noofVehicles = Int(noofVehiclesTF.text ?? "")
         let totalCost: Int = noofTons! * noofVehicles!
@@ -129,8 +121,6 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         noofVehiclesTF.resignFirstResponder()
-       // estimationwasteTF.resignFirstResponder()
-        
         return true
         }
     @IBAction func typeofReqClick(_ sender: UIButton) {
@@ -152,15 +142,18 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         dropdown.anchorView = sender
         dropdown.show()
         dropdown.selectionAction = {[unowned self] (index : Int , item : String) in
-            //  print("selected index \(index) item \(item)")
+          print("selected index \(index) item \(item)")
             
             sender.setTitle(item, for: .normal)
             vehicletypeBtn.setTitleColor(.black, for: .normal)
             self.vehicleId = self.vehicledatamodel?.vehiclelist?[index].vehicleTypeID
             self.dropdown.hide()
-            self.noofTons = Int((vehicletypeBtn.currentTitle?.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())! )
-            //  self.noofTons = String(Tons ?? 0)
-                    }
+            if index != 0 {
+                noofVehiclesTF.isHidden = false
+                self.noofTons = Int((vehicletypeBtn.currentTitle?.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())! )
+            }
+        }
+          
     }
 
    
@@ -268,22 +261,16 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     }
    
     func convertImageToBase64(image: UIImage) -> String {
-
-        //   let imageData1 = (image1Btn.image(for: .normal)!).jpeg(.lowest)
         let imageData = image.jpegData(compressionQuality: 0.001)!
-
-
-        //   let imageData = UIImagePNGRepresentation(image, 0.001)!
         return imageData.base64EncodedString(options: Data.Base64EncodingOptions.lineLength64Characters)
     }
         @IBAction func submitClick(_ sender: Any) {
-            //
-            if tag == 0{
-                self.requestsubmitWS()
-            } else if tag == 1{
-               // self.paymentpendingEstimationSubmitWS()
-            } else if tag == 5{
-                self.raiseRequestWS()
+            if validation() {
+                if tag == 0{ //request estimation from request list
+                    self.requestsubmitWS()
+                }  else if tag == 5{ //directly from dashboard raise
+                    self.raiseRequestWS()
+                }
             }
     }
     func requestsubmitWS(){
@@ -292,11 +279,11 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
             "CNDW_GRIEVANCE_ID" : ticketId ?? "",
             "EMPLOYEE_ID": UserDefaultVars.empId,
             "DEVICEID": deviceId,
-            "TOKEN_ID": UserDefaultVars.token,
+            "TOKEN_ID": UserDefaultVars.token ?? "",
             "IMAGE1_PATH": imgData,
             "VEHICLE_TYPE_ID": vehicleId ?? "",
             "NO_OF_VEHICLES": noofVehiclesTF.text ?? "",
-            "EST_WT": estimationwasteTF.text ?? "",
+            "EST_WT": weight ?? "",
             "AMOUNT": amountTF.text ?? ""
             
         ] as [String : Any]
@@ -314,7 +301,10 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
                 }
                 if resp.statusCode == "200"
                 {
-                    self?.showAlert(message: resp.statusMessage ?? "")
+                    self?.showAlert(message: resp.statusMessage ?? ""){
+                        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
+                        self?.navigationController?.pushViewController(vc, animated:true)
+                    }
                 }
                 else
                 {
@@ -326,45 +316,7 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
             }
         }
     }
-//    func paymentpendingEstimationSubmitWS(){
-//        let imgData = convertImageToBase64String(img: cameraImg.image!)
-//        let params = [
-//            "CNDW_GRIEVANCE_ID":ticketDetails?.ticketID ?? "",
-//            "EMPLOYEE_ID": UserDefaultVars.empId,
-//            "DEVICEID": deviceId,
-//            "TOKEN_ID": UserDefaultVars.token,
-//            "IMAGE1_PATH": imgData,
-//            "VEHICLE_TYPE_ID": vehicleId ?? "",
-//            "NO_OF_VEHICLES": noofVehiclesTF.text ?? "",
-//            "EST_WT":  estimationwasteTF.text ?? "",
-//            "WARD_ID": ticketDetails?.wardID ?? ""
-//
-//        ]as [String : Any]
-//        print(params)
-//    guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
-//    NetworkRequest.makeRequest(type: PaymentPendingSubmitStruct.self, urlRequest: Router.submitPaymentReq(Parameters: params)) { [weak self](result) in
-//            switch result {
-//            case .success(let resp):
-//                print(resp)
-//                if resp.statusCode == "600"{
-//                    self?.showCustomAlert(message: resp.statusMessage ?? ""){
-//                        self?.navigationController?.popViewController(animated: true)
-//                    }
-//                }
-//                if resp.statusCode == "200"
-//                {
-//                    self?.showAlert(message: resp.statusMessage ?? "")
-//                }
-//                else
-//                {
-//                    self?.showAlert(message: resp.statusMessage ?? "" )
-//                }
-//            case .failure(let err):
-//                print(err)
-//                self?.showAlert(message: err.localizedDescription)
-//            }
-//        }
-//    }
+
     func raiseRequestWS(){
         let imgData = convertImageToBase64String(img: cameraImg.image!)
         let params = [
@@ -377,10 +329,10 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
               "IMAGE2_PATH": "",
               "IMAGE3_PATH": "",
             "NO_OF_VEHICLES": noofVehiclesTF.text ?? "",
-            "EST_WT": estimationwasteTF.text ?? "",
+            "EST_WT": weight ?? "",
             "CREATED_BY": UserDefaultVars.empName,
               "DEVICEID": deviceId,
-            "TOKEN_ID": UserDefaultVars.token,
+            "TOKEN_ID": UserDefaultVars.token ?? "",
             "MOBILE_NUMBER": UserDefaultVars.mobileNumber,
               "LATITUDE": latitude ?? "",
               "LONGITUDE": longitude ?? ""
@@ -401,7 +353,10 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
                 }
                 if resp.statusCode == "200"
                 {
-                    self?.showAlert(message: "\(resp.statusMessage ?? serverNotResponding) \(resp.cndwGrievanceID ?? "")")
+                    self?.showAlert(message: "\(resp.statusMessage ?? serverNotResponding) \(resp.cndwGrievanceID ?? "")"){
+                        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
+                        self?.navigationController?.pushViewController(vc, animated:true)
+                    }
                 }
                 else
                 {
@@ -432,6 +387,25 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         estimationView.layer.shadowOpacity = 0.7
         estimationView.layer.shadowRadius = 2.0
         estimationView.layer.cornerRadius = 4
+    }
+    func validation() -> Bool{
+        if tag == 5 && landmarkTf.text == ""{
+       showAlert(message: "Please enter landmark")
+        return false
+    } else  if reqTypeBtn.currentTitle == "Select request type"{
+         showAlert(message: "Select request type")
+         return false
+     } else  if vehicletypeBtn.currentTitle == "Select vehicle type"{
+        showAlert(message: "Select vehicle type")
+        return false
+     } else  if noofVehiclesTF.text == ""{
+        showAlert(message: "Select no of vehicles")
+        return false
+     } else if cameraImg.isImagePicked == false {
+        showAlert(message: "Please capture image")
+        return false
+     }
+    return true
     }
 }
 

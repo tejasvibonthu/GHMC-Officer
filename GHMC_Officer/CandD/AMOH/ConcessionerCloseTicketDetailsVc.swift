@@ -176,10 +176,14 @@ extension ConcessionerCloseTicketDetailsVc : UITableViewDelegate , UITableViewDa
             let vehicledetails = ticketDetails?.listVehicles?[indexPath.row]
             cell.lb_tripno.text = vehicledetails?.vehicleID
             cell.lb_vehicleno.text = vehicledetails?.vehicleNo
+            cell.lb_drivername.text = vehicledetails?.driverName
+            cell.lb_mobileNo.text = vehicledetails?.mobileNumber
         } else if tag == 1 {
             let details = amohDetails?.listVehicles?[indexPath.row]
             cell.lb_tripno.text = details?.vehicleID
             cell.lb_vehicleno.text = details?.vehicleNo
+            cell.lb_drivername.text = details?.driverName
+            cell.lb_mobileNo.text = details?.mobileNumber
         }
         
         return cell

@@ -23,14 +23,14 @@ class ConcessionerRejcetorassignTicketVC: UIViewController {
         textView.isHidden = true
         self.ticketLb.text = ticketDetails?.tokenID
         self.reasonLb.text = ticketDetails?.status
-        self.img.image = UIImage(named: ticketDetails?.imagePath ?? "")
+        self.img.sd_setImage(with: URL(string:ticketDetails?.imagePath  ?? ""), placeholderImage: UIImage(named: "noi"))
     }
     @IBAction func backbtnClick(_ sender: Any) {
-        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "RequestLists")as! RequestLists
-//        vc.ticketDetails = details
-       vc.tag = 2
-       // print(ticketIdLb)
-        self.navigationController?.pushViewController(vc, animated:true)
+        self.navigationController?.popViewController(animated: true)
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        textView.layer.borderColor = UIColor.black.cgColor
+        textView.layer.borderWidth = 1.0;
     }
     @IBAction func reassignClick(_ sender: UIButton) {
         if sender.isSelected {
@@ -39,7 +39,7 @@ class ConcessionerRejcetorassignTicketVC: UIViewController {
                 } else {
                     sender.isSelected = true
                     rb2.isSelected = false
-                    textView.isHidden = true
+                    textView.isHidden = false
                     isReassaign = "Y"
                 }
     }
@@ -50,7 +50,7 @@ class ConcessionerRejcetorassignTicketVC: UIViewController {
                 } else {
                     sender.isSelected = true
                     rb1.isSelected = false
-                    textView.isHidden = false
+                    textView.isHidden = true
                     isReassaign = "N"
                 }
     }
