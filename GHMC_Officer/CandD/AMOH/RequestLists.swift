@@ -386,7 +386,7 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             cell.locationLb.text = details?.location
             cell.dateLb.text = details?.ticketClosedDate
             cell.estmationSV.isHidden = true
-           // cell.imgView?.sd_setImage(with: URL(string:details?.imagePath  ?? ""), placeholderImage: UIImage(named: "noi"))
+            cell.imgView?.sd_setImage(with: URL(string:details?.image1_path  ?? ""), placeholderImage: UIImage(named: "noi"))
             cell.satusSV.isHidden = true
             cell.selectionStyle = .none
         } else if tag == 4{ //Amoh Closed tickets
@@ -395,7 +395,7 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
             cell.locationLb.text = details?.location
             cell.dateLb.text = details?.ticketClosedDate
             cell.estmationSV.isHidden = true
-           // cell.imgView?.image = UIImage.init(named:details?.im ?? "")
+            cell.imgView?.sd_setImage(with: URL(string:details?.image1_path  ?? ""), placeholderImage: UIImage(named: "noi"))
             cell.satusSV.isHidden = true
             cell.selectionStyle = .none
         }
@@ -623,9 +623,9 @@ struct AmohconcessionerClosedListStruct: Codable {
         let wardName, concessionerName: String?
         let typeOfWaste: String?
         let status: String?
+        let image1_path:String?
        
         let listVehicles: [ListVehicle]?
-
         enum CodingKeys: String, CodingKey {
             case ticketID = "TICKET_ID"
             case location = "LOCATION"
@@ -640,27 +640,25 @@ struct AmohconcessionerClosedListStruct: Codable {
             case concessionerName = "CONCESSIONER_NAME"
             case typeOfWaste = "TYPE_OF_WASTE"
             case status = "STATUS"
-           
+            case image1_path = "IMAGE1_PATH"
             case listVehicles
         }
     }
     
     // MARK: - ListVehicle
     struct ListVehicle: Codable {
-        let vehicleNo, vehicleID,  driverName, mobileNumber: String?
+        let vehicleNo, vehicleID,  driverName, mobileNumber,beforeTripImage,afterTripImage: String?
 
         enum CodingKeys: String, CodingKey {
             case vehicleNo = "VEHICLE_NO"
             case vehicleID = "VEHICLE_ID"
             case driverName = "DRIVER_NAME"
-            case mobileNumber = "MOBILE_NUMBER"
+            case mobileNumber = "DRIVER_MOBILE_NUMBER"
+            case beforeTripImage = "BEFORE_TRIP_IMAGE"
+            case afterTripImage = "AFTER_TRIP_IMAGE"
         }
     }
-
-
 }
-
-
 // MARK: - AmohClosedListStruct
 struct AmohClosedListStruct: Codable {
     let statusCode, statusMessage: String?
@@ -681,6 +679,7 @@ struct AmohClosedListStruct: Codable {
         let wardID: String?
         let wardName, concessionerName: String?
         let typeOfWaste: String?
+        let image1_path:String?
         let status: String?
         let listVehicles: [ListVehicle]?
 
@@ -698,19 +697,21 @@ struct AmohClosedListStruct: Codable {
             case concessionerName = "CONCESSIONER_NAME"
             case typeOfWaste = "TYPE_OF_WASTE"
             case status = "STATUS"
+            case image1_path = "IMAGE1_PATH"
             case listVehicles
         }
     }
-    
     // MARK: - ListVehicle
     struct ListVehicle: Codable {
-        let vehicleNo, vehicleID,  driverName, mobileNumber: String?
+        let vehicleNo, vehicleID,  driverName, mobileNumber,beforeTripImage,afterTripImage: String?
 
         enum CodingKeys: String, CodingKey {
             case vehicleNo = "VEHICLE_NO"
             case vehicleID = "VEHICLE_ID"
             case driverName = "DRIVER_NAME"
-            case mobileNumber = "MOBILE_NUMBER"
+            case mobileNumber = "DRIVER_MOBILE_NUMBER"
+            case beforeTripImage = "BEFORE_TRIP_IMAGE"
+            case afterTripImage = "AFTER_TRIP_IMAGE"
         }
     }
 }

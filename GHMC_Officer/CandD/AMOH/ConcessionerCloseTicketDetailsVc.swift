@@ -29,15 +29,28 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        lb_TickedID.text = ticketDetails?.ticketID
-        lb_TickedClosedDate.text = ticketDetails?.ticketClosedDate
-        lb_TickedRaisedDate.text = ticketDetails?.ticketRaisedDate
-        lb_zone.text = ticketDetails?.zoneName
-        lb_circle.text = ticketDetails?.circleName
-        lb_ward.text = ticketDetails?.wardName
-        lb_ramkysupervisorname.text = ticketDetails?.concessionerName
-        lb_location.text = ticketDetails?.location
-        lb_typeOfWaste.text = ticketDetails?.typeOfWaste
+        if tag == 0 {
+            lb_TickedID.text = ticketDetails?.ticketID
+            lb_TickedClosedDate.text = ticketDetails?.ticketClosedDate
+            lb_TickedRaisedDate.text = ticketDetails?.ticketRaisedDate
+            lb_zone.text = ticketDetails?.zoneName
+            lb_circle.text = ticketDetails?.circleName
+            lb_ward.text = ticketDetails?.wardName
+            lb_ramkysupervisorname.text = ticketDetails?.concessionerName
+            lb_location.text = ticketDetails?.location
+            lb_typeOfWaste.text = ticketDetails?.typeOfWaste
+        } else if tag == 1 {
+            lb_TickedID.text = amohDetails?.ticketID
+            lb_TickedClosedDate.text = amohDetails?.ticketClosedDate
+            lb_TickedRaisedDate.text = amohDetails?.ticketRaisedDate
+            lb_zone.text = amohDetails?.zoneName
+            lb_circle.text = amohDetails?.circleName
+            lb_ward.text = amohDetails?.wardName
+            lb_ramkysupervisorname.text = amohDetails?.concessionerName
+            lb_location.text = amohDetails?.location
+            lb_typeOfWaste.text = amohDetails?.typeOfWaste
+        }
+      
         tableView.delegate = self
         tableView.dataSource = self
 
@@ -60,7 +73,7 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
             "CNDW_GRIEVANCE_ID": ticketDetails?.ticketID ?? "",
             "EMPLOYEE_ID": UserDefaultVars.empId,
             "DEVICEID": deviceId,
-            "TOKEN_ID": UserDefaultVars.token,
+            "TOKEN_ID": UserDefaultVars.token ?? "",
             "IS_REASSIGN": isreassign ?? "" ,
             "REMARKS":remarksTxt.text ?? ""
             
@@ -178,12 +191,16 @@ extension ConcessionerCloseTicketDetailsVc : UITableViewDelegate , UITableViewDa
             cell.lb_vehicleno.text = vehicledetails?.vehicleNo
             cell.lb_drivername.text = vehicledetails?.driverName
             cell.lb_mobileNo.text = vehicledetails?.mobileNumber
+            cell.img1.sd_setImage(with: URL(string:vehicledetails?.beforeTripImage  ?? ""), placeholderImage: UIImage(named: "noi"))
+            cell.img2.sd_setImage(with: URL(string:vehicledetails?.afterTripImage  ?? ""), placeholderImage: UIImage(named: "noi"))
         } else if tag == 1 {
             let details = amohDetails?.listVehicles?[indexPath.row]
             cell.lb_tripno.text = details?.vehicleID
             cell.lb_vehicleno.text = details?.vehicleNo
             cell.lb_drivername.text = details?.driverName
             cell.lb_mobileNo.text = details?.mobileNumber
+            cell.img1.sd_setImage(with: URL(string:details?.beforeTripImage  ?? ""), placeholderImage: UIImage(named: "noi"))
+            cell.img2.sd_setImage(with: URL(string:details?.afterTripImage  ?? ""), placeholderImage: UIImage(named: "noi"))
         }
         
         return cell

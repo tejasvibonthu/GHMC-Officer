@@ -8,7 +8,6 @@
 
 import UIKit
 import SDWebImage
-
 class ForwordtoConcessioner: UIViewController {
     @IBOutlet weak var dateLb: UILabel!
     @IBOutlet weak var zoneLb: UILabel!
@@ -20,7 +19,7 @@ class ForwordtoConcessioner: UIViewController {
     @IBOutlet weak var noofvehiclesLb: UILabel!
     @IBOutlet weak var camImg: UIImageView!
     @IBOutlet weak var estimationLb: UILabel!
-   
+    var numberFromString:String?
     var ticketDetails:GetPaidListStruct.PaidList?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +32,9 @@ class ForwordtoConcessioner: UIViewController {
         typeofvehiclesLb.text = ticketDetails?.vehicleType
         noofvehiclesLb.text = ticketDetails?.noOfVehicles
         estimationLb.text = ticketDetails?.estWt
+        let tonsWeight = Int(ticketDetails?.estWt ?? "")
+        self.numberFromString = String(tonsWeight ?? 0)
+
         camImg.sd_setImage(with: URL(string:ticketDetails?.image1Path ?? ""), placeholderImage: UIImage(named: "noi"))
         
         
@@ -55,7 +57,7 @@ class ForwordtoConcessioner: UIViewController {
             "IMAGE1_PATH": ticketDetails?.image1Path ?? "",
             "VEHICLE_TYPE_ID":  ticketDetails?.vehicletypeId,
             "NO_OF_VEHICLES": ticketDetails?.noOfVehicles ?? "",
-            "EST_WT": ticketDetails?.estWt ?? "",
+            "EST_WT": numberFromString,
             "WARD_ID": ticketDetails?.wardID ?? ""
             
         ]as [String : Any]

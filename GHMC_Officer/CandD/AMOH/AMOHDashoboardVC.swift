@@ -131,7 +131,7 @@ class AMOHDashoboardVC: UIViewController {
                         self?.consessionerRejectedLBCount.text = concessionerRejected
                         self?.connsessionerclosedTicketsLBCount.text = concessionerCloseTickets
                         self?.AmohClosedTicketsLBCount.text = amohCloseTickets
-                        self?.AmohClosedTicketsLBCount.text = noOfRequests
+                       // self?.AmohClosedTicketsLBCount.text = noOfRequests
                         
                         
   

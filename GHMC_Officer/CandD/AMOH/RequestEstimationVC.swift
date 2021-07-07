@@ -84,6 +84,7 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
             circleLB.text = ticketDetails?.circleID
             wardLB.text = ticketDetails?.wardID
             imgtopConstraint.constant = 0
+            landmarkTf.textColor = .black
         }
         estimationwasteTF.isHidden = true
         self.estimationwasteTF.isEnabled = false

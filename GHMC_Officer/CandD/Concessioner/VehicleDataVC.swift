@@ -20,14 +20,15 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
     var grievanceId:String?
     var table1Data:[String]?
     var noofTons : Int = 0
+        {
+            didSet
+            {
+                estimationWasteLb.text = "Estimation Weight(tons) :  \(noofTons)"
+            }
+        }
     var imgData:String?
     var amount:String?
-    {
-        didSet
-        {
-            estimationWasteLb.text = "Estimation Weight(tons) :  \(noofTons)"
-        }
-    }
+   
 
     @IBOutlet weak var camImg: CustomImagePicker!
     {
@@ -66,9 +67,10 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
             sender.setTitle(item, for: .normal)
             let vehicleId = self.vehicledatamodel?.vehiclelist?[index].vehicleTypeID
             tableViewDataSource?[sender.tag].vehicleId = vehicleId ?? ""
-            let totalNoofVehicles : Int = tableViewDataSource?.count ?? 0
-            tableViewDataSource?[sender.tag].tons =  totalNoofVehicles * Int((item.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()))!
-            self.noofTons = tableViewDataSource!.map({$0.tons}).reduce(0, +)
+           // let totalNoofVehicles : Int = tableViewDataSource?.count ?? 0
+            tableViewDataSource?[sender.tag].tons =  Int((item.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()))!
+            noOfTripsCalculation()
+            //self.noofTons = tableViewDataSource!.map({$0.tons}).reduce(0, +)
             self.dropdown.hide()
             self.calculateAmountWS()
         }
@@ -99,6 +101,8 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
         let tag = textField.tag
       //  print(textField.text)
         tableViewDataSource?[tag].noofTrips = textField.text ?? ""
+        noOfTripsCalculation()
+ 
     }
     func validation() -> Bool
     {
@@ -142,7 +146,7 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
                 return false
                 
             }
-            else if item.noofTrips.count == 0{
+            else if item.noofTrips?.count == 0{
                 self.showAlert(message: "Please Enter no of trips")
                 tableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: true)
                 return false
@@ -151,6 +155,21 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
     }
         
         return true
+    }
+    //method to calculate estimationWeight
+    func noOfTripsCalculation()
+    {
+        if let list = tableViewDataSource
+        {
+            var sumOfTrips : Int = 0
+            for vehicle in list
+            {
+                if let tons = vehicle.tons,let noOfTrips = vehicle.noofTrips , let trips = Int(noOfTrips) {
+                sumOfTrips += tons * trips
+                }
+            }
+            self.noofTons = sumOfTrips
+        }
     }
     //MARK:- Service Call
     func getVehiclesDataWS()
@@ -201,9 +220,9 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
         {
            let param = [
             "VEHICLE_NO": item.vehicleNo,
-                "DRIVER_NAME": item.vehicleNo,
-                "MOBILE_NUMBER":item.vehicleNo,
-                "NO_OF_TRIPS":item.vehicleNo,
+                "DRIVER_NAME": item.driverName,
+                "MOBILE_NUMBER":item.mobileNo,
+                "NO_OF_TRIPS":item.noofTrips,
             "VEHICLE_TYPE_ID": item.vehicleId ,
           ]
             vehicleDetials.append(param)
@@ -308,7 +327,7 @@ struct VehicleData {
     var vehicleType : String
     var driverName : String
     var mobileNo : String
-    var noofTrips : String
+    var noofTrips : String?
     var vehicleId :String
-    var tons : Int
+    var tons : Int?
 }
