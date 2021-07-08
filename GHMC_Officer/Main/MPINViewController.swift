@@ -97,7 +97,6 @@ class MPINViewController: UIViewController {
                PKHUD.sharedHUD.hide()
             }
             switch response.result {
-                
             case .success:
                 let responseDict = response.result.value as! NSDictionary
 ////print(responseDict)

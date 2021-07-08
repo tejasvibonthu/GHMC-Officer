@@ -8,6 +8,7 @@
 
 import UIKit
 import SDWebImage
+
 class ForwordtoConcessioner: UIViewController {
     @IBOutlet weak var dateLb: UILabel!
     @IBOutlet weak var zoneLb: UILabel!
@@ -34,10 +35,7 @@ class ForwordtoConcessioner: UIViewController {
         estimationLb.text = ticketDetails?.estWt
         let tonsWeight = Int(ticketDetails?.estWt ?? "")
         self.numberFromString = String(tonsWeight ?? 0)
-
         camImg.sd_setImage(with: URL(string:ticketDetails?.image1Path ?? ""), placeholderImage: UIImage(named: "noi"))
-        
-        
     }
     
     @IBAction func backClick(_ sender: Any) {
@@ -47,19 +45,16 @@ class ForwordtoConcessioner: UIViewController {
         self.forwordtoConcessionerSubmitWS()
     }
     func forwordtoConcessionerSubmitWS(){
-//        guard camImg.isImagePicked == true else { showAlert(message: "Please capture photo");return}
-       // let imgData = convertImageToBase64String(img: camImg.image!)
         let params = [
             "CNDW_GRIEVANCE_ID":ticketDetails?.ticketID ?? "",
             "EMPLOYEE_ID": UserDefaultVars.empId,
             "DEVICEID": deviceId,
-            "TOKEN_ID": UserDefaultVars.token,
+            "TOKEN_ID": UserDefaultVars.token ?? "",
             "IMAGE1_PATH": ticketDetails?.image1Path ?? "",
-            "VEHICLE_TYPE_ID":  ticketDetails?.vehicletypeId,
+            "VEHICLE_TYPE_ID":  ticketDetails?.vehicletypeId ?? "",
             "NO_OF_VEHICLES": ticketDetails?.noOfVehicles ?? "",
-            "EST_WT": numberFromString,
+            "EST_WT": numberFromString ?? "",
             "WARD_ID": ticketDetails?.wardID ?? ""
-            
         ]as [String : Any]
         print(params)
     guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
@@ -75,8 +70,18 @@ class ForwordtoConcessioner: UIViewController {
                 }
                 if resp.statusCode == "200"
                 {
-                    self?.showAlert(message: resp.statusMessage ?? "")
-                }
+                    self?.showAlert(message: resp.statusMessage ?? ""){
+                        
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is AMOHDashoboardVC {
+                                    NotificationCenter.default.post(name:NSNotification.Name("refreshDashboardCounts"), object: nil)
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
+                    }
+                
                 else
                 {
                     self?.showAlert(message: resp.statusMessage ?? "" )

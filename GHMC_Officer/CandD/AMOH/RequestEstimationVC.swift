@@ -303,9 +303,14 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
                 if resp.statusCode == "200"
                 {
                     self?.showAlert(message: resp.statusMessage ?? ""){
-                        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
-                        self?.navigationController?.pushViewController(vc, animated:true)
-                    }
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is AMOHDashoboardVC {
+                                    NotificationCenter.default.post(name:NSNotification.Name("refreshDashboardCounts"), object: nil)
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
                 }
                 else
                 {
@@ -355,8 +360,13 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
                 if resp.statusCode == "200"
                 {
                     self?.showAlert(message: "\(resp.statusMessage ?? serverNotResponding) \(resp.cndwGrievanceID ?? "")"){
-                        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
-                        self?.navigationController?.pushViewController(vc, animated:true)
+                        let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                        for aViewController in viewControllers {
+                            if aViewController is AMOHDashoboardVC {
+                                NotificationCenter.default.post(name:NSNotification.Name("refreshDashboardCounts"), object: nil)
+                                self?.navigationController!.popToViewController(aViewController, animated: true)
+                            }
+                        }
                     }
                 }
                 else

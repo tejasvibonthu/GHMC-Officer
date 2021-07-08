@@ -88,12 +88,12 @@ class TripsatPlantVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         cell.mobileNumberLb.text = details?.driverMobileNumber
         cell.supervisorNoLB.text = details?.supervisorName
         cell.supervisorNameLb.text = details?.supervisorName
+        cell.ticketIdLb.text = details?.cndwGrievancesID
         cell.selectionStyle = .none
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)  {
         let details = tableviewDatasource?[indexPath.row]
-
         let vc = storyboards.Operator.instance.instantiateViewController(withIdentifier:"PickupSlipDetailsVC") as! PickupSlipDetailsVC
         vc.tripDetails = details
         self.navigationController?.pushViewController(vc, animated:true)

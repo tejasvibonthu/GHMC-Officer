@@ -68,7 +68,14 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
                 }
                 if getList.statusCode == "200"{
                     if getList.ticketList?.isEmpty == true {
-                        self?.showAlert(message: "No Records found")
+                        self?.showAlert(message: "No Records found"){
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is ConcessionerDasboardVC {
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
                     } else {
                         DispatchQueue.main.async {
                             self?.tableView.reloadData()
@@ -115,7 +122,14 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
                 }
                 if getList.statusCode == "200"{
                     if getList.ticketList?.isEmpty == true {
-                        self?.showAlert(message: "No Records found")
+                        self?.showAlert(message: "No Records found"){
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is ConcessionerDasboardVC {
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
                     } else {
                         DispatchQueue.main.async {
                             self?.tableView.reloadData()
@@ -163,7 +177,14 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
                 }
                 if getList.statusCode == "200"{
                     if getList.ticketList?.isEmpty == true {
-                        self?.showAlert(message: "No Records found")
+                        self?.showAlert(message: "No Records found"){
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is ConcessionerDasboardVC {
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
                     } else {
                         DispatchQueue.main.async {
                             self?.tableView.reloadData()
@@ -208,7 +229,14 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
                 }
                 if getList.statusCode == "200"{
                     if getList.ticketList?.isEmpty == true {
-                        self?.showAlert(message: "No Records found")
+                        self?.showAlert(message: "No Records found"){
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is ConcessionerDasboardVC {
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
                     } else {
                         DispatchQueue.main.async {
                             self?.tableView.reloadData()
@@ -252,28 +280,26 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
             cell.locationLb.text = details?.location
             cell.dateLB.text = details?.createdDate
             cell.estimatedWtLB.text = details?.estWt
-            cell.img?.image = UIImage.init(named:details?.image1Path ?? "")
+            cell.img?.sd_setImage(with: URL(string:details?.image1Path  ?? ""), placeholderImage: UIImage(named: "noi"))
         } else if tag == 1{
             let details = pickuplisttableviewDatasource?[indexPath.row]
             cell.ticketIdLb.text = details?.ticketID
             cell.locationLb.text = details?.location
             cell.dateLB.text = details?.createdDate
             cell.estimatedWtLB.text = details?.estWt
-            cell.img?.image = UIImage.init(named:details?.image1Path ?? "")
+            cell.img?.sd_setImage(with: URL(string:details?.image1Path  ?? ""), placeholderImage: UIImage(named: "noi"))
         } else if tag == 2{
             let details = concessionerRejecttableviewDatasource?[indexPath.row]
             cell.ticketIdLb.text = details?.ticketID
             cell.locationLb.text = details?.location
             cell.dateLB.text = details?.createdDate
-          //  cell.estimatedWtLB.text = details?.st
-            cell.img?.image = UIImage.init(named:details?.image1Path ?? "")
+            cell.img?.sd_setImage(with: URL(string:details?.image1Path  ?? ""), placeholderImage: UIImage(named: "noi"))
         } else if tag == 3{
             let details = concessionerClosedTableDatasource?[indexPath.row]
             cell.ticketIdLb.text = details?.ticketID
             cell.locationLb.text = details?.location
             cell.dateLB.text = details?.ticketClosedDate
-          //  cell.estimatedWtLB.text = details?.st
-           // cell.img?.image = UIImage.init(named:details?.im ?? "")
+            
         }
         cell.selectionStyle = .none
         return cell
@@ -288,25 +314,53 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
             vc.ward = details?.wardName
             vc.location = details?.location
             vc.grievanceId = details?.ticketID
+            vc.imgIs = details?.image1Path
             self.navigationController?.pushViewController(vc, animated:true)
         } else if tag == 1 {
             let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerpickupCaptureVC") as! ConcessionerpickupCaptureVC
           vc.ticketData = pickupcapturelistModel?.ticketList?[indexPath.row]
-          
-            
-            self.navigationController?.pushViewController(vc, animated:true)
+          self.navigationController?.pushViewController(vc, animated:true)
         }
         // print(ticketIdLb)
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         let searchString = searchText
         if searchText == ""{
-            self.tableviewDatasource = self.requestListModel?.ticketList
+            switch tag {
+            case 0:
+                self.tableviewDatasource = self.requestListModel?.ticketList
+            case 1:
+                self.pickuplisttableviewDatasource = self.pickupcapturelistModel?.ticketList
+            case 2:
+                self.concessionerRejecttableviewDatasource = self.concessionerRejectlistModel?.ticketList
+            case 3:
+                self.concessionerClosedTableDatasource = self.concessonerCloseListModel?.ticketList
+            default:
+                print("")
+            }
         } else{
             if searchString != "", searchString.count > 0 {
-                self.tableviewDatasource = self.requestListModel?.ticketList?.filter {
-                    return $0.ticketID.range(of: searchString, options: .caseInsensitive) != nil
+                switch tag {
+                case 0:
+                    self.tableviewDatasource = self.requestListModel?.ticketList?.filter {
+                        return $0.ticketID.range(of: searchString, options: .caseInsensitive) != nil
+                    }
+                case 1:
+                    self.pickuplisttableviewDatasource = self.pickupcapturelistModel?.ticketList?.filter {
+                        return $0.ticketID?.range(of: searchString, options: .caseInsensitive) != nil
+                    }
+                case 2:
+                    self.concessionerRejecttableviewDatasource = self.concessionerRejectlistModel?.ticketList?.filter {
+                        return $0.ticketID?.range(of: searchString, options: .caseInsensitive) != nil
+                    }
+                case 3:
+                    self.concessionerClosedTableDatasource = self.concessonerCloseListModel?.ticketList?.filter {
+                        return $0.ticketID?.range(of: searchString, options: .caseInsensitive) != nil
+                    }
+                default:
+                    print("")
                 }
+               
             }
         }
         tableView.reloadData()

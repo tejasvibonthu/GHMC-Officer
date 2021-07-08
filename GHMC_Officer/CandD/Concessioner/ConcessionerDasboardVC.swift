@@ -27,7 +27,9 @@ class ConcessionerDasboardVC: UIViewController {
         self.nameLb.text = UserDefaultVars.empName
         self.designationLb.text = UserDefaultVars.designation
         self.mobileNumberLb.text = UserDefaultVars.mobileNumber
+        self.hideViews()
         self.getConcessionerDashboardWS()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDashvoardCounts), name: Notification.Name("refreshconcesionerdashboard"), object: nil)
         let noofTickets = UITapGestureRecognizer.init(target: self, action: #selector(taponticketListView))
         ticketListView.addGestureRecognizer(noofTickets)
         
@@ -40,6 +42,21 @@ class ConcessionerDasboardVC: UIViewController {
         
         let closedTickets = UITapGestureRecognizer(target: self, action:#selector(self.taponclosedListView))
         closedListView.addGestureRecognizer(closedTickets)
+    }
+    func hideViews(){
+        self.ticketListView.isHidden = true
+        self.captureListView.isHidden = true
+        self.rejectListView.isHidden = true
+        self.closedListView.isHidden = true
+        }
+    func showViews(){
+        self.ticketListView.isHidden = false
+        self.captureListView.isHidden = false
+        self.rejectListView.isHidden = false
+        self.closedListView.isHidden = false
+    }
+    @objc func handleDashvoardCounts(){
+        self.getConcessionerDashboardWS()
     }
     @IBAction func logoutClick(_ sender: Any) {
         let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
@@ -96,6 +113,7 @@ class ConcessionerDasboardVC: UIViewController {
                 if getCounts.amohList?.isEmpty == true {
                     self?.showAlert(message: "No Records found")
                 } else {
+                    self?.showViews()
                     self?.cocessionerTicketCountLb.text = getCounts.amohList?[0].concessionerTicketsCount
                     self?.concessionerPickupCaptureCountLb.text =  getCounts.amohList?[0].concessionerPickupCaptureCount
                     self?.concessionerRejectCountLb.text =  getCounts.amohList?[0].concessionerRejectedCount
@@ -112,6 +130,10 @@ class ConcessionerDasboardVC: UIViewController {
         }
     }
 }
+    deinit
+    {
+        NotificationCenter.default.removeObserver(self)
+    }
 }
 // MARK: - ConcessionerdashboardStruct
 struct ConcessionerdashboardStruct: Codable {

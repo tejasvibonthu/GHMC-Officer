@@ -51,6 +51,7 @@ class ConcessionerRequest: UIViewController,UITextFieldDelegate {
     var weight:String?
     var vehiclesCount:String?
     var IsAccept:String?
+    var imgIs:String?
     override func viewDidLoad() {
         super.viewDidLoad()
         dtaeLB.text = date
@@ -58,6 +59,7 @@ class ConcessionerRequest: UIViewController,UITextFieldDelegate {
         circleLB.text = circle
         wardLB.text = ward
         locationLB.text = location
+        imgView.sd_setImage(with: URL(string:imgIs ?? ""), placeholderImage: UIImage(named: "noi"))
         self.reasonTV.isHidden = true
         
 //        nofVehiclesTf.delegate = self
@@ -138,7 +140,13 @@ class ConcessionerRequest: UIViewController,UITextFieldDelegate {
                     if resp.statusCode == "200"
                     {
                         self?.showAlert(message: resp.statusMessage ?? ""){
-                            self?.navigationController?.popViewController(animated: true)
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is ConcessionerDasboardVC {
+                                    NotificationCenter.default.post(name: NSNotification.Name("refreshconcesionerdashboard"), object: nil)
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
                         }
                     }
                     else

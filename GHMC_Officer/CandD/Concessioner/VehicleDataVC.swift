@@ -141,7 +141,7 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
                 
             }
             else if item.mobileNo.count < 10 {
-                self.showAlert(message: "Please Enter Mobile no")
+                self.showAlert(message: "Please Enter 10 Digit Mobile no")
                 tableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: true)
                 return false
                 
@@ -233,7 +233,7 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
             "EMPLOYEE_ID": UserDefaultVars.empId,
             "DEVICEID": deviceId,
             "TOKEN_ID": UserDefaultVars.token,
-           "IMAGE1_PATH": "",
+           "IMAGE1_PATH": imgData,
             "NO_OF_VEHICLES": noofvehiclesLb.text ?? "",
             "EST_WT": String(noofTons),
             "AMOUNT": self.amount ?? "",
@@ -251,8 +251,13 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
                     if resp.statusCode == "200"
                     {
                         self?.showAlert(message: resp.statusMessage ?? ""){
-                           let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerDasboardVC") as! ConcessionerDasboardVC
-                            self?.navigationController?.pushViewController(vc, animated:true)
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is ConcessionerDasboardVC {
+                                    NotificationCenter.default.post(name: NSNotification.Name("refreshconcesionerdashboard"), object: nil)
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
                         }
                     }
                     else

@@ -143,8 +143,13 @@ class ConcessionerpickupCaptureVC: UIViewController {
                     if resp.statusCode == "200"
                     {
                         self?.showAlert(message: resp.statusMessage ?? ""){
-                            let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerDasboardVC") as! ConcessionerDasboardVC
-                             self?.navigationController?.pushViewController(vc, animated:true)
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is ConcessionerDasboardVC {
+                                    NotificationCenter.default.post(name: NSNotification.Name("refreshconcesionerdashboard"), object: nil)
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
                         }
                     }
                     else

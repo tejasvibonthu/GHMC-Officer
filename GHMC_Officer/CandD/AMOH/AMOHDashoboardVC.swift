@@ -9,6 +9,7 @@
 import UIKit
 
 class AMOHDashoboardVC: UIViewController {
+    
     @IBOutlet weak var bgImg: UIImageView!
     @IBOutlet weak var noofReqLB: UILabel!
     @IBOutlet weak var noofReqLBCount: UILabel!
@@ -31,12 +32,14 @@ class AMOHDashoboardVC: UIViewController {
     @IBOutlet weak var mobileNumberLB: UILabel!
     @IBOutlet weak var backButton: UIButton!
     var dashboardCountsModel:AmohDashoardCountsStruct?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleCountsObserver), name: NSNotification.Name("refreshDashboardCounts"), object: nil)
+        
         self.usernameLB.text = UserDefaultVars.empName
         self.designationLB.text = UserDefaultVars.designation
         self.mobileNumberLB.text = UserDefaultVars.mobileNumber
+        self.hideViews()
         self.GetAmohDashboardcounts()
         let noofReq = UITapGestureRecognizer.init(target: self, action: #selector(taponnoofReq))
         noofReqView.addGestureRecognizer(noofReq)
@@ -56,6 +59,26 @@ class AMOHDashoboardVC: UIViewController {
         
         let raiseRequset = UITapGestureRecognizer(target: self, action:#selector(self.tapOnraiseEstimation))
         raiseEstimationView.addGestureRecognizer(raiseRequset)
+    }
+    
+    @objc func handleCountsObserver(){
+        self.GetAmohDashboardcounts()
+    }
+    func hideViews(){
+        noofReqView.isHidden = true
+        paymentConformationView.isHidden = true
+        conessionerRejectedView.isHidden = true
+        concessionerClosedView.isHidden = true
+        amohclosedView.isHidden = true
+        raiseEstimationView.isHidden = true
+    }
+    func showViews(){
+        noofReqView.isHidden = false
+        paymentConformationView.isHidden = false
+        conessionerRejectedView.isHidden = false
+        concessionerClosedView.isHidden = false
+        amohclosedView.isHidden = false
+        raiseEstimationView.isHidden = false
     }
     
     @IBAction func backBtnClick(_ sender: Any) {
@@ -120,6 +143,7 @@ class AMOHDashoboardVC: UIViewController {
                     if getCounts.amohList?.isEmpty == true {
                         self?.showAlert(message: "No Records found")
                     } else {
+                        self?.showViews()
                         let noOfRequests = getCounts.amohList?[0].noOfRequests
                         let paymentConfirmation =  getCounts.amohList?[0].paymentConfirmation
                         let concessionerRejected =  getCounts.amohList?[0].concessionerRejected
@@ -131,10 +155,6 @@ class AMOHDashoboardVC: UIViewController {
                         self?.consessionerRejectedLBCount.text = concessionerRejected
                         self?.connsessionerclosedTicketsLBCount.text = concessionerCloseTickets
                         self?.AmohClosedTicketsLBCount.text = amohCloseTickets
-                       // self?.AmohClosedTicketsLBCount.text = noOfRequests
-                        
-                        
-  
                     }
                 } else {
                     self?.showAlert(message: getCounts.statusMessage ?? "")
@@ -151,7 +171,10 @@ class AMOHDashoboardVC: UIViewController {
         }
         
     }
-
+deinit
+{
+    NotificationCenter.default.removeObserver(self)
+}
 }
 import Foundation
 

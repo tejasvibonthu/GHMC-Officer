@@ -1,13 +1,4 @@
-//
-//  ConcessionerCloseTicketDetailsVc.swift
-//  GHMC_Officer
-//
-//  Created by deep chandan on 29/06/21.
-//  Copyright © 2021 IOSuser3. All rights reserved.
-//
-
 import UIKit
-
 class ConcessionerCloseTicketDetailsVc: UIViewController {
     //MARK:- Properties
     @IBOutlet weak var lb_TickedID: UILabel!
@@ -19,6 +10,7 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
     @IBOutlet weak var lb_location: UILabel!
     @IBOutlet weak var lb_ramkysupervisorname: UILabel!
     @IBOutlet weak var remarksTxt: UITextField!
+    @IBOutlet weak var remarksLb: UILabel!
     @IBOutlet weak var reAssignBtn: UIButton!
     @IBOutlet weak var lb_typeOfWaste: UILabel!
     @IBOutlet weak var closeRadioBtn: UIButton!
@@ -28,6 +20,8 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
     var tag :Int?
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
+        remarksLb.isHidden = true
+        remarksTxt.isHidden = true
         super.viewDidLoad()
         if tag == 0 {
             lb_TickedID.text = ticketDetails?.ticketID
@@ -38,7 +32,7 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
             lb_ward.text = ticketDetails?.wardName
             lb_ramkysupervisorname.text = ticketDetails?.concessionerName
             lb_location.text = ticketDetails?.location
-            lb_typeOfWaste.text = ticketDetails?.typeOfWaste
+          //  lb_typeOfWaste.text = ticketDetails?.typeOfWaste
         } else if tag == 1 {
             lb_TickedID.text = amohDetails?.ticketID
             lb_TickedClosedDate.text = amohDetails?.ticketClosedDate
@@ -48,12 +42,11 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
             lb_ward.text = amohDetails?.wardName
             lb_ramkysupervisorname.text = amohDetails?.concessionerName
             lb_location.text = amohDetails?.location
-            lb_typeOfWaste.text = amohDetails?.typeOfWaste
+           // lb_typeOfWaste.text = amohDetails?.typeOfWaste
         }
       
         tableView.delegate = self
         tableView.dataSource = self
-
     }
     @IBAction func backBtnClicked(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
@@ -94,7 +87,13 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
                     if resp.statusCode == "200"
                     {
                         self?.showAlert(message: resp.statusMessage ?? "" ){
-                            self?.navigationController?.popViewController(animated: true)
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is AMOHDashoboardVC {
+                                    NotificationCenter.default.post(name:NSNotification.Name("refreshDashboardCounts"), object: nil)
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
                         }
                     }
                     else
@@ -133,12 +132,26 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
                     if resp.statusCode == "200"
                     {
                         self?.showAlert(message: resp.statusMessage ?? "" ){
-                            self?.navigationController?.popViewController(animated: true)
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is AMOHDashoboardVC {
+                                    NotificationCenter.default.post(name:NSNotification.Name("refreshDashboardCounts"), object: nil)
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
                         }
                     }
                     else
                     {
-                        self?.showAlert(message: resp.statusMessage ?? "" )
+                        self?.showAlert(message: resp.statusMessage ?? "" ){
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is AMOHDashoboardVC {
+                                    NotificationCenter.default.post(name:NSNotification.Name("refreshDashboardCounts"), object: nil)
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
                     }
                 case .failure(let err):
                     print(err)
@@ -150,7 +163,7 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
     if closeRadioBtn.isSelected == false && reAssignBtn.isSelected == false{
        showAlert(message: "please select Re assign or Close ")
         return false
-    } else  if remarksTxt.text == ""{
+    } else  if remarksTxt.text == "" && remarksLb.isHidden == false{
          showAlert(message: "please enter remarks")
          return false
      }
@@ -162,12 +175,16 @@ class ConcessionerCloseTicketDetailsVc: UIViewController {
             print("reassignradiobtn")
             sender.isSelected.toggle()
             closeRadioBtn.isSelected = false
+            remarksLb.isHidden = false
+            remarksTxt.isHidden = false
             isreassign = "Y"
 
         default: //closebtn
             print("closebtnclicked")
             sender.isSelected.toggle()
             reAssignBtn.isSelected = false
+            remarksLb.isHidden = true
+            remarksTxt.isHidden = true
             isreassign = "N"
         }
     }

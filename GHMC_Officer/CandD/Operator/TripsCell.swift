@@ -15,6 +15,7 @@ class TripsCell: UITableViewCell {
     @IBOutlet weak var mobileNumberLb: UILabel!
     @IBOutlet weak var supervisorNameLb: UILabel!
     @IBOutlet weak var supervisorNoLB: UILabel!
+    @IBOutlet weak var ticketIdLb: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

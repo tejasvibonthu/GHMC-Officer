@@ -55,7 +55,19 @@ class ConcessionerRejcetorassignTicketVC: UIViewController {
                 }
     }
     @IBAction func submitClick(_ sender: Any) {
-        self.ConcessionerRejectSubmitWS()
+        if validation(){
+            self.ConcessionerRejectSubmitWS()
+        }
+    }
+    func validation() ->Bool{
+        if rb1.isSelected == false && rb2.isSelected == false{
+            showAlert(message: "Please select Re-assign or close")
+            return false
+        }else if textView.isHidden == false && textView.text == ""{
+            showAlert(message: "Please enter remarks")
+            return false
+        }
+        return true
     }
     func ConcessionerRejectSubmitWS(){
         let params = [
@@ -81,9 +93,16 @@ class ConcessionerRejcetorassignTicketVC: UIViewController {
                 if resp.statusCode == "200"
                 {
                     self?.showAlert(message: resp.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is AMOHDashoboardVC {
+                                    NotificationCenter.default.post(name:NSNotification.Name("refreshDashboardCounts"), object: nil)
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
                     }
-                }
+                
                 else
                 {
                     self?.showAlert(message: resp.statusMessage ?? "" )

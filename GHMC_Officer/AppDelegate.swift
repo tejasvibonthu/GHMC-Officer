@@ -36,14 +36,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GMSPlacesClient.provideAPIKey("AIzaSyApZla0iJ16BznqlpmTXSuG7z3ZDSZDpXw")
         GMSServices.provideAPIKey("AIzaSyCYtfc51p8vQINhr9OzyVgPlojNUSmkt94")
          FirebaseApp.configure()
-         InstanceID.instanceID().instanceID { (result, error) in
-            if let error = error {
-                print("Error fetching remote instange ID: \(error)")
-            } else if let result = result {
-                print("Remote instance ID token: \(result.token)")
-                fcm_Key = result.token
-            }
-        }
+//         InstanceID.instanceID().instanceID { (result, error) in
+//            if let error = error {
+//                print("Error fetching remote instange ID: \(error)")
+//            } else if let result = result {
+//                print("Remote instance ID token: \(result.token)")
+//                fcm_Key = result.token
+//            }
+    //    }
     
         return true
     }

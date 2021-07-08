@@ -72,7 +72,14 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                 }
                 if getList.statusCode == "200"{
                     if getList.amohList?.isEmpty == true {
-                        self?.showAlert(message: "No Records found")
+                        self?.showAlert(message: "No Records found"){
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is AMOHDashoboardVC {
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
                     } else {
                         DispatchQueue.main.async {
                             self?.tableView.reloadData()
@@ -80,7 +87,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                     }
                 } else {
                     self?.showCustomAlert(message: getList.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
+                       self?.navigationController?.pushViewController(vc, animated:true)
                     }
                 }
                 
@@ -119,7 +127,14 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                 }
                 if getList.statusCode == "200"{
                     if getList.paidList?.isEmpty == true {
-                        self?.showAlert(message: "No Records found")
+                        self?.showAlert(message: "No Records found"){
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is AMOHDashoboardVC {
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
                     } else {
                         DispatchQueue.main.async {
                             self?.tableView.reloadData()
@@ -127,7 +142,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                     }
                 } else {
                     self?.showCustomAlert(message: getList.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
+                       self?.navigationController?.pushViewController(vc, animated:true)
                     }
                 }
             case .failure(let err):
@@ -164,7 +180,14 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                 }
                 if getList.statusCode == "200"{
                     if getList.ticketsList?.isEmpty == true {
-                        self?.showAlert(message: "No Records found")
+                        self?.showAlert(message: "No Records found"){
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is AMOHDashoboardVC {
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
                     } else {
                         DispatchQueue.main.async {
                             self?.tableView.reloadData()
@@ -172,7 +195,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                     }
                 } else {
                     self?.showCustomAlert(message: getList.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
+                       self?.navigationController?.pushViewController(vc, animated:true)
                     }
                 }
                 
@@ -209,7 +233,14 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                 }
                 if getList.statusCode == "200"{
                     if getList.ticketList?.isEmpty == true {
-                        self?.showAlert(message: "No Records found")
+                        self?.showAlert(message: "No Records found"){
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is AMOHDashoboardVC {
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
+                        }
                     } else {
                         DispatchQueue.main.async {
                             self?.tableView.reloadData()
@@ -217,7 +248,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                     }
                 } else {
                     self?.showCustomAlert(message: getList.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
+                        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
+                       self?.navigationController?.pushViewController(vc, animated:true)
                     }
                 }
                 
@@ -256,7 +288,12 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                 if getList.statusCode == "200"{
                     if getList.ticketList?.isEmpty == true {
                         self?.showAlert(message: "No Records found"){
-                            self?.navigationController?.popViewController(animated: true)
+                            let viewControllers: [UIViewController] = (self?.navigationController!.viewControllers)!
+                            for aViewController in viewControllers {
+                                if aViewController is AMOHDashoboardVC {
+                                    self?.navigationController!.popToViewController(aViewController, animated: true)
+                                }
+                            }
                         }
                     } else {
                         DispatchQueue.main.async {
@@ -265,8 +302,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                     }
                 } else {
                     self?.showCustomAlert(message: getList.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
-                    }
+                        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
+                       self?.navigationController?.pushViewController(vc, animated:true)                    }
                 }
                 
             case .failure(let err):
@@ -310,8 +347,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                     }
                  else {
                     self?.showCustomAlert(message: getDetails.statusMessage ?? ""){
-                        self?.navigationController?.popViewController(animated: true)
-                    }
+                        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier:"AMOHDashoboardVC") as! AMOHDashoboardVC
+                       self?.navigationController?.pushViewController(vc, animated:true)                    }
                 }
                 
             case .failure(let err):
@@ -450,6 +487,10 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                 self.tableviewPaymentDatasource = self.paymentComformListModel?.paidList
             case 2:
                 self.tableviewDatasource = self.rejectListModel?.ticketsList
+            case 3:
+                self.concessionerCloselistTabledatasource = self.concessionerCloselistmodel?.ticketList
+            case 4:
+                self.amohClosedlistTableviewdatasource = self.amohClosedListModel?.ticketList
             default:
                 break
             }
