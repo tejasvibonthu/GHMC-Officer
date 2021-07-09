@@ -180,6 +180,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="dateLB" destination="YAt-2j-fdB" id="qxM-ja-dMV"/>
+                                            <outlet property="estimSV" destination="oeg-J6-AYC" id="tLq-nL-BEw"/>
                                             <outlet property="estimatedWtLB" destination="IpE-iB-V1U" id="dIN-0N-V5m"/>
                                             <outlet property="img" destination="Z97-Nd-AVF" id="ogf-18-zmN"/>
                                             <outlet property="locationLb" destination="PZ6-gM-GCV" id="zx6-5H-xHU"/>

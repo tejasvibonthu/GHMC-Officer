@@ -166,23 +166,6 @@
                                                     <constraint firstItem="hNR-nZ-IAN" firstAttribute="leading" secondItem="fAk-FT-0Y0" secondAttribute="leading" constant="8" id="y8t-P2-oGB"/>
                                                 </constraints>
                                             </view>
-                                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="SG4-4Z-Uag">
-                                                <rect key="frame" x="16" y="465" width="78" height="15.666666666666666"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1pq-a3-rXK">
-                                                        <rect key="frame" x="0.0" y="0.0" width="34" height="15.666666666666666"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
-                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JmL-Hg-q3z">
-                                                        <rect key="frame" x="44" y="0.0" width="34" height="15.666666666666666"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
-                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Estimation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-Vn-3dP">
                                                 <rect key="frame" x="8" y="268" width="398" height="20.333333333333314"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -384,6 +367,8 @@
                         <outlet property="landmarkTf" destination="cPF-8o-WEe" id="oyR-qm-CVU"/>
                         <outlet property="noofVehiclesTF" destination="MlJ-jB-Q3n" id="MJT-fE-BHM"/>
                         <outlet property="reqTypeBtn" destination="m0e-B2-Hzi" id="H1a-Wy-dbu"/>
+                        <outlet property="ticketIdLb" destination="qAY-ol-edP" id="ZZw-sU-byE"/>
+                        <outlet property="ticketSV" destination="k9T-3c-MGY" id="Sxv-jV-T0K"/>
                         <outlet property="vehicletypeBtn" destination="f19-pC-V05" id="sm4-0C-Rlg"/>
                         <outlet property="wardLB" destination="uws-MI-Gea" id="o1p-Yz-ZqG"/>
                         <outlet property="zoneLB" destination="PQc-bT-aDE" id="Yfl-6s-Y2t"/>

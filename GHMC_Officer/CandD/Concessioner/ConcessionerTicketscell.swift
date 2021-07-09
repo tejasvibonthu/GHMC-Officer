@@ -10,6 +10,7 @@ class ConcessionerTicketscell: UITableViewCell {
     @IBOutlet weak var ticketIdLb: UILabel!
     @IBOutlet weak var locationLb: UILabel!
     @IBOutlet weak var dateLB: UILabel!
+    @IBOutlet weak var estimSV: UIStackView!
     @IBOutlet weak var estimatedWtLB: UILabel!
     @IBOutlet weak var img: UIImageView!
     override func awakeFromNib() {

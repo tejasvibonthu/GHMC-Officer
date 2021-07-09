@@ -1,13 +1,4 @@
-//
-//  TripsatPlantVC.swift
-//  GHMC_Officer
-//
-//  Created by Haritej on 27/06/21.
-//  Copyright © 2021 IOSuser3. All rights reserved.
-//
-
 import UIKit
-
 class TripsatPlantVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate {
     @IBOutlet weak var bg: UIImageView!
     @IBOutlet weak var tableView: UITableView!
@@ -106,7 +97,7 @@ class TripsatPlantVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         } else{
             if searchString != "", searchString.count > 0 {
                 self.tableviewDatasource = self.requestListModel?.operatorVehicleList?.filter {
-                    return $0.vehicleNumber?.range(of: searchString, options: .caseInsensitive) != nil
+                    return $0.cndwGrievancesID?.range(of: searchString, options: .caseInsensitive) != nil
                 }
             }
         }

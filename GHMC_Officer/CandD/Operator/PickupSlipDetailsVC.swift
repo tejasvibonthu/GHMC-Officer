@@ -29,6 +29,7 @@ class PickupSlipDetailsVC: UIViewController {
         zoneLb.text = tripDetails?.zone
         circleLb.text = tripDetails?.circle
         wardLb.text = tripDetails?.ward
+        slipNoLb.text = tripDetails?.cndwGrievancesID
         wastetypeLb.text = "UnClaimed"
     }
     

@@ -33,7 +33,9 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     var wardId:String?
     var locationManager = CLLocationManager()
     @IBOutlet weak var imgtopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var ticketSV: UIStackView!
     @IBOutlet weak var dtaeLB: UILabel!
+    @IBOutlet weak var ticketIdLb: UILabel!
     @IBOutlet weak var zoneLB: UILabel!
     @IBOutlet weak var circleLB: UILabel!
     @IBOutlet weak var wardLB: UILabel!
@@ -70,6 +72,7 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
         whereAmIService()
         if tag == 0 {
+            ticketIdLb.text = ticketId
             dtaeLB.text = estimationDetails?.createdDate
             zoneLB.text = estimationDetails?.zoneID
             circleLB.text = estimationDetails?.circleID
@@ -79,11 +82,11 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
             imgView.sd_setImage(with: URL(string:estimationDetails?.image1Path  ?? ""), placeholderImage: UIImage(named: "noi"))
         }
             else if tag == 5 {
+            ticketSV.isHidden = true
             dtaeLB.text = Date().string(format:"dd-MM-YYYY")
             zoneLB.text = ticketDetails?.zoneID
             circleLB.text = ticketDetails?.circleID
             wardLB.text = ticketDetails?.wardID
-            imgtopConstraint.constant = 0
             landmarkTf.textColor = .black
         }
         estimationwasteTF.isHidden = true
@@ -149,7 +152,7 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
             vehicletypeBtn.setTitleColor(.black, for: .normal)
             self.vehicleId = self.vehicledatamodel?.vehiclelist?[index].vehicleTypeID
             self.dropdown.hide()
-            if index != 0 {
+            if  vehicletypeBtn.currentTitle != "Select" {
                 noofVehiclesTF.isHidden = false
                 self.noofTons = Int((vehicletypeBtn.currentTitle?.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())! )
             }

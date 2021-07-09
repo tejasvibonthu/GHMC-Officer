@@ -12,6 +12,7 @@ import CoreLocation
 import GoogleMaps
 import GooglePlaces
 import MobileCoreServices
+import GrowingTextView
 
 class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocationManagerDelegate,UIPickerViewDelegate, UIPickerViewDataSource ,UITextViewDelegate,UIDocumentPickerDelegate,UIDocumentMenuDelegate,UINavigationControllerDelegate {
     @IBOutlet weak var complaintBtn: UIButton!
@@ -19,8 +20,14 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
     @IBOutlet weak var vehicleTypeBtn: UIButton!
     @IBOutlet weak var nofTripsTF: UITextField!
     @IBOutlet weak var totalnetWtTF: UITextField!
-    @IBOutlet weak var descriptionTV: UITextView!
-    @IBOutlet weak var cameraImg: UIImageView!
+    @IBOutlet weak var descriptionTV: GrowingTextView!
+    @IBOutlet weak var camImg: CustomImagePicker!
+    {
+        didSet
+        {
+            camImg.parentViewController = self
+        }
+    }
     var imagestr1:String!
     let types: [String] = [kUTTypePDF as String]
     var imagesPicker: UIImagePickerController! = UIImagePickerController()
@@ -29,16 +36,17 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
     var vehicleId:String?
     var vehicledatasourceArry:[String] = []
     var location:String? = nil
-    var myComplaintId:String?
-    let complaintId:String? = nil
+    var compID:String?
+    var updateWardModel:updateWrd?
+    var updateGrivencemodel:grivenceUpdate?
+
+//    var myComplaintId:String?
+//    let complaintId:String? = nil
     let dropdown = DropDown()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let image = UserDefaults.standard.value(forKey:"bgImagview") as! String
-       let modeId = UserDefaultVars.modeID
-        let subcatId = UserDefaultVars.subcatId
-        let designation = UserDefaultVars.designation
         self.descriptionTV.text = "Enter Reramrks"
         descriptionTV.textColor = UIColor.darkGray
         self.imagesPicker.delegate = self
@@ -50,7 +58,6 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
 
 
        // subcatId = "34"
-
       //  modeId = "15"
       //  print("modeidresponse",modeId ?? "")
 
@@ -67,7 +74,109 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
     
     @IBAction func wardnameBtnClick(_ sender: UIButton) {
     }
-    
+    func updateWard(){
+        let deviceId = UIDevice.current.identifierForVendor!.uuidString
+        guard let location1 = location else {
+            showAlert(message:"Unable to fetch location.Please try again later..")
+            return
+        }
+        let mobileno = UserDefaultVars.mobileNumber
+        let name = UserDefaultVars.empName
+        let params = [
+            "userid":userid,
+        "password":password,
+        "remarks":descriptionTV.text ?? "",
+        "photo":imagestr1 ?? "",
+        "latlon":location1,
+        "mobileno":"\(mobileno)-\(name)",
+        "deviceid":deviceId,
+        "compId":compID ?? "",
+        "updatedstatus":self.complaint_id ?? "",
+        "ward":ward_id ?? ""]
+        guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+        NetworkRequest.makeRequest(type: updateWrd.self, urlRequest: Router.forwordtoAnotherWard(Parameters: params)) { [weak self](result) in
+                switch result {
+                case .success(let resp):
+                    print(resp)
+                    self?.updateWardModel = resp
+                    if  self.updateWardModel.status == true{
+                        let alert = UIAlertController(title: "MYGHMC", message:(self.updateWardModel.compid ?? ""), preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction.init(title:"OK", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
+                            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                            appDelegate.openDashboard()
+                        }))
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                    else
+                    {
+                        self?.showAlert(message: updateWardModel?.Message)
+                    }
+                case .failure(let err):
+                    print(err)
+                    self?.showAlert(message: err.localizedDescription)
+                }
+            }
+        }
+    func updateGrivence(){
+        let mobileno = UserDefaultVars.mobileNumber
+        let name = UserDefaultVars.empName
+        let type_id = UserDefaultVars.typeId
+        guard let location1 = location else {
+            showAlert(message:"Unable to fetch location.Please try again later..")
+            return
+        }
+        let params  = ["userid": userid,
+                       "password": password,
+                       "type_id": "\(type_id)",
+                       "mobileno": "\(mobileno)-\(name)-\(type_id)",
+                       "updatedstatus":self.complaint_id!,
+                       "compId": self.myComplaintId!,
+                       "remarks":descriptionTV.text!,
+                       "photo":imagestr1 ??  "",
+                       "latlon": location1,
+                       "deviceid":deviceId,
+                       "no_of_trips":nofTripsTF.text ?? "",
+                       "total_net_weight":totalnetWtTF.text ?? "",
+                       "trader_name":"",
+                       "id_proof_type":"",
+                       "id_proof_no":"",
+                       "nmos_mobile_no":"",
+                       "email":"",
+                       "fine_amount":"",
+                       "source":UserDefaultVars.modeID,
+                       "vehicleNo":vehicleSLNo ?? "",
+                       "claimant_status":ward_id ?? "",
+                       "lower_staff_id": ward_id ?? ""
+        ]
+        guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+        NetworkRequest.makeRequest(type: grivenceUpdate.self, urlRequest: Router.updateGrivence(Parameters: params)) { [weak self](result) in
+                switch result {
+                case .success(let resp):
+                    print(resp)
+                    self.updateGrivencemodel = resp
+                    if  self.updateGrivencemodel?.status == "True"{
+                    let alert = UIAlertController(title: "MYGHMC", message:self.updateGrivencemodel?.compid!, preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction.init(title:"OK", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
+                            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                            appDelegate.openDashboard()
+                        }))
+                        self.present(alert, animated: true, completion: nil)
+                        }else {
+                            self.showAlert(message:(self.updateGrivencemodel?.Message ?? ""))
+                        }
+                case .failure(let err):
+                    print(err)
+                    self?.showAlert(message: err.localizedDescription)
+                }
+            }
+    }
+    func getWardWS(){
+        let paar = ["userid":userid,
+                                 "password":password,
+                                 ]
+        
+       
+        }
     @IBAction func vehicleTypeBtnClick(_ sender: UIButton) {
         print(vehicledatasourceArry)
         dropdown.dataSource = vehicledatasourceArry 
@@ -87,7 +196,7 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
     func getVehicleIds(){
         
         let params  = ["userid":userid,
-                        "password":password]
+                       "password":password]
         
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
         NetworkRequest.makeRequestArray(type: vehiclesFullData.self, urlRequest: Router.getRamkeyVehicles(Parameters: params)) { [weak self](result) in
@@ -99,9 +208,9 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
                 if vehicleData != nil {
                     self?.vehicleDataModel = vehicleData
                     self?.vehicleDataModel?.forEach({self?.vehicledatasourceArry.append($0.vehicleNumber ?? "")})
-                  //  print(self?.vehicledatasourceArry)
+                    //  print(self?.vehicledatasourceArry)
                     
-                   
+                    
                 } else {
                     self?.showAlert(message:serverNotResponding)
                 }
@@ -111,7 +220,7 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
                 self?.showAlert(message: serverNotResponding)
             }
         }
-     
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -119,9 +228,9 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
     }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let locValue:CLLocationCoordinate2D = manager.location!.coordinate
-        print("locations = \(locValue.latitude) \(locValue.longitude)")
+        //print("locations = \(locValue.latitude) \(locValue.longitude)")
         location = "\(locValue.latitude),\(locValue.longitude)"
-        UserDefaults.standard.set(location, forKey:"locationl")
+       // UserDefaults.standard.set(location, forKey:"locationl")
       //  print(location)
     }
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -158,45 +267,45 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
        // self.present(importMenu, animated: true, completion: nil)
     }
     @objc func imagegestureAction(){
-
+        
         let controller = UIAlertController(title: "Select a picture which properly describes the issue!", message: nil, preferredStyle: .actionSheet)
-
-
-            controller.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { (action) in
-             //   print("Choosed Camera")
-                self.camera()
-
-
-            }))
-
-            controller.addAction(UIAlertAction(title: "Choose Photo", style: .default, handler: { (action) in
-              //  print("Choosed Gallery")
-
+        
+        
+        controller.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { (action) in
+            //   print("Choosed Camera")
+            self.camera()
+            
+            
+        }))
+        
+        controller.addAction(UIAlertAction(title: "Choose Photo", style: .default, handler: { (action) in
+            //  print("Choosed Gallery")
+            
             self.photoLibrary()
-
-            }))
-            controller.addAction(UIAlertAction(title: "Choose Document", style: .default, handler: { (action) in
-                    //   print("Choosed Document")
+            
+        }))
+        controller.addAction(UIAlertAction(title: "Choose Document", style: .default, handler: { (action) in
+            //   print("Choosed Document")
             self.openDocument()
-
-                   }))
-
-            controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
-                print("Cancelled")
-
-            }))
+            
+        }))
+        
+        controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
+            print("Cancelled")
+            
+        }))
         
         if let popoverController = controller.popoverPresentationController {
-          popoverController.sourceView = self.view
-          popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-          popoverController.permittedArrowDirections = []
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
         }
-            self.present(controller, animated: true, completion: nil)
-
-        }
+        self.present(controller, animated: true, completion: nil)
+        
+    }
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         let data = try! Data(contentsOf: urls[0])
-        self.cameraImg.image = UIImage(named:"pdfnew")
+        self.camImg.image = UIImage(named:"pdfnew")
         imagestr1  = data.base64EncodedString(options: NSData.Base64EncodingOptions.init(rawValue: 0))
     }
     public func documentMenu(_ picker:UIDocumentMenuViewController, didPickDocumentPicker documentPicker: UIDocumentPickerViewController) {
@@ -223,7 +332,7 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
         
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             dismiss(animated: true, completion: nil)
-            self.cameraImg.image = image
+            self.camImg.image = image
             let image1 : UIImage = image
             let imageData:NSData = image1.jpeg(.lowest)! as NSData
             imagestr1 = imageData.base64EncodedString(options: .lineLength64Characters)
@@ -234,18 +343,7 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
     @IBAction func submitClick(_ sender: Any) {
     }
 
-
 }
-//struct vehiclesFullData : Decodable {
-//    let sLNO : String?
-//    let vEHICLE_NUMBER : String?
-//    
-//    enum CodingKeys: String, CodingKey {
-//        
-//        case sLNO = "SLNO"
-//        case vEHICLE_NUMBER = "VEHICLE_NUMBER"
-//    }
-//}
 // MARK: - LoginStructElement
 struct vehiclesFullData: Codable {
     let slno, vehicleNumber: String?
@@ -254,4 +352,19 @@ struct vehiclesFullData: Codable {
         case slno = "SLNO"
         case vehicleNumber = "VEHICLE_NUMBER"
     }
+}
+struct updateWrd:Codable {
+  var  compid:String?
+  var tag: String?
+  var url: String?
+  var status: Bool?
+  var Message:String?
+   
+}
+struct grivenceUpdate:Codable{
+    var compid:String?
+    var status:String?
+    var Message:String?
+    var tag: String?
+    var url: String?
 }

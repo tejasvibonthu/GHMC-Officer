@@ -280,6 +280,7 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
             cell.locationLb.text = details?.location
             cell.dateLB.text = details?.createdDate
             cell.estimatedWtLB.text = details?.estWt
+            cell.estimSV.isHidden = false
             cell.img?.sd_setImage(with: URL(string:details?.image1Path  ?? ""), placeholderImage: UIImage(named: "noi"))
         } else if tag == 1{
             let details = pickuplisttableviewDatasource?[indexPath.row]
@@ -287,18 +288,22 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
             cell.locationLb.text = details?.location
             cell.dateLB.text = details?.createdDate
             cell.estimatedWtLB.text = details?.estWt
+            cell.estimSV.isHidden = false
             cell.img?.sd_setImage(with: URL(string:details?.image1Path  ?? ""), placeholderImage: UIImage(named: "noi"))
         } else if tag == 2{
             let details = concessionerRejecttableviewDatasource?[indexPath.row]
             cell.ticketIdLb.text = details?.ticketID
             cell.locationLb.text = details?.location
             cell.dateLB.text = details?.createdDate
+            cell.estimSV.isHidden = true
             cell.img?.sd_setImage(with: URL(string:details?.image1Path  ?? ""), placeholderImage: UIImage(named: "noi"))
         } else if tag == 3{
             let details = concessionerClosedTableDatasource?[indexPath.row]
             cell.ticketIdLb.text = details?.ticketID
             cell.locationLb.text = details?.location
             cell.dateLB.text = details?.ticketClosedDate
+           // cell.img?.sd_setImage(with: URL(string:details?.im  ?? ""), placeholderImage: UIImage(named: "noi"))
+            cell.estimSV.isHidden = true
             
         }
         cell.selectionStyle = .none

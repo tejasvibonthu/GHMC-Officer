@@ -17,20 +17,3 @@ struct data3:Decodable {
     var id:String?
     var name:String?
 }
-
-struct grivenceUpdate:Codable{
-    var compid:String?
-    var status:String?
-    var Message:String?
-    var tag: String?
-    var url: String?
-}
-
-struct  updateWrd:Codable {
-  var  compid:String?
-  var tag: String?
-  var url: String?
-  var status: Bool?
-    var Message:String?
-   
-}
