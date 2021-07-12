@@ -34,11 +34,19 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
     var locationManager:CLLocationManager?
     var vehicleDataModel:[vehiclesFullData]?
     var vehicleId:String?
-    var vehicledatasourceArry:[String] = []
+   
     var location:String? = nil
     var compID:String?
     var updateWardModel:updateWrd?
     var updateGrivencemodel:grivenceUpdate?
+    var getwardsModel:getwardDeatilsStruct?
+    var getstatusTypesModel:[GetStatusTypesStruct]?
+    var complainttypeDataSource:[String] = []
+    var vehicledatasourceArry:[String] = []
+    var wardsdatasourceArry:[String] = []
+    
+    var compType:String?
+    var compId:String?
 
 //    var myComplaintId:String?
 //    let complaintId:String? = nil
@@ -55,6 +63,7 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
         self.view.backgroundColor = UIColor.init(patternImage:UIImage.init(named:image)!)
         
         getVehicleIds()
+        self.getStatusTypeWS()
 
 
        // subcatId = "34"
@@ -68,112 +77,174 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
         locationManager?.requestAlwaysAuthorization()
         locationManager?.startUpdatingLocation()
     }
-    @IBAction func complaintBtnClick(_ sender: UIButton) {
-       
+    @IBAction func backClick(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
     }
-    
+    @IBAction func complaintBtnClick(_ sender: UIButton) {
+        dropdown.dataSource = complainttypeDataSource
+        dropdown.anchorView = sender
+        dropdown.show()
+        dropdown.selectionAction = {[unowned self] (index : Int , item : String) in
+          print("selected index \(index) item \(item)")
+            
+            sender.setTitle(item, for: .normal)
+            complaintBtn.setTitleColor(.black, for: .normal)
+            self.compType = self.getstatusTypesModel?[index].type
+            self.compId = self.getstatusTypesModel?[index].id
+            self.dropdown.hide()
+        }
+    }
     @IBAction func wardnameBtnClick(_ sender: UIButton) {
     }
-    func updateWard(){
-        let deviceId = UIDevice.current.identifierForVendor!.uuidString
-        guard let location1 = location else {
-            showAlert(message:"Unable to fetch location.Please try again later..")
-            return
-        }
-        let mobileno = UserDefaultVars.mobileNumber
-        let name = UserDefaultVars.empName
-        let params = [
+    func getStatusTypeWS(){
+           let parms  = [
             "userid":userid,
-        "password":password,
-        "remarks":descriptionTV.text ?? "",
-        "photo":imagestr1 ?? "",
-        "latlon":location1,
-        "mobileno":"\(mobileno)-\(name)",
-        "deviceid":deviceId,
-        "compId":compID ?? "",
-        "updatedstatus":self.complaint_id ?? "",
-        "ward":ward_id ?? ""]
+          "password":password,
+          "type_id":UserDefaultVars.typeId,
+          "designation":UserDefaultVars.designation
+           ]
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
-        NetworkRequest.makeRequest(type: updateWrd.self, urlRequest: Router.forwordtoAnotherWard(Parameters: params)) { [weak self](result) in
+        NetworkRequest.makeRequestArray(type: GetStatusTypesStruct.self, urlRequest: Router.getstatusType(params: parms)) { [weak self](result) in
                 switch result {
                 case .success(let resp):
-                    print(resp)
-                    self?.updateWardModel = resp
-                    if  self.updateWardModel.status == true{
-                        let alert = UIAlertController(title: "MYGHMC", message:(self.updateWardModel.compid ?? ""), preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction.init(title:"OK", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
-                            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                            appDelegate.openDashboard()
-                        }))
-                        self.present(alert, animated: true, completion: nil)
+                   // print(resp)
+                    self?.getstatusTypesModel = resp
+                    if  ((self?.getstatusTypesModel?.isEmpty) != nil) {
+                        self?.getstatusTypesModel?.forEach({self?.complainttypeDataSource.append($0.type ?? "")})
                     }
                     else
                     {
-                        self?.showAlert(message: updateWardModel?.Message)
+                        self?.showAlert(message: "No records found")
                     }
                 case .failure(let err):
                     print(err)
                     self?.showAlert(message: err.localizedDescription)
                 }
             }
-        }
-    func updateGrivence(){
-        let mobileno = UserDefaultVars.mobileNumber
-        let name = UserDefaultVars.empName
-        let type_id = UserDefaultVars.typeId
-        guard let location1 = location else {
-            showAlert(message:"Unable to fetch location.Please try again later..")
-            return
-        }
-        let params  = ["userid": userid,
-                       "password": password,
-                       "type_id": "\(type_id)",
-                       "mobileno": "\(mobileno)-\(name)-\(type_id)",
-                       "updatedstatus":self.complaint_id!,
-                       "compId": self.myComplaintId!,
-                       "remarks":descriptionTV.text!,
-                       "photo":imagestr1 ??  "",
-                       "latlon": location1,
-                       "deviceid":deviceId,
-                       "no_of_trips":nofTripsTF.text ?? "",
-                       "total_net_weight":totalnetWtTF.text ?? "",
-                       "trader_name":"",
-                       "id_proof_type":"",
-                       "id_proof_no":"",
-                       "nmos_mobile_no":"",
-                       "email":"",
-                       "fine_amount":"",
-                       "source":UserDefaultVars.modeID,
-                       "vehicleNo":vehicleSLNo ?? "",
-                       "claimant_status":ward_id ?? "",
-                       "lower_staff_id": ward_id ?? ""
-        ]
-        guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
-        NetworkRequest.makeRequest(type: grivenceUpdate.self, urlRequest: Router.updateGrivence(Parameters: params)) { [weak self](result) in
-                switch result {
-                case .success(let resp):
-                    print(resp)
-                    self.updateGrivencemodel = resp
-                    if  self.updateGrivencemodel?.status == "True"{
-                    let alert = UIAlertController(title: "MYGHMC", message:self.updateGrivencemodel?.compid!, preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction.init(title:"OK", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
-                            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                            appDelegate.openDashboard()
-                        }))
-                        self.present(alert, animated: true, completion: nil)
-                        }else {
-                            self.showAlert(message:(self.updateGrivencemodel?.Message ?? ""))
-                        }
-                case .failure(let err):
-                    print(err)
-                    self?.showAlert(message: err.localizedDescription)
-                }
-            }
+        
     }
+//    func updateWard(){
+//        let deviceId = UIDevice.current.identifierForVendor!.uuidString
+//        guard let location1 = location else {
+//            showAlert(message:"Unable to fetch location.Please try again later..")
+//            return
+//        }
+//        let mobileno = UserDefaultVars.mobileNumber
+//        let name = UserDefaultVars.empName
+//        let params = [
+//            "userid":userid,
+//        "password":password,
+//        "remarks":descriptionTV.text ?? "",
+//        "photo":imagestr1 ?? "",
+//        "latlon":location1,
+//        "mobileno":"\(mobileno)-\(name)",
+//        "deviceid":deviceId,
+//        "compId":compID ?? "",
+//        "updatedstatus":self.complaint_id ?? "",
+//        "ward":ward_id ?? ""]
+//        guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+//        NetworkRequest.makeRequest(type: updateWrd.self, urlRequest: Router.forwordtoAnotherWard(Parameters: params)) { [weak self](result) in
+//                switch result {
+//                case .success(let resp):
+//                    print(resp)
+//                    self?.updateWardModel = resp
+//                    if  self.updateWardModel.status == true{
+//                        let alert = UIAlertController(title: "MYGHMC", message:(self.updateWardModel.compid ?? ""), preferredStyle: UIAlertController.Style.alert)
+//                        alert.addAction(UIAlertAction.init(title:"OK", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
+//                            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//                            appDelegate.openDashboard()
+//                        }))
+//                        self.present(alert, animated: true, completion: nil)
+//                    }
+//                    else
+//                    {
+//                        self?.showAlert(message: updateWardModel?.Message)
+//                    }
+//                case .failure(let err):
+//                    print(err)
+//                    self?.showAlert(message: err.localizedDescription)
+//                }
+//            }
+//        }
+//    func updateGrivence(){
+//        let mobileno = UserDefaultVars.mobileNumber
+//        let name = UserDefaultVars.empName
+//        let type_id = UserDefaultVars.typeId
+//        guard let location1 = location else {
+//            showAlert(message:"Unable to fetch location.Please try again later..")
+//            return
+//        }
+//        let params  = ["userid": userid,
+//                       "password": password,
+//                       "type_id": "\(type_id)",
+//                       "mobileno": "\(mobileno)-\(name)-\(type_id)",
+//                       "updatedstatus":self.complaint_id!,
+//                       "compId": self.myComplaintId!,
+//                       "remarks":descriptionTV.text!,
+//                       "photo":imagestr1 ??  "",
+//                       "latlon": location1,
+//                       "deviceid":deviceId,
+//                       "no_of_trips":nofTripsTF.text ?? "",
+//                       "total_net_weight":totalnetWtTF.text ?? "",
+//                       "trader_name":"",
+//                       "id_proof_type":"",
+//                       "id_proof_no":"",
+//                       "nmos_mobile_no":"",
+//                       "email":"",
+//                       "fine_amount":"",
+//                       "source":UserDefaultVars.modeID,
+//                       "vehicleNo":vehicleSLNo ?? "",
+//                       "claimant_status":ward_id ?? "",
+//                       "lower_staff_id": ward_id ?? ""
+//        ]
+//        guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+//        NetworkRequest.makeRequest(type: grivenceUpdate.self, urlRequest: Router.updateGrivence(Parameters: params)) { [weak self](result) in
+//                switch result {
+//                case .success(let resp):
+//                    print(resp)
+//                    self.updateGrivencemodel = resp
+//                    if  self.updateGrivencemodel?.status == "True"{
+//                    let alert = UIAlertController(title: "MYGHMC", message:self.updateGrivencemodel?.compid!, preferredStyle: UIAlertController.Style.alert)
+//                        alert.addAction(UIAlertAction.init(title:"OK", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
+//                            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//                            appDelegate.openDashboard()
+//                        }))
+//                        self.present(alert, animated: true, completion: nil)
+//                        }else {
+//                            self.showAlert(message:(self.updateGrivencemodel?.Message ?? ""))
+//                        }
+//                case .failure(let err):
+//                    print(err)
+//                    self?.showAlert(message: err.localizedDescription)
+//                }
+//            }
+//    }
     func getWardWS(){
-        let paar = ["userid":userid,
-                                 "password":password,
+        let params = ["userid":userid,
+                      "password":password,
                                  ]
+        guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+        NetworkRequest.makeRequestArray(type: getwardDeatilsStruct.self, urlRequest: Router.getWard(params: params)) { [weak self](result) in
+            switch result
+            {
+            case  .success(let
+                            wardsData):
+              //  print(vehicleData)
+                if wardsData != nil {
+                    self?.getwardsModel = wardsData
+                    self?.getwardsModel?.data.forEach({self?.wardsdatasourceArry.append($0.vehicleNumber ?? "")})
+                    //  print(self?.vehicledatasourceArry)
+                    
+                    
+                } else {
+                    self?.showAlert(message:serverNotResponding)
+                }
+                
+            case .failure(let err):
+                print(err)
+                self?.showAlert(message: serverNotResponding)
+            }
+        }
         
        
         }
@@ -194,7 +265,6 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
                     }
     }
     func getVehicleIds(){
-        
         let params  = ["userid":userid,
                        "password":password]
         
@@ -344,6 +414,24 @@ class TakesactionVC: UIViewController,UIImagePickerControllerDelegate,CLLocation
     }
 
 }
+// This file was generated from JSON Schema using quicktype, do not modify it directly.
+// To parse the JSON, add this file to your project and do:
+//
+//   let getStatusTypesStruct = try? newJSONDecoder().decode(GetStatusTypesStruct.self, from: jsonData)
+
+import Foundation
+
+// MARK: - GetStatusTypesStructElement
+struct GetStatusTypesStruct: Codable {
+    let id, type: String?
+    let status: Status?
+}
+
+enum Status: String, Codable {
+    case success = "success"
+}
+
+
 // MARK: - LoginStructElement
 struct vehiclesFullData: Codable {
     let slno, vehicleNumber: String?
@@ -367,4 +455,13 @@ struct grivenceUpdate:Codable{
     var Message:String?
     var tag: String?
     var url: String?
+}
+struct getwardDeatilsStruct:Codable{
+    var status:String?
+    var tag:String?
+    var data:[data]?
+    struct data:Codable{
+        var ward:String?
+        var id:String?
+    }
 }

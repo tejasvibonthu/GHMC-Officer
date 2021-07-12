@@ -1194,7 +1194,7 @@
                                         </constraints>
                                         <state key="normal" title="Button" image="left_arrow"/>
                                         <connections>
-                                            <action selector="back_buttonAction:" destination="Fjr-rE-fwq" eventType="touchUpInside" id="YKF-2s-6yr"/>
+                                            <action selector="backClick:" destination="QTk-6b-0nu" eventType="touchUpInside" id="D0C-Y1-01U"/>
                                         </connections>
                                     </button>
                                 </subviews>
