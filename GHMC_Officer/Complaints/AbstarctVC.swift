@@ -33,7 +33,8 @@ class AbstarctVC: UIViewController {
     
 
     @IBAction func backButtonAction(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
+        let vc = storyboards.HomeStoryBoard.instance.instantiateViewController(withIdentifier:"HomeViewController") as! HomeViewController
+        self.navigationController?.pushViewController(vc, animated:true)
     }
     func absractReportWS(){
         
@@ -180,7 +181,15 @@ extension AbstarctVC:UITableViewDataSource,UITableViewDelegate
         
         return cell
     }
-    
-    
+}
+struct abstractRport:Codable{
+    var status:String?
+    var flag:String?
+    var TOTAL_RECEIVED:String?
+    var TOTAL_PENDING:String?
+    var TOTAL_UNDER_PROCESS:String?
+    var TOTAL_CLOSED:String?
+    var TOTAL_NON_GHMC:String?
+    var TOTAL_FUND_RELATED:String?
     
 }

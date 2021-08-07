@@ -12,14 +12,11 @@ class TripsatPlantVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         searchBar.delegate = self
         self.getTripsListWS()
     }
-    @IBAction func logoutClick(_ sender: Any) {
-        let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
-        UserDefaults.standard.removeObject(forKey:"mpin")
-        UserDefaults.standard.synchronize()
-        let navVc = UINavigationController(rootViewController: vc)
-        self.view.window?.rootViewController = navVc
-        self.view.window?.makeKeyAndVisible()
+  
+    @IBAction func backClick(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
     }
+    
     func getTripsListWS() {
         let params = ["EMPLOYEE_ID":UserDefaultVars.empId,
                        "DEVICEID":deviceId,

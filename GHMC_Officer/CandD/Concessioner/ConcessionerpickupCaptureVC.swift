@@ -8,11 +8,14 @@
 
 import UIKit
 import SearchTextField
-class ConcessionerpickupCaptureVC: UIViewController {
+class ConcessionerpickupCaptureVC: UIViewController,TimeStampProtocol {
+    func imgDelegate(img: UIImage , imgView :UIImageView) {
+        imgView.image = img
+        imgView.isUserInteractionEnabled = false
+    }
+  @IBOutlet weak var afterPickupImgView: CustomImageView!
 
-  @IBOutlet weak var afterPickupImgView: CustomImagePicker!
-
-  @IBOutlet weak var beforePickupImgView: CustomImagePicker!
+  @IBOutlet weak var beforePickupImgView: CustomImageView!
  
   @IBOutlet weak var ticketIdLb: UILabel!
   @IBOutlet weak var locationLb: UILabel!

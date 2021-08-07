@@ -56,20 +56,22 @@ class UserListVC: UIViewController {
     }
     
     @IBAction func menuAction(_ sender: Any) {
+        let appDelgate = UIApplication.shared.delegate as! AppDelegate
+        appDelgate.openDashboard()
         
-        if self.revealViewController() != nil {
-            self.revealViewController().rearViewRevealWidth = 0.88 * UIScreen.main.bounds.size.width
-            self.revealViewController().panGestureRecognizer().isEnabled = true
-            self.revealViewController().tapGestureRecognizer()
-            revealViewController().revealToggle(sender)
-            
-        } else {
-            
-            let objReavealController = self.storyboard?.instantiateViewController(withIdentifier: "SWRevealViewController") as! SWRevealViewController
-            objReavealController.panGestureRecognizer().isEnabled = true
-            objReavealController.tapGestureRecognizer()
-            objReavealController.revealToggle(sender)
-        }
+//        if self.revealViewController() != nil {
+//            self.revealViewController().rearViewRevealWidth = 0.88 * UIScreen.main.bounds.size.width
+//            self.revealViewController().panGestureRecognizer().isEnabled = true
+//            self.revealViewController().tapGestureRecognizer()
+//            revealViewController().revealToggle(sender)
+//
+//        } else {
+//
+//            let objReavealController = self.storyboard?.instantiateViewController(withIdentifier: "SWRevealViewController") as! SWRevealViewController
+//            objReavealController.panGestureRecognizer().isEnabled = true
+//            objReavealController.tapGestureRecognizer()
+//            objReavealController.revealToggle(sender)
+//        }
         
     }
     func UsersListWS(){

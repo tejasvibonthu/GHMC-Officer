@@ -94,9 +94,13 @@ class CheckStatusListVC: UIViewController {
                         
                         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                             UIAlertAction in
-                            let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "SWRevealViewController") as? SWRevealViewController
+//                            let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "SWRevealViewController") as? SWRevealViewController
+//
+//                            self.navigationController?.pushViewController(vc!, animated: false)
                             
-                            self.navigationController?.pushViewController(vc!, animated: false)                        }
+                            let appdelete = UIApplication.shared.delegate as! AppDelegate
+                           appdelete.openDashboard()
+                        }
                         
                         alertController.addAction(okAction)
                         
@@ -119,9 +123,12 @@ class CheckStatusListVC: UIViewController {
 
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                    UIAlertAction in
-                   let vc = storyboards.HomeStoryBoard.instance.instantiateViewController(withIdentifier: "SWRevealViewController") as? SWRevealViewController
-
-                   self.navigationController?.pushViewController(vc!, animated: false)                        }
+//                   let vc = storyboards.HomeStoryBoard.instance.instantiateViewController(withIdentifier: "SWRevealViewController") as? SWRevealViewController
+//
+//                   self.navigationController?.pushViewController(vc!, animated: false)
+                let appdelete = UIApplication.shared.delegate as! AppDelegate
+               appdelete.openDashboard()
+            }
 
                alertController.addAction(okAction)
 

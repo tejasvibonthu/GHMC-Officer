@@ -16,6 +16,8 @@ class ConcessionerRequest: UIViewController,UITextFieldDelegate {
     var circle:String?
     var location:String?
     var grievanceId:String?
+    var latitude:String?
+    var longitude:String?
     @IBOutlet weak var bg: UIImageView!
     @IBOutlet weak var dtaeLB: UILabel!
     @IBOutlet weak var zoneLB: UILabel!
@@ -97,6 +99,24 @@ class ConcessionerRequest: UIViewController,UITextFieldDelegate {
         self.navigationController?.popViewController(animated: true)
     }
 
+    @IBAction func btn_ViewdirectionsClick(_ sender: Any) {
+        openGoogleMap(destLat: latitude ?? "", destLon: longitude ?? "")
+    }
+    func openGoogleMap(destLat : String , destLon : String) {
+        let lat = destLat
+        let latDouble =  Double(lat)
+        let long = destLon
+        let longDouble =  Double(long)
+        if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {  //if phone has an app
+            if let url = URL(string: "comgooglemaps-x-callback://?saddr=&daddr=\(String(describing: latDouble!)),\(String(describing: longDouble!))&directionsmode=driving") {
+                UIApplication.shared.open(url, options: [:])
+            }}
+        else {
+            if let urlDestination = URL.init(string: "https://www.google.co.in/maps/dir/?saddr=&daddr=\(String(describing: latDouble!)),\(String(describing: longDouble!))&directionsmode=driving") {
+                UIApplication.shared.open(urlDestination)
+            }
+        }
+    }
     func validation() -> Bool{
         if  radioBtn1.isSelected == false && radioBtn2.isSelected == false{
             showAlert(message: "Please select accept or reject")

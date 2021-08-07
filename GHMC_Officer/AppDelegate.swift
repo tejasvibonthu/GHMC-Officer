@@ -11,17 +11,11 @@ import Firebase
 import GooglePlaces
 import GoogleMaps
 import IQKeyboardManagerSwift
-
-
-
-
+import SideMenuSwift
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
     var update = "1"
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         if #available(iOS 13.0, *) {
@@ -36,21 +30,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GMSPlacesClient.provideAPIKey("AIzaSyApZla0iJ16BznqlpmTXSuG7z3ZDSZDpXw")
         GMSServices.provideAPIKey("AIzaSyCYtfc51p8vQINhr9OzyVgPlojNUSmkt94")
          FirebaseApp.configure()
-//         InstanceID.instanceID().instanceID { (result, error) in
-//            if let error = error {
-//                print("Error fetching remote instange ID: \(error)")
-//            } else if let result = result {
-//                print("Remote instance ID token: \(result.token)")
-//                fcm_Key = result.token
-//            }
-    //    }
+         InstanceID.instanceID().instanceID { (result, error) in
+            if let error = error {
+                print("Error fetching remote instange ID: \(error)")
+            } else if let result = result {
+                print("Remote instance ID token: \(result.token)")
+                fcm_Key = result.token
+            }
+        }
+        setupSidememu()
     
         return true
     }
+    func setupSidememu()
+    {
+        SideMenuController.preferences.basic.menuWidth = UIScreen.main.bounds.width * 0.7
+     //   SideMenuController.preferences.basic.defaultCacheKey = "home"
+        SideMenuController.preferences.basic.enablePanGesture = true
+    }
+
     func openDashboard() -> Void {
-        let swController = storyboards.HomeStoryBoard.instance.instantiateViewController(withIdentifier: "SWRevealViewController") as! SWRevealViewController
-        self.window?.rootViewController = swController
-        self.window?.makeKeyAndVisible()
+        if let swController = storyboards.HomeStoryBoard.instance.instantiateInitialViewController(){
+            self.window?.rootViewController = swController
+            self.window?.makeKeyAndVisible()
+        }
     }
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

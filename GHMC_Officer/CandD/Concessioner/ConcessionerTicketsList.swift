@@ -278,7 +278,8 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
             let details = tableviewDatasource?[indexPath.row]
             cell.ticketIdLb.text = details?.ticketID
             cell.locationLb.text = details?.location
-            cell.dateLB.text = details?.createdDate
+            cell.dateLB.text = details?.citizenraisedDate
+            cell.amohfwdDateLb.text = details?.amohFwdDate
             cell.estimatedWtLB.text = details?.estWt
             cell.estimSV.isHidden = false
             cell.img?.sd_setImage(with: URL(string:details?.image1Path  ?? ""), placeholderImage: UIImage(named: "noi"))
@@ -320,6 +321,8 @@ class ConcessionerTicketsList: UIViewController ,UITableViewDelegate,UITableView
             vc.location = details?.location
             vc.grievanceId = details?.ticketID
             vc.imgIs = details?.image1Path
+            vc.latitude = details?.latitude
+            vc.longitude = details?.longitude
             self.navigationController?.pushViewController(vc, animated:true)
         } else if tag == 1 {
             let vc = storyboards.Concessioner.instance.instantiateViewController(withIdentifier:"ConcessionerpickupCaptureVC") as! ConcessionerpickupCaptureVC
@@ -395,6 +398,8 @@ struct ConcessionerTicketsListStruct: Codable {
         let vehicleType: String
         let image1Path: String
         let noOfVehicles, status: String
+        let citizenraisedDate ,amohFwdDate :String
+        let latitude ,longitude :String
 
         enum CodingKeys: String, CodingKey {
             case ticketID = "TICKET_ID"
@@ -413,6 +418,10 @@ struct ConcessionerTicketsListStruct: Codable {
             case image1Path = "IMAGE1_PATH"
             case noOfVehicles = "NO_OF_VEHICLES"
             case status = "STATUS"
+            case citizenraisedDate = "CITIZEN_RAISED_DATE"
+            case amohFwdDate = "AMOH_FORWARDED_DATE"
+            case latitude = "LATITUDE"
+            case longitude = "LONGITUDE"
         }
     }
 

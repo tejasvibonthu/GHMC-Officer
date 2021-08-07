@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 extension UIViewController{
 func showCustomAlert(message : String ,okCompletion : (()->())? = nil)
 {

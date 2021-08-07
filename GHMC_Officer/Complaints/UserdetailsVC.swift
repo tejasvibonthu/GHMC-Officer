@@ -69,19 +69,19 @@ class UserdetailsVC: UIViewController {
         @IBAction func backButtob_Action(_ sender: Any) {
         self.navigationController?.popViewController(animated:true)
     }
-    @IBAction func menuAction(_ sender: Any) {
-        if self.revealViewController() != nil {
-            self.revealViewController().rearViewRevealWidth = 0.88 * UIScreen.main.bounds.size.width
-            self.revealViewController().panGestureRecognizer().isEnabled = true
-            self.revealViewController().tapGestureRecognizer()
-            revealViewController().revealToggle(sender)
-        } else {
-            let objReavealController = self.storyboard?.instantiateViewController(withIdentifier: "SWRevealViewController") as! SWRevealViewController
-            objReavealController.panGestureRecognizer().isEnabled = true
-            objReavealController.tapGestureRecognizer()
-            objReavealController.revealToggle(sender)
-        }
-    }
+//    @IBAction func menuAction(_ sender: Any) {
+//        if self.revealViewController() != nil {
+//            self.revealViewController().rearViewRevealWidth = 0.88 * UIScreen.main.bounds.size.width
+//            self.revealViewController().panGestureRecognizer().isEnabled = true
+//            self.revealViewController().tapGestureRecognizer()
+//            revealViewController().revealToggle(sender)
+//        } else {
+//            let objReavealController = self.storyboard?.instantiateViewController(withIdentifier: "SWRevealViewController") as! SWRevealViewController
+//            objReavealController.panGestureRecognizer().isEnabled = true
+//            objReavealController.tapGestureRecognizer()
+//            objReavealController.revealToggle(sender)
+//        }
+//    }
     func userDetailsWS()  {
                 self.params = ["mode":UserDefaultVars.modeID,
                              "userid":userid,
@@ -113,7 +113,7 @@ class UserdetailsVC: UIViewController {
                         }
                     }
                 } else {
-                    self?.showCustomAlert(message: getList.status ?? ""){
+                    self?.showAlert(message: getList.status ?? ""){
                         self?.navigationController?.popViewController(animated: true)
                     }
                 }
@@ -122,7 +122,7 @@ class UserdetailsVC: UIViewController {
                 print(err)
                 DispatchQueue.main.async {
                     //  self?.showAlert(message: serverNotResponding)
-                    self?.showCustomAlert(message: serverNotResponding){
+                    self?.showAlert(message: serverNotResponding){
                         self?.navigationController?.popViewController(animated: true)
                     }
                 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SideMenuSwift
 class HomeViewController: UIViewController {
     @IBOutlet weak var bgimageview: UIImageView!
     @IBOutlet weak var bgImagev: UIImageView!
@@ -120,19 +121,20 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func menuAction(_ sender: Any) {
-        if self.revealViewController() != nil {
-            self.revealViewController().rearViewRevealWidth = 0.75 * UIScreen.main.bounds.size.width
-            self.revealViewController().panGestureRecognizer().isEnabled = true
-            self.revealViewController().tapGestureRecognizer()
-            revealViewController().revealToggle(sender)
-
-        } else {
-
-            let objReavealController = self.storyboard?.instantiateViewController(withIdentifier: "SWRevealViewController") as! SWRevealViewController
-            objReavealController.panGestureRecognizer().isEnabled = true
-            objReavealController.tapGestureRecognizer()
-            objReavealController.revealToggle(sender)
-        }
+        sideMenuController?.revealMenu()
+//        if self.revealViewController() != nil {
+//            self.revealViewController().rearViewRevealWidth = 0.75 * UIScreen.main.bounds.size.width
+//            self.revealViewController().panGestureRecognizer().isEnabled = true
+//            self.revealViewController().tapGestureRecognizer()
+//            revealViewController().revealToggle(sender)
+//
+//        } else {
+//
+//            let objReavealController = self.storyboard?.instantiateViewController(withIdentifier: "SWRevealViewController") as! SWRevealViewController
+//            objReavealController.panGestureRecognizer().isEnabled = true
+//            objReavealController.tapGestureRecognizer()
+//            objReavealController.revealToggle(sender)
+//        }
         
     }
     func getGrivanceCountsWS(){

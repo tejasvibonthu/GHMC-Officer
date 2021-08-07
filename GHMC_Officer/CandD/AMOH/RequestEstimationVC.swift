@@ -9,18 +9,22 @@
 import UIKit
 import DropDown
 import GoogleMaps
-class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate,CLLocationManagerDelegate {
+class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate,CLLocationManagerDelegate ,TimeStampProtocol ,UITableViewDelegate ,UITableViewDataSource {
+    func imgDelegate(img: UIImage ,imgView: UIImageView) {
+        print("imgWithTimestamp\(img)")
+        cameraImg.image  = img
+        cameraImg.isUserInteractionEnabled = false
+    }
+    var imageWithTimestamp :UIImage?
     var estimationDetails:RequestEstimationStruct?
     var ticketId:String?
     var reqdatasourceArry:[String] = []
     var req:String?
     var reqId:String?
-    var vehicleId:String?
     var reqDataModel:GetreqTypeStruct?
     let dropdown = DropDown()
     var vehicledatasourceArry:[String] = []
     var noofTons:Int?
-    var vehicledatamodel:GetVehicledataStruct?
     var weight:String?
     var tag:Int!
     var imgStr:String?
@@ -31,8 +35,11 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     var circleId:String?
     var zoneId:String?
     var wardId:String?
+    var lat:String?
+    var lon:String?
+    var noofVehiclesArray : [TblItems] = []
+    var totalAmount : String?
     var locationManager = CLLocationManager()
-    @IBOutlet weak var imgtopConstraint: NSLayoutConstraint!
     @IBOutlet weak var ticketSV: UIStackView!
     @IBOutlet weak var dtaeLB: UILabel!
     @IBOutlet weak var ticketIdLb: UILabel!
@@ -44,12 +51,13 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var detailsView: UIView!
     @IBOutlet weak var estimationView: UIView!
-    @IBOutlet weak var noofVehiclesTF: UITextField!
-    @IBOutlet weak var vehicletypeBtn: UIButton!
-    @IBOutlet weak var estimationwasteTF: UITextField!
-    @IBOutlet weak var amountTF: UITextField!
+    @IBOutlet weak var estimationwasteTF: UILabel!
     @IBOutlet weak var landmarkTf: UITextField!
-    @IBOutlet weak var cameraImg: CustomImagePicker!
+    @IBOutlet weak var btn_viewdirections: UIButton!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableviewHeight: NSLayoutConstraint!
+    
+    @IBOutlet weak var cameraImg: CustomImageView!
     {
         didSet
         {
@@ -58,6 +66,7 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.setshadow()
         if CLLocationManager.locationServicesEnabled() {
             locationManager = CLLocationManager()
@@ -88,16 +97,13 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
             circleLB.text = ticketDetails?.circleID
             wardLB.text = ticketDetails?.wardID
             landmarkTf.textColor = .black
+                btn_viewdirections.isHidden = true
         }
-        estimationwasteTF.isHidden = true
-        self.estimationwasteTF.isEnabled = false
-        noofVehiclesTF.delegate = self
-        noofVehiclesTF.isHidden = true
-        amountTF.isHidden = true
-        amountTF.delegate = self
-        self.amountTF.isEnabled = false
-        self.getRequestTypeWS()
-        self.getVehiclesDataWS()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableviewHeight.constant = 0
+       // self.getRequestTypeWS()
         }
     //Mark :- LocationManager Delegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -109,24 +115,9 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
         whereAmIService()
     }
-    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if noofVehiclesTF.text != "" {
-        let noofVehicles = Int(noofVehiclesTF.text ?? "")
-        let totalCost: Int = noofTons! * noofVehicles!
-        self.weight = String(totalCost)
-        estimationwasteTF.isHidden = false
-        estimationwasteTF.text = ("\(weight ?? "0") TONS")
-        if estimationwasteTF.text != "" {
-            self.calculateAmountWS()
-            self.amountTF.isHidden = false
-        }
-    }
-        return true
-    }
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        noofVehiclesTF.resignFirstResponder()
-        return true
-        }
+  
+    
+   
     @IBAction func typeofReqClick(_ sender: UIButton) {
         DropDown.appearance().textColor = UIColor.black
         dropdown.dataSource = reqdatasourceArry
@@ -141,24 +132,7 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
             self.dropdown.hide()
                     }
     }
-    @IBAction func vehicleTypeClick(_ sender: UIButton) {
-        dropdown.dataSource = vehicledatasourceArry
-        dropdown.anchorView = sender
-        dropdown.show()
-        dropdown.selectionAction = {[unowned self] (index : Int , item : String) in
-          print("selected index \(index) item \(item)")
-            
-            sender.setTitle(item, for: .normal)
-            vehicletypeBtn.setTitleColor(.black, for: .normal)
-            self.vehicleId = self.vehicledatamodel?.vehiclelist?[index].vehicleTypeID
-            self.dropdown.hide()
-            if  vehicletypeBtn.currentTitle != "Select" {
-                noofVehiclesTF.isHidden = false
-                self.noofTons = Int((vehicletypeBtn.currentTitle?.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())! )
-            }
-        }
-          
-    }
+   
 
    
     //get vehicle types API call
@@ -185,46 +159,26 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         }
     }
     //get vehicle types API call
-    func getVehiclesDataWS()
-    {
-        guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
-        NetworkRequest.makeRequest(type: GetVehicledataStruct.self, urlRequest: Router.getVehicleData) { [weak self](result) in
-            switch result
-            {
-            case  .success(let vehicledata):
-              //  print(vehicledata)
-                if vehicledata.statusCode == "200"{
-                    self?.vehicledatamodel = vehicledata
-                    self?.vehicledatamodel?.vehiclelist?.forEach({self?.vehicledatasourceArry.append($0.vehicleType ?? "")})
-                }
-                 else{
-                 self?.showAlert(message: vehicledata.statusMessage ?? "")
-             }
-            case .failure(let err):
-                print(err)
-                self?.showAlert(message: serverNotResponding)
-            }
-        }
-    }
-    func calculateAmountWS(){
-        let params = ["EST_WT": self.weight]
-        guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
-        NetworkRequest.makeRequest(type: CalculateAmountStruct.self, urlRequest: Router.calculateAmountbyTons(Parameters: params)) { [weak self](result) in
-            switch result
-            {
-            case  .success(let CalData):
-                if CalData.statusCode == "200"{
-                    self?.amountTF.text = CalData.cndwAmount ?? ""
-                }
-                else{
-                    self?.showAlert(message: CalData.statusMessage ?? "")
-                }
-            case .failure(let err):
-                print(err)
-                self?.showAlert(message: serverNotResponding)
-            }
-        }
-    }
+    
+//    func calculateAmountWS(){
+//        let params = ["EST_WT": self.weight]
+//        guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
+//        NetworkRequest.makeRequest(type: CalculateAmountStruct.self, urlRequest: Router.calculateAmountbyTons(Parameters: params)) { [weak self](result) in
+//            switch result
+//            {
+//            case  .success(let CalData):
+//                if CalData.statusCode == "200"{
+//                    self?.amountTF.text = CalData.cndwAmount ?? ""
+//                }
+//                else{
+//                    self?.showAlert(message: CalData.statusMessage ?? "")
+//                }
+//            case .failure(let err):
+//                print(err)
+//                self?.showAlert(message: serverNotResponding)
+//            }
+//        }
+//    }
     func whereAmIService()
     {
         let parameters : [String : Any] = [
@@ -268,27 +222,117 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         let imageData = image.jpegData(compressionQuality: 0.001)!
         return imageData.base64EncodedString(options: Data.Base64EncodingOptions.lineLength64Characters)
     }
-        @IBAction func submitClick(_ sender: Any) {
+    @IBAction func btn_viewdirectionsClick(_ sender: Any) {
+        openGoogleMap(destLat: lat ?? "" , destLon: lon ?? "")
+    }
+    func openGoogleMap(destLat : String , destLon : String) {
+        let lat = destLat
+        let latDouble =  Double(lat)
+        let long = destLon
+        let longDouble =  Double(long)
+        if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {  //if phone has an app
+            if let url = URL(string: "comgooglemaps-x-callback://?saddr=&daddr=\(String(describing: latDouble!)),\(String(describing: longDouble!))&directionsmode=driving") {
+                UIApplication.shared.open(url, options: [:])
+            }}
+        else {
+            if let urlDestination = URL.init(string: "https://www.google.co.in/maps/dir/?saddr=&daddr=\(String(describing: latDouble!)),\(String(describing: longDouble!))&directionsmode=driving") {
+                UIApplication.shared.open(urlDestination)
+            }
+        }
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return noofVehiclesArray.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "AmoVehicledataCell") as! AmoVehicledataCell
+        let cellItem = noofVehiclesArray[indexPath.row]
+        cell.lb_vehicleType.text = cellItem.vehicleName
+        cell.lb_noofvehicles.text = cellItem.noofVehicles
+        cell.lb_amount.text = cellItem.amount
+        //calculate estimation weight
+        print("vehicledataArray\(noofVehiclesArray)")
+        if  cell.lb_vehicleType.text != "" && cell.lb_noofvehicles.text != "" && cell.lb_amount.text != "" {
+            let vehilennos = noofVehiclesArray.map({$0.noofVehicles})
+            let vehicleType = noofVehiclesArray.map({$0.vehicleName.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()})
+            let A = vehilennos.map { Int($0)!}
+            let B = vehicleType.map { Int($0)!}
+            let C = zip(A,B).map { $0 * $1 }
+            let wt = C.sum()
+            estimationwasteTF.text = String(wt)
+            //calculate amount
+            let amount = noofVehiclesArray.map({$0.amount})
+            let D = amount.map { Int($0)!}
+            let E = zip(A,D).map { $0 * $1 }
+            self.totalAmount = String(E.sum())
+            print(totalAmount)
+        }
+        
+        cell.selectionStyle = .none
+        return cell
+    }
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == .delete) {
+            // handle delete (by removing the data from your array and updating the tableview)
+            tableView.beginUpdates()
+            noofVehiclesArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+            tableviewHeight.constant -= 90
+            //calculate estimation weight
+            let vehilennos = noofVehiclesArray.map({$0.noofVehicles})
+            let vehicleType = noofVehiclesArray.map({$0.vehicleName.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()})
+            let A = vehilennos.map { Int($0)!}
+            let B = vehicleType.map { Int($0)!}
+            let C = zip(A,B).map { $0 * $1 }
+            let wt = C.sum()
+            estimationwasteTF.text = String(wt)
+            //calculate amount
+            let amount = noofVehiclesArray.map({$0.amount})
+            let D = amount.map { Int($0)!}
+            let E = zip(A,D).map { $0 * $1 }
+            self.totalAmount = String(E.sum())
+            print(totalAmount)
+            tableView.endUpdates()
+        }
+    }
+    @IBAction func btn_addVehicleClick(_ sender: Any) {
+        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "VehicledataEntryVC") as! VehicledataEntryVC
+        vc.vehicleDatadelegate = self
+        self.present(vc, animated: true, completion: nil)
+    }
+    @IBAction func submitClick(_ sender: Any) {
             if validation() {
                 if tag == 0{ //request estimation from request list
-                    self.requestsubmitWS()
+                    self.requestestimationsubmitWS()
                 }  else if tag == 5{ //directly from dashboard raise
                     self.raiseRequestWS()
                 }
             }
     }
-    func requestsubmitWS(){
+    func requestestimationsubmitWS(){
         let imgData = convertImageToBase64String(img: cameraImg.image!)
+        var vehicleDetails :[[String:Any]] = [[:]]
+        for item in noofVehiclesArray {
+            let param = ["VEHICLE_TYPE_ID" : item.vehicleId ,
+                         "NO_OF_TRIPS":item.noofVehicles]
+            vehicleDetails.append(param)
+
+        }
         let params = [
             "CNDW_GRIEVANCE_ID" : ticketId ?? "",
             "EMPLOYEE_ID": UserDefaultVars.empId,
             "DEVICEID": deviceId,
             "TOKEN_ID": UserDefaultVars.token ?? "",
             "IMAGE1_PATH": imgData,
-            "VEHICLE_TYPE_ID": vehicleId ?? "",
-            "NO_OF_VEHICLES": noofVehiclesTF.text ?? "",
-            "EST_WT": weight ?? "",
-            "AMOUNT": amountTF.text ?? ""
+            "VEHICLE_TYPE_ID":   "",
+            "NO_OF_VEHICLES":  "",
+            "EST_WT": estimationwasteTF.text ?? "",
+            "AMOUNT":  totalAmount,
+            "VEHICLE_DETAILS":  vehicleDetails,
             
         ] as [String : Any]
         print(params)
@@ -328,25 +372,29 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
 
     func raiseRequestWS(){
         let imgData = convertImageToBase64String(img: cameraImg.image!)
+        var vehicleDetails :[[String:Any]] = [[:]]
+        for item in noofVehiclesArray {
+            let param = ["VEHICLE_TYPE_ID" : item.vehicleId ,
+                         "NO_OF_TRIPS":item.noofVehicles]
+            vehicleDetails.append(param)
+
+        }
         let params = [
             "ZONE_ID":zoneId ?? "",
-              "CIRCLE_ID": circleId ?? "",
-              "WARD_ID": wardId ?? "",
+            "CIRCLE_ID": circleId ?? "",
+            "WARD_ID": wardId ?? "",
             "LANDMARK": landmarkTf.text ?? "",
-              "VEHICLE_TYPE": vehicleId ?? "",
-              "IMAGE1_PATH": imgData,
-              "IMAGE2_PATH": "",
-              "IMAGE3_PATH": "",
-            "NO_OF_VEHICLES": noofVehiclesTF.text ?? "",
-            "EST_WT": weight ?? "",
+            "IMAGE1_PATH": imgData,
+            "IMAGE2_PATH": "",
+            "IMAGE3_PATH": "",
+            "EST_WT": estimationwasteTF.text ?? "",
             "CREATED_BY": UserDefaultVars.empName,
-              "DEVICEID": deviceId,
+            "DEVICEID": deviceId,
             "TOKEN_ID": UserDefaultVars.token ?? "",
             "MOBILE_NUMBER": UserDefaultVars.mobileNumber,
-              "LATITUDE": latitude ?? "",
-              "LONGITUDE": longitude ?? ""
-            
-            
+            "LATITUDE": latitude ?? "",
+            "LONGITUDE": longitude ?? "",
+            "VEHICLE_DETAILS":  vehicleDetails,
         ] as [String : Any]
         print(params)
     guard Reachability.isConnectedToNetwork() else {self.showAlert(message:noInternet);return}
@@ -406,16 +454,9 @@ class RequestEstimationVC: UIViewController,UITextFieldDelegate,UIImagePickerCon
         if tag == 5 && landmarkTf.text == ""{
        showAlert(message: "Please enter landmark")
         return false
-    } else  if reqTypeBtn.currentTitle == "Select request type"{
-         showAlert(message: "Select request type")
-         return false
-     } else  if vehicletypeBtn.currentTitle == "Select vehicle type"{
-        showAlert(message: "Select vehicle type")
-        return false
-     } else  if noofVehiclesTF.text == ""{
-        showAlert(message: "Select no of vehicles")
-        return false
-     } else if cameraImg.isImagePicked == false {
+    } else if noofVehiclesArray.isEmpty {
+        showAlert(message: "Please add vehicle details")
+    } else if cameraImg.isImagePicked == false {
         showAlert(message: "Please capture image")
         return false
      }
@@ -454,27 +495,7 @@ struct CalculateAmountStruct: Codable {
         case cndwAmount = "CNDW_AMOUNT"
     }
 }
-// MARK: - GetVehicledataStruct
-struct GetVehicledataStruct: Codable {
-    let statusCode, statusMessage: String?
-    let vehiclelist: [Vehiclelist]?
 
-    enum CodingKeys: String, CodingKey {
-        case statusCode = "STATUS_CODE"
-        case statusMessage = "STATUS_MESSAGE"
-        case vehiclelist = "VEHICLELIST"
-    }
-    // MARK: - Vehiclelist
-    struct Vehiclelist: Codable {
-        let vehicleTypeID, vehicleType: String?
-
-        enum CodingKeys: String, CodingKey {
-            case vehicleTypeID = "VEHICLE_TYPE_ID"
-            case vehicleType = "VEHICLE_TYPE"
-        }
-    }
-
-}
 
 // MARK: - PaymentPendingSubmitStruct
 struct PaymentPendingSubmitStruct: Codable {
@@ -513,4 +534,25 @@ struct AMograisegrivanceStruct: Codable {
         case cndwGrievanceID = "CNDW_GRIEVANCE_ID"
         case officerDetails = "OFFICER_DETAILS"
     }
+}
+extension RequestEstimationVC : VehicleDataProtocol{
+        func vehicleDetails(vehicletype : String , vehicleId: String , noofVehicles : String ,amount : String ){
+        noofVehiclesArray.append(contentsOf: [TblItems.init(vehicleName: vehicletype , vehicleId: vehicleId, noofVehicles: noofVehicles, amount: amount)])
+            
+        if !noofVehiclesArray.isEmpty{
+            tableviewHeight.constant += 90
+            tableView.reloadData()
+
+        }
+     //   print(noofVehiclesArray)
+    }
+}
+struct TblItems {
+    let vehicleName : String
+    let vehicleId : String
+    let noofVehicles : String
+    let amount : String
+}
+extension Sequence where Element: AdditiveArithmetic {
+    func sum() -> Element { reduce(.zero, +) }
 }

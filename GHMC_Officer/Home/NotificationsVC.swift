@@ -19,31 +19,25 @@ class NotificationsVC: UIViewController {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
         tableview.rowHeight = UITableView.automaticDimension
-        navigationBarView.layer.addSublayer(addBorderBottom(y:navigationBarView.frame.size.height-1, width:navigationBarView.frame.size.width, colour:UIColor.black, height1:2.0))
-          
+//        navigationBarView.layer.addSublayer(addBorderBottom(y:navigationBarView.frame.size.height-1, width:navigationBarView.frame.size.width, colour:UIColor.black, height1:2.0))
+        tableview.separatorStyle = .none
         
         if Reachability.isConnectedToNetwork(){
             self.notificationWS()
         }else{
-            
-        
-        // Do any additional setup after loading the view.
+            showAlert(message: noInternet)
     }
     }
     func notificationWS(){
-    
     let dict :Parameters  = ["userid":userid,
     "password":password,
     "type_id":UserDefaults.standard.value(forKey:"TYPE_ID") ?? " ",
     "mobileno":UserDefaults.standard.value(forKey:"MOBILE_NO") ?? "",
-    
     ]
-    
     DispatchQueue.main.async {
     self.loading(text:progressMsgWhenLOginClicked)
     PKHUD.sharedHUD.show()
     }
-    
     Alamofire.request(Router.showNotifications(params:dict)).responseJSON {response in
     
   //  print(response)
@@ -83,19 +77,18 @@ class NotificationsVC: UIViewController {
         }
     }
     
-    @IBAction func homeButtonAction(_ sender: Any) {
+   
+    @IBAction func back_ButtonAction(_ sender: Any) {
         let vc = storyboards.HomeStoryBoard.instance.instantiateViewController(withIdentifier:"HomeViewController") as! HomeViewController
         self.navigationController?.pushViewController(vc, animated:true)
+     //   self.navigationController?.popViewController(animated:true)
     }
-    @IBAction func back_ButtonAction(_ sender: Any) {
-        self.navigationController?.popViewController(animated:true)
-    }
-    func addBorderBottom(y:CGFloat,width:CGFloat,colour:UIColor,height1:CGFloat)->CALayer{
-        let bottomBorder = CALayer()
-        bottomBorder.frame = CGRect(x: 0.0, y:y, width:width, height: height1)
-        bottomBorder.backgroundColor = colour.cgColor
-        return bottomBorder
-    }
+//    func addBorderBottom(y:CGFloat,width:CGFloat,colour:UIColor,height1:CGFloat)->CALayer{
+//        let bottomBorder = CALayer()
+//        bottomBorder.frame = CGRect(x: 0.0, y:y, width:width, height: height1)
+//        bottomBorder.backgroundColor = colour.cgColor
+//        return bottomBorder
+//    }
     /*
     // MARK: - Navigation
 
@@ -131,8 +124,10 @@ extension NotificationsVC:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell=tableView.dequeueReusableCell(withIdentifier:"NotificationsTableViewCell") as! NotificationsTableViewCell
+        cell.selectionStyle = .none
+        
            cell.wholeView.layer.masksToBounds = true
-        cell.wholeView.layer.addSublayer(addBorderBottom(y:cell.wholeView.frame.size.height-1, width:cell.wholeView.frame.size.width, colour:UIColor.lightGray, height1:1.0))
+      //  cell.wholeView.layer.addSublayer(addBorderBottom(y:cell.wholeView.frame.size.height-1, width:cell.wholeView.frame.size.width, colour:UIColor.lightGray, height1:1.0))
         cell.setUp(row:indexPath.row, model:notificationModel!)
         
         
@@ -141,4 +136,16 @@ extension NotificationsVC:UITableViewDelegate,UITableViewDataSource{
     
     
     
+}
+
+struct notifications:Codable{
+    
+    let sno:String?
+    let title:String?
+    let msg:String?
+    let isimage:String?
+    let imageurl:String?
+    let status:String?
+    let timestamp:String?
+   
 }

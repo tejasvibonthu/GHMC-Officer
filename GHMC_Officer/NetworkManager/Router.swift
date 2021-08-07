@@ -99,6 +99,7 @@ enum Router:URLRequestConvertible{
     case whereIam(Parameters:Parameters)
     case insertGrievance(Parameters:Parameters)
     case getRamkeyVehicles(Parameters:Parameters)
+    case getIdProofs
     //C and D waste
     //AMOH
     case getAMOHRequestList(Parameters:Parameters)
@@ -146,7 +147,7 @@ enum Router:URLRequestConvertible{
     var method:HTTPMethod{
         
         switch self {
-        case .mobileNumber,.sendFile,.revokeFile,.acknoeledge,.mpinGeneration,.forgotPassword,.fcmKeyOfficer,.getClaimTypes,.getVehicleData:
+        case .mobileNumber,.sendFile,.revokeFile,.acknoeledge,.mpinGeneration,.forgotPassword,.fcmKeyOfficer,.getClaimTypes,.getVehicleData,.getIdProofs:
             return .get
         case .resendOtp:
             return .post
@@ -218,6 +219,8 @@ enum Router:URLRequestConvertible{
             return "insertGrievance"
         case .getRamkeyVehicles:
             return "getRamkyVehicles"
+        case .getIdProofs:
+            return "getIdProofTypes"
         case .versionCheck:
             return "versionCheck"
             // C and D  waste
@@ -393,6 +396,17 @@ enum Router:URLRequestConvertible{
             urlRequest = try JSONEncoding.default.encode(urlRequest)
         case .getRamkeyVehicles(Parameters: let parameters):
             urlRequest = try JSONEncoding.default.encode(urlRequest, with: parameters)
+        case .getIdProofs:
+            urlRequest = try JSONEncoding.default.encode(urlRequest)
+//        case .lowerStaff(let empID):
+//            let pathString = path + "/\(empID)"
+//            let urlWithPath = url.appendingPathComponent(path).absoluteString.removingPercentEncoding
+//           // urlRequest = URLRequest(url: urlWithPath)
+//           // urlRequest.httpMethod = method.rawValue
+//            print(urlWithPath)
+//            urlRequest = URLRequest(url: urlWithPath)
+//            urlRequest = urlWithPath
+           // urlRequest = try JSONEncoding.default.encode(urlWithPath as! URLRequestConvertible)
         case .versionCheck(let parameters):
             urlRequest = try JSONEncoding.default.encode(urlRequest, with: parameters)
         //AMOH

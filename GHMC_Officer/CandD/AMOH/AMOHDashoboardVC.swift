@@ -86,32 +86,57 @@ class AMOHDashoboardVC: UIViewController {
     }
     //total no of requests list
     @objc func taponnoofReq(){
-        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
-        vc.tag = 0
-        navigationController?.pushViewController(vc, animated: true)
+        if self.noofReqLBCount.text != "0"{
+            let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
+            vc.tag = 0
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            self.showAlert(message: "No records found")
+        }
+        
      }
     //payment conformed list
     @objc func taponpaymentConformation(){
-        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
-        vc.tag = 1
-        navigationController?.pushViewController(vc, animated: true)
+        if self.paymentConformationLBCount.text != "0"{
+            let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
+            vc.tag = 1
+            navigationController?.pushViewController(vc, animated: true)
+        }else {
+            self.showAlert(message: "No records found")
+        }
+       
      }
     //concessionerrejected list
-    @objc func taponconsessionerRejected(){
-        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
-        vc.tag = 2
-        navigationController?.pushViewController(vc, animated: true)
+        @objc func taponconsessionerRejected(){
+            if consessionerRejectedLBCount.text != "0"{
+                let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
+                vc.tag = 2
+                navigationController?.pushViewController(vc, animated: true)
+            } else {
+                self.showAlert(message: "No records found")
+            }
+        
      }
     //concessioner closed tickets(Amoh login)
     @objc func taponconnsessionerclosedTickets(){
-        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
-        vc.tag = 3
-        navigationController?.pushViewController(vc, animated: true)
+        if connsessionerclosedTicketsLBCount.text != "0"{
+            let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
+            vc.tag = 3
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            self.showAlert(message: "No records found")
+        }
+        
      }
     @objc func taponAmohClosedTickets(){
-        let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
-        vc.tag = 4
-        navigationController?.pushViewController(vc, animated: true)
+        if AmohClosedTicketsLBCount.text != "0"{
+            let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "ConcessionerRejectListVC") as! RequestLists
+            vc.tag = 4
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            self.showAlert(message: "No records found")
+        }
+        
      }
     //Raise request
     @objc func tapOnraiseEstimation(){
@@ -144,17 +169,13 @@ class AMOHDashoboardVC: UIViewController {
                         self?.showAlert(message: "No Records found")
                     } else {
                         self?.showViews()
-                        let noOfRequests = getCounts.amohList?[0].noOfRequests
-                        let paymentConfirmation =  getCounts.amohList?[0].paymentConfirmation
-                        let concessionerRejected =  getCounts.amohList?[0].concessionerRejected
-                        let concessionerCloseTickets =  getCounts.amohList?[0].concessionerCloseTickets
-                        let amohCloseTickets =  getCounts.amohList?[0].amohCloseTickets
                         
-                        self?.noofReqLBCount.text = noOfRequests
-                        self?.paymentConformationLBCount.text = paymentConfirmation
-                        self?.consessionerRejectedLBCount.text = concessionerRejected
-                        self?.connsessionerclosedTicketsLBCount.text = concessionerCloseTickets
-                        self?.AmohClosedTicketsLBCount.text = amohCloseTickets
+                        
+                        self?.noofReqLBCount.text = getCounts.amohList?[0].noOfRequests
+                        self?.paymentConformationLBCount.text = getCounts.amohList?[0].paymentConfirmation
+                        self?.consessionerRejectedLBCount.text = getCounts.amohList?[0].concessionerRejected
+                        self?.connsessionerclosedTicketsLBCount.text = getCounts.amohList?[0].concessionerCloseTickets
+                        self?.AmohClosedTicketsLBCount.text = getCounts.amohList?[0].amohCloseTickets
                     }
                 } else {
                     self?.showAlert(message: getCounts.statusMessage ?? "")

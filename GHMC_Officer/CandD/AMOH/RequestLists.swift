@@ -323,7 +323,7 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                       "DEVICEID":deviceId,
                       "TOKEN_ID":UserDefaultVars.token
         ]
-      //  print(params)
+        print(params)
         guard Reachability.isConnectedToNetwork() else {self.showAlert(message: noInternet);return}
         NetworkRequest.makeRequest(type: RequestEstimationStruct.self, urlRequest: Router.getAMOHRequestEstimation(Parameters: params )) { [weak self](result) in
             switch result
@@ -341,6 +341,8 @@ class RequestLists: UIViewController,UITableViewDelegate,UITableViewDataSource,U
                     let vc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "RequestEstimationVC")as! RequestEstimationVC
                     vc.estimationDetails = self?.estimationDetailsModel
                     vc.ticketId = ticketID
+                    vc.lat = getDetails.latitude
+                    vc.lon = getDetails.longitude
                     vc.tag = 0
                    // print(ticketIdLb)
                      self?.navigationController?.pushViewController(vc, animated:true)
@@ -580,6 +582,7 @@ struct RequestEstimationStruct: Codable {
     let image1Path: String?
     let image2Path, image3Path, noOfVehicles, estWt: String?
     let createdBy, createdDate, status: String?
+    let latitude ,longitude : String?
 
     enum CodingKeys: String, CodingKey {
         case statusCode = "STATUS_CODE"
@@ -597,6 +600,8 @@ struct RequestEstimationStruct: Codable {
         case createdBy = "CREATED_BY"
         case createdDate = "CREATED_DATE"
         case status = "STATUS"
+        case latitude = "LATITUDE"
+        case longitude = "LONGITUDE"
     }
 }
 

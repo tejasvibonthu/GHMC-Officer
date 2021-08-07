@@ -44,15 +44,22 @@ class GrievanceHistoryVC: UIViewController {
         self.navigationController?.pushViewController(vc, animated:true)
     }
     @IBAction func take_Action(_ sender: Any) {
-      if(modeId == "15"){
-//       let vc = storyboards.Complaints.instance.instantiateViewController(withIdentifier:"TakeActionNewNMOSVC") as! TakeActionNewNMOSVC
-      // self.navigationController?.pushViewController(vc, animated:true)
+        if(modeId == "15"){
+         let vc = storyboards.Complaints.instance.instantiateViewController(withIdentifier:"TakeActionNewNMOSVC") as! TakeActionNewNMOSVC
+            vc.compID = complaintId
+         self.navigationController?.pushViewController(vc, animated:true)
         } else{
             let vc = storyboards.Complaints.instance.instantiateViewController(withIdentifier:"TakesactionVC") as! TakesactionVC
             vc.compID = complaintId
+            vc.subcatId = self.subcatID
             self.navigationController?.pushViewController(vc, animated:true)
         }
-    }
+//        let vc = storyboards.Complaints.instance.instantiateViewController(withIdentifier:"TakeActionNewNMOSVC") as! TakeActionNewNMOSVC
+//        vc.compID = complaintId
+//        self.navigationController?.pushViewController(vc, animated:true)
+         }
+
+    
     @IBAction func viewdirections(_ sender: Any) {
         guard let latlan = self.grivenceHistorymodel?.grievance?[0].latlon else {self.showAlert(message: "Unable get location please try again later");return}
         let latlansArray = latlan.components(separatedBy: ",")
@@ -94,11 +101,11 @@ class GrievanceHistoryVC: UIViewController {
             case .success(let grivancesHistory):
              //   print(grivancesHistory)
                 self?.grivenceHistorymodel = grivancesHistory
-               // print( self?.grivenceHistorymodel)
+              //  print( self?.grivenceHistorymodel)
                 if  grivancesHistory.status == "success" {
                   self?.subcatID =  grivancesHistory.grievance?[0].subCat
-                    UserDefaults.standard.set(self?.subcatID, forKey:"SUBCAT_ID")
-                    UserDefaultVars.subcatId = self?.subcatID ?? ""
+                 //   UserDefaults.standard.set(self?.subcatID, forKey:"SUBCAT_ID")
+                  //  UserDefaultVars.subcatId = self?.subcatID ?? ""
                     if((grivancesHistory.grievance?[0].latlon == "0.0,0.0") || (grivancesHistory.grievance?[0].latlon == nil)){
                         self?.viewdirectionsButton.isHidden = true
 

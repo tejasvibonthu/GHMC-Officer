@@ -1,3 +1,6 @@
+import UIKit
+import Foundation
+
 struct UserDefaultVars {
     static var mpin = UserDefaults.standard.value(forKey: "mpin") as! String
     static var designation = UserDefaults.standard.value(forKey: "DESIGNATION") as! String

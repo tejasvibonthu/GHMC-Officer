@@ -12,6 +12,7 @@ ${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework
 ${BUILT_PRODUCTS_DIR}/SCLAlertView/SCLAlertView.framework
 ${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework
 ${BUILT_PRODUCTS_DIR}/SearchTextField/SearchTextField.framework
+${BUILT_PRODUCTS_DIR}/SideMenuSwift/SideMenuSwift.framework
 ${BUILT_PRODUCTS_DIR}/SkyFloatingLabelTextField/SkyFloatingLabelTextField.framework
 ${BUILT_PRODUCTS_DIR}/SwiftMessages/SwiftMessages.framework
 ${BUILT_PRODUCTS_DIR}/TextFieldEffects/TextFieldEffects.framework

@@ -112,7 +112,7 @@ class MPINViewController: UIViewController {
 //                }
                 else if UserDefaultVars.designation == "Operator"
                 {
-                    let vc = storyboards.Operator.instance.instantiateViewController(withIdentifier:"TripsatPlantVC") as! TripsatPlantVC
+                    let vc = storyboards.Operator.instance.instantiateViewController(withIdentifier:"OperatorHomeVC") as! OperatorHomeVC
                     self.navigationController?.pushViewController(vc, animated:true)
                 }  else {
                 

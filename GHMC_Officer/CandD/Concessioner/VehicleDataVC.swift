@@ -9,7 +9,13 @@
 import UIKit
 import DropDown
 
-class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate {
+class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,TimeStampProtocol {
+    func imgDelegate(img: UIImage , imgView: UIImageView) {
+        print("imgWithTimestamp\(img)")
+        camImg.image  = img
+        camImg.isUserInteractionEnabled = false
+    }
+    var imageWithTimestamp :UIImage?
     @IBOutlet weak var submitBtnTop: NSLayoutConstraint!
     @IBOutlet weak var bg: UIImageView!
     @IBOutlet weak var noofvehiclesLb: UITextField!
@@ -28,9 +34,7 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
         }
     var imgData:String?
     var amount:String?
-   
-
-    @IBOutlet weak var camImg: CustomImagePicker!
+    @IBOutlet weak var camImg: CustomImageView!
     {
         didSet
         {
@@ -41,7 +45,6 @@ class VehicleDataVC: UIViewController,UITableViewDelegate,UITableViewDataSource,
     var dropdown = DropDown()
     var vehicledatasourceArry:[String] = []
     var weight:String?
-
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self

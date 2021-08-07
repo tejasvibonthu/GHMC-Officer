@@ -21,7 +21,7 @@ class MenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       self.navigationController?.navigationBar.isHidden = true
-        self.revealViewController().rearViewRevealWidth = 250 //put the width you need
+       // self.revealViewController().rearViewRevealWidth = 250 //put the width you need
 
       sectionTitles = ["profile","services","others"]
       rowTitles = [["Inbox"],["Grivevance","Absract Report"],["Themes","Exit","logout"]]
@@ -81,69 +81,42 @@ extension MenuViewController:UITableViewDelegate,UITableViewDataSource{
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        self.revealViewController().revealToggle(self)
-        self.revealViewController().panGestureRecognizer().isEnabled = true
         if indexPath.section == 0{
             switch indexPath.row {
-            
-            case 0: // track file
-                let activeNav = self.revealViewController().frontViewController as! UINavigationController
-                let propertyNavVc = storyboards.HomeStoryBoard.instance.instantiateViewController(withIdentifier: "NotificationsViewControllerNav") as! UINavigationController
-                let propertyVC = propertyNavVc.viewControllers[0] as! NotificationsVC
-                activeNav.pushViewController(propertyVC, animated: true)
+            case 0:
+                let propertyNavVc = storyboards.HomeStoryBoard.instance.instantiateViewController(withIdentifier: "NotificationsVC") as! NotificationsVC
+                let navController = UINavigationController(rootViewController: propertyNavVc)
+                sideMenuController?.setContentViewController(to: navController, animated: true, completion: nil)
                 break
             default:
-                print("tutiu")
+                print("")
             }
         }
         if indexPath.section == 1{
             switch indexPath.row {
-            case 0: // Revoke File
-                let activeNav = self.revealViewController().frontViewController as! UINavigationController
-                let propertyNavVc = storyboards.HomeStoryBoard.instance.instantiateViewController(withIdentifier: "HomeViewControllerNav") as! UINavigationController
-                let propertyVC = propertyNavVc.viewControllers[0] as! HomeViewController
-                activeNav.pushViewController(propertyVC, animated: true)
+            case 0: // Grievances
+                let vc = storyboards.HomeStoryBoard.instance.instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
+                let homeVC = UINavigationController(rootViewController: vc)
+                sideMenuController?.setContentViewController(to: homeVC, animated: true, completion: nil)
                 break
-            case 1: // Revoke File
-                let activeNav = self.revealViewController().frontViewController as! UINavigationController
-                let propertyNavVc = storyboards.Complaints.instance.instantiateViewController(withIdentifier: "AbstarctViewControllerNav") as! UINavigationController
-                let propertyVC = propertyNavVc.viewControllers[0] as! AbstarctVC
-                activeNav.pushViewController(propertyVC, animated: true)
+            case 1: // abstract report
+                let Vc = storyboards.Complaints.instance.instantiateViewController(withIdentifier: "AbstarctVC") as! AbstarctVC
+                let abstractVC = UINavigationController(rootViewController: Vc)
+                sideMenuController?.setContentViewController(to: abstractVC, animated: true, completion: nil)
                 break
-//            case 2: // Revoke File
-//                let reqNav = self.revealViewController().frontViewController as! UINavigationController
-//                let propertyNavVc = storyboards.AMOH.instance.instantiateViewController(withIdentifier: "AmohRequestControllerNav") as! UINavigationController
-//                let propertyVC = propertyNavVc.viewControllers[0] as! RequestListVC
-//                reqNav.pushViewController(propertyVC, animated: true)
-//                break
-                
             default:
-                print("wgfewsh")
+                print("")
             }
         }
         
         if indexPath.section == 2{
-            
             switch indexPath.row {
             case 0: //themes
-                let activeNav = self.revealViewController().frontViewController as! UINavigationController
-                let propertyNavVc = storyboards.HomeStoryBoard.instance.instantiateViewController(withIdentifier: "ThemeViewControllerNav") as! UINavigationController
-                
-                propertyNavVc.modalTransitionStyle = .crossDissolve
-                propertyNavVc.modalPresentationStyle = .overCurrentContext
-                activeNav.present(propertyNavVc, animated:true, completion:nil)
-                
+                let vc = storyboards.HomeStoryBoard.instance.instantiateViewController(withIdentifier: "ThemesVC") as! ThemesVC
+                vc.modalPresentationStyle = .overCurrentContext
+                vc.modalTransitionStyle = .crossDissolve
+                self.present(vc, animated: true, completion: nil)
             case 1: // exit
-                
-                //          UserDefaults.standard.removeObject(forKey:"mpin")
-                //            UserDefaults.standard.removeObject(forKey:"DESIGNATION")
-                //            UserDefaults.standard.removeObject(forKey:"EMP_NAME")
-                //            UserDefaults.standard.removeObject(forKey:"TYPE_ID")
-                //            UserDefaults.standard.removeObject(forKey:"MOBILE_NO")
-                //            UserDefaults.standard.removeObject(forKey:"otp")
-                //            UserDefaults.standard.synchronize()
-                
                 let appearance = SCLAlertView.SCLAppearance(
                     showCloseButton: false
                 )
@@ -158,47 +131,42 @@ extension MenuViewController:UITableViewDelegate,UITableViewDataSource{
                 alertView.showInfo("GHMC", subTitle:"Do you want to exit from app?")
                 break
             case 2: //logout
-//                let activeNav = self.revealViewController().frontViewController as! UINavigationController
                 let vc = storyboards.Main.instance.instantiateViewController(withIdentifier: "LoginViewControllerViewController") as! LoginViewControllerViewController
                 UserDefaults.standard.removeObject(forKey:"mpin")
                 UserDefaults.standard.synchronize()
                 let navVc = UINavigationController(rootViewController: vc)
                 self.view.window?.rootViewController = navVc
                 self.view.window?.makeKeyAndVisible()
-                
-                
-//
-//                let loginVC = vc.viewControllers[0] as! LoginViewControllerViewController
-//                activeNav.pushViewController(loginVC, animated: true)
+       
             default:
-                print("dghae")
+                print("")
             }
         }
+        self.sideMenuController?.hideMenu()
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UIView(frame: CGRect(x:0, y:0, width:tableView.frame.size.width-10, height:20))
+        let view = UIView(frame: CGRect(x:0, y:0, width:tableView.frame.size.width, height:40))
        //  let view1 = UIView(frame: CGRect(x:0, y:0, width:tableView.frame.size.width-10, height:50))
-        let label = UILabel(frame: CGRect(x:10, y:0, width:tableView.frame.size.width-10, height:30))
-        label.text = sectionTitles![section]
+        let label = UILabel(frame: view.frame)
+        label.text = sectionTitles?[section]
         label.textColor = UIColor.darkGray
-        label.font = UIFont.systemFont(ofSize:14)
+        label.font = UIFont.systemFont(ofSize:16 , weight: .semibold)
         view.addSubview(label)
+        if #available(iOS 13.0, *) {
+            view.backgroundColor = .systemGray6
+        } else {
+            // Fallback on earlier versions
+            view.backgroundColor = .lightGray
+        }
        //  view.addSubview(view1)
         return view
         }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20
-    }
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionTitles![section]
+        return 40
     }
 
-    func sectionIndexTitles(for tableView: UITableView) -> [String]?{
-         if let array = sectionTitles {
-            return array
-         }else{
-           return [" "]
-        }
-        
+ 
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 }
